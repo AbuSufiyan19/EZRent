@@ -61,9 +61,12 @@ const CustomerSignup = () => {
             SIGN UP
           </button>
         </form>
-        <a href="/login" className="create-account">
-          Already have an account? Sign in here.
+        <div className="create-account">
+        <p>Already have an account?&nbsp;</p>
+        <a href="/login">
+          Sign In
         </a>
+        </div>
       </div>
     </div>
   );

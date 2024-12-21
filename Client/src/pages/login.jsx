@@ -45,12 +45,15 @@ const Login = () => {
             Forgot Password?
           </a>
           <button type="submit" className="login-button">
-            LOG IN
+            SIGN IN
           </button>
         </form>
-        <a href="/customersignup" className="create-account">
-          Create new account
+        <div className="create-account">
+        <p>Don't have an account?&nbsp;</p>
+        <a href="/customersignup">
+          Sign Up
         </a>
+        </div>
       </div>
     </div>
   );
