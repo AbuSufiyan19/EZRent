@@ -10,4 +10,4 @@ The **Construction Equipment Rental Platform** streamlines renting construction 
 - **Diverse Inventory**: A wide network of local vendors offers varied options for all construction needs.
 - **Admin Panel**: Ensures platform integrity by authenticating users, managing support escalations, and maintaining smooth operations.
 
-Visit the live platform: [Construction Equipment Rental Platform](https://equipmate.onrender.com)
+Visit the live platform: [Construction Equipment Rental Platform](https://ezrentalservice.onrender.com)
