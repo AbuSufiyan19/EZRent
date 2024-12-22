@@ -8,9 +8,8 @@ import CustomerNavbar from './components/customernavbar';
 const App = () => {
   return (
     <Router>
-      <CustomerNavbar />
       <Routes>  
-        <Route path="/" />
+        <Route path="/" element={<CustomerNavbar />} />
         <Route path="/login" element={<Login />} />
         <Route path="/customersignup" element={<CustomerSignup />} />
       </Routes>
