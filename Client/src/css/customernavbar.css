@@ -137,7 +137,7 @@
   /* Mobile View */
   @media (max-width: 768px) {
     .navbar-slide-menu {
-        top: 10.2%;
+        top: 50px;
         right: -100%;
         width: 200px;
         text-align: center;
@@ -178,7 +178,7 @@
   }
   @media (max-width: 431px) {
     .navbar-slide-menu {
-        top: 7.5%;
+        top: 50px;
         height: 25vh;
     }
   }
