@@ -137,11 +137,11 @@
   /* Mobile View */
   @media (max-width: 768px) {
     .navbar-slide-menu {
-        top: 50px;
+        top: 70px;
         right: -100%;
         width: 200px;
         text-align: center;
-        height: 35vh;
+        height: 23vh;
     }
     .navbar-right{
         display: none;
@@ -178,7 +178,7 @@
   }
   @media (max-width: 431px) {
     .navbar-slide-menu {
-        top: 50px;
+        top: 70px;
         height: 25vh;
     }
   }
