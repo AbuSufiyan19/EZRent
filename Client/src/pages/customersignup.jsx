@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../css/login.css";
-import loginlogo from "/loginlogo.jpg";
+import loginlogo from "/loginlogo.png";
 import loginbackground from "/loginbackground.webp"
 import ezrent from "/ezrent.png"
 
@@ -33,12 +33,12 @@ const CustomerSignup = () => {
             className="login-input"
           />
           <input
-            type="text"
+            type="number"
             placeholder="Mobile Number"
             className="login-input"
           />
           <input
-            type="text"
+            type="email"
             placeholder="Email Address"
             className="login-input"
           />

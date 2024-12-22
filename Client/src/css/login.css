@@ -47,7 +47,7 @@ body{
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f3f3f3;
+    background-color: #f8f8f8;
     color: #333333;
     border: 1px solid #e5e7eb;
     box-shadow: 1px 1px 3px rgb(220, 220, 220);
@@ -176,6 +176,9 @@ body{
   @media (max-width: 768px) {
     .login-page .login-card {
       padding: 1.5rem;
+    }
+    .login-page {
+      background-color: #aaaaaa;
     }
   }
   

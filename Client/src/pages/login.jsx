@@ -1,7 +1,7 @@
 import React from "react";
 import "../css/login.css";
-import loginlogo from "/loginlogo.jpg"
-import googlelogo from "/googlelogo.png"
+import loginlogo from "/loginlogo.png"
+// import googlelogo from "/googlelogo.png"
 import loginbackground from "/loginbackground.webp"
 import ezrent from "/ezrent.png"
 
@@ -21,7 +21,7 @@ const Login = () => {
             </div>
         <img src={ezrent} alt="EZRent" className="ezrent" width={150} height={25}/>
         <p>Your Partner in Construction Equipment Rental</p>
-        <button className="google-signin">
+        {/* <button className="google-signin">
           <img
             src={googlelogo}
             alt="Google"
@@ -29,10 +29,11 @@ const Login = () => {
           />
           <p>Sign In With Google</p>
         </button>
-        <div className="divider">OR</div>
+        <div className="divider">OR</div> */}
+        <br></br>
         <form className="login-form">
           <input
-            type="text"
+            type="email"
             placeholder="Email Address"
             className="login-input"
           />
