@@ -2,7 +2,7 @@
 import React from "react";
 import "../css/home.css";
 import CustomerNavbar from "../components/customernavbar";
-import BackgroundSlider from "../components/BackgroundSlider"; // Import the new carousel component
+import BackgroundSlider from "../components/backgroundslider"; // Import the new carousel component
 import CategoriesCarousel from "../components/categoriescarosal";
 
 const HomeMainPage = () => {
