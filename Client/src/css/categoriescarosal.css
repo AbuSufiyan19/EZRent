@@ -1,0 +1,99 @@
+/* Container for the categories carousel */
+.categories-carousel {
+    position: relative;
+    width: 100%;
+    background-color: #f1f1f1;
+  }
+  .categories-carousel h2{
+    margin: 0;
+    text-align: center;
+    padding-top: 20px;
+    font-size: 28px;
+    color: #0c1239;
+  }
+  .categories-carousel .carousel-container {
+    display: flex;
+    overflow: hidden;
+    justify-content: center;
+    padding: 45px;
+    padding-top: 10px;
+  }
+  
+  .categories-carousel .category-card {
+    flex: 0 0 33.33%; /* Each card takes up 1/3 of the container width */
+    padding: 10px;
+    text-align: center;
+    transition: transform 0.5s ease;
+  }
+  
+  .categories-carousel .category-img {
+    width: 100%;
+    height: 200px;
+    max-height: 200px; /* Limit the height of images */
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  
+  .categories-carousel .category-name {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #333;
+  }
+  
+  /* Arrows Styling */
+  .categories-carousel .carousel-arrows {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .categories-carousel .arrow {
+    background: #0c1239;
+    color: #fba31c;
+    font-size: 24px;
+    padding: 10px;
+    border: none;
+    border-radius: 48%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .categories-carousel .arrow:hover {
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  .categories-carousel .left {
+    left: 0;
+  }
+  
+  .categories-carousel .right {
+    right: 0;
+  }
+  @media (max-width: 768px) {
+    .categories-carousel .category-card {
+      flex: 0 0 50%; /* Only 1 card visible at a time */
+    }
+  
+    .categories-carousel .carousel-container {
+      overflow-x: scroll; /* Allow horizontal scrolling */
+    }
+  
+    .categories-carousel .arrow {
+      display: block; /* Ensure arrows are visible on mobile */
+    }
+  }
+  @media (max-width: 431px) {
+    .categories-carousel .category-card {
+        flex: 0 0 100%; /* Only 1 card visible at a time */
+      }
+    .categories-carousel .category-img {
+      height: 150px; /* Reduce image size on smaller screens */
+    }
+  
+    .categories-carousel h2 {
+      font-size: 24px; /* Adjust title font size */
+    }
+  }

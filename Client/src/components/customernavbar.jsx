@@ -11,6 +11,10 @@ const CustomerNavbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <nav className="navbar">
       {/* Left Section: Logos */}
@@ -23,7 +27,7 @@ const CustomerNavbar = () => {
       <div className={`navbar-center ${isMenuOpen ? "active" : ""}`}>
         <ul className="navbar-menu">
           <li><a href="#home">Home</a></li>
-          <li><a href="#equipments">Equipments</a></li>
+          <li><a href="#categories">Equipments</a></li>
           <li><a href="#about">About Us</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
@@ -56,10 +60,10 @@ const CustomerNavbar = () => {
       {/* Sliding Menu */}
       <div className={`navbar-slide-menu ${isMenuOpen ? "open" : ""}`}>
         <ul className="navbar-menu-mobile">
-          <li><a href="#home">Home</a></li>
-          <li><a href="#equipments">Equipments</a></li>
-          <li><a href="#about">About Us</a></li>
-          <li><a href="#contact">Contact</a></li>
+        <li><a href="#home" onClick={closeMenu}>Home</a></li>
+          <li><a href="#categories" onClick={closeMenu}>Equipments</a></li>
+          <li><a href="#about" onClick={closeMenu}>About Us</a></li>
+          <li><a href="#contact" onClick={closeMenu}>Contact</a></li>
         </ul>
         <button className="navbar-button">Sign In</button>
       </div>
