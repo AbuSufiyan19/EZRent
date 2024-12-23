@@ -1,0 +1,129 @@
+/* Container for the entire equipment grid */
+.equipment-grid-container {
+    width: 100%;
+        /* padding: 2rem 0; */
+    text-align: center;
+  }
+
+  .equipment-grid-container .equipmentsearch-title{
+    margin: 0;
+    text-align: center;
+    padding: 20px;
+    font-size: 28px;
+    color: #0c1239;
+  }
+  
+  /* Styling for the search bar */
+  .equipment-grid-container .search-bar-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  
+  .equipment-grid-container .search-input {
+    width: 300px;
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: .5px solid #666;
+    border-radius: 50px;
+    margin-right: 10px;
+  }
+  .equipment-grid-container .search-input::placeholder{
+    color: #666;
+  }
+  
+  .equipment-grid-container .search-btn {
+    background-color: #0c1239;
+    color: #fba31c;
+    border: none;
+    padding: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 50px;
+    cursor: pointer;
+  }
+  
+  .equipment-grid-container .search-btn i {
+    margin-right: 0.5rem;
+  }
+  
+  /* Grid container */
+  .equipment-grid-container .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 cards per row for large screens */
+    gap: 30px;
+    padding: 30px;
+    padding-top: 0;
+  }
+  
+  /* Equipment card styling */
+  .equipment-grid-container .equipment-card {
+    display: flex; 
+    flex-direction: column; 
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    height: 100%; 
+    justify-content: space-between; 
+  }
+  
+  .equipment-grid-container .equipment-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .equipment-grid-container .equipment-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0;
+    color: #0c1239;
+    margin-top: 10px;
+  }
+  
+  .equipment-grid-container .equipment-desc {
+    font-size: 1rem;
+    color: #666;
+    padding-left: 50px;
+    padding-right: 50px;
+    margin: 0;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+  }
+  
+  .equipment-grid-container .equipment-btn {
+    background-color: #fba31c;
+    color: #0c1239;
+    border: none;
+    font-weight: bolder;
+    padding: 0.7rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    align-self: center; /* Center the button horizontally */
+  }
+  
+  
+  .equipment-grid-container .equipment-btn:hover {
+    background-color: #218838;
+  }
+  
+  /* Media queries for responsiveness */
+  
+  /* For tablets (2 cards per row) */
+  @media (max-width: 768px) {
+    .equipment-grid-container .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  /* For mobile (1 card per row) */
+  @media (max-width: 480px) {
+    .equipment-grid-container .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  

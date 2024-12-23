@@ -4,6 +4,10 @@ import "../css/home.css";
 import CustomerNavbar from "../components/customernavbar";
 import BackgroundSlider from "../components/backgroundslider"; // Import the new carousel component
 import CategoriesCarousel from "../components/categoriescarosal";
+import EquipmentSearch from "../components/equipmentsearch";
+import AboutUs from "../components/aboutus";
+import Footer from "../components/footer";
+
 
 const HomeMainPage = () => {
   return (
@@ -29,6 +33,14 @@ const HomeMainPage = () => {
        <section id="categories" className="categories-section">
         <CategoriesCarousel />
       </section>
+      <section id="equipment" className="equipment-section">
+        <EquipmentSearch />
+      </section>
+      <section id="aboutus" className="aboutus-section">
+        <AboutUs />
+      </section>
+      <Footer />
+      
     </>
   );
 };

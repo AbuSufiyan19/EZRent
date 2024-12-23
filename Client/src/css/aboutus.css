@@ -1,0 +1,106 @@
+.aboutus-container {
+    position: relative;
+    background-image: url("/aboutus.jpg"); /* Add your background image */
+    background-size: cover;
+    background-position: center;
+    height: 100vh; /* Adjust height as needed */
+    display: flex;
+    align-items: center;
+    color: white;
+  }
+  
+  .aboutus-container .aboutus-overlay {
+    text-align: justify;
+    padding: 40px;
+    margin-left: 50px;
+    max-width: 600px;
+    background: rgba(255, 255, 255, 0.567);
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4.5px );
+    -webkit-backdrop-filter: blur( 4.5px );
+    border-radius: 30px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+  }
+  
+  .aboutus-container .aboutus-title {
+    font-size: 2.4rem;
+    font-weight: bold;
+    color: #fba31c;
+    text-shadow: 2px 2px 2px #0c1239;
+    margin: 0;
+  }
+  
+  .aboutus-container .aboutus-description {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #0c1239;
+    margin-bottom: 0;
+    line-height: 1.6;
+  }
+  
+  /* Media Queries for Responsiveness */
+  
+  @media (max-width: 1024px) {
+    .aboutus-container {
+        height: 250px;
+      }
+    
+      .aboutus-container .aboutus-overlay {
+        padding: 1.5rem;
+        max-width: 40%;
+      }
+    
+      .aboutus-container .aboutus-title {
+        font-size: 19px;
+      }
+    
+      .aboutus-container .aboutus-description {
+        font-size: 11px;
+        line-height: 1.3;
+      }
+  }
+  /* For tablets (screen width <= 768px) */
+  @media (max-width: 768px) {
+    .aboutus-container {
+      height: 300px;
+      justify-content: center;
+    }
+  
+    .aboutus-container .aboutus-overlay {
+      padding: 1.5rem;
+      max-width: 350px;
+      margin: 30px;
+    }
+  
+    .aboutus-container .aboutus-title {
+      font-size: 18px;
+    }
+  
+    .aboutus-container .aboutus-description {
+      font-size: 11px;
+    }
+  }
+  
+  /* For mobile devices (screen width <= 480px) */
+  @media (max-width: 480px) {
+    .aboutus-container {
+      height: 250px;
+      justify-content: center;
+    }
+  
+    .aboutus-container .aboutus-overlay {
+      padding: 1rem;
+      width: 100%;
+    }
+  
+    .aboutus-container .aboutus-title {
+      font-size: 15px;
+      text-align: center;
+    }
+  
+    .aboutus-container .aboutus-description {
+      font-size: 10px;
+      line-height: 1.4;
+    }
+  }
+  

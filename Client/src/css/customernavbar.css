@@ -52,6 +52,10 @@
     font-size: 18px;
   }
 
+  .navbar-menu li a:hover{
+    color: #fba31c;
+  }
+
   /* .navbar-center-mobile {
     display: none;
   }
@@ -108,6 +112,7 @@
     z-index: 999;
     border-bottom-left-radius: 10px;
     background: rgba( 255, 255, 255, 0.6 );
+    background: linear-gradient(180deg, rgba( 255, 255, 255, 0.6 ) 0%, rgba( 255, 255, 255, 0.6 ) 100%);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     backdrop-filter: blur(4.5px);
     -webkit-backdrop-filter: blur(4.5px); 
