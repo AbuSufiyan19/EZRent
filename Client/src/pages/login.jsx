@@ -2,7 +2,7 @@ import React from "react";
 import "../css/login.css";
 import loginlogo from "/loginlogo.png"
 // import googlelogo from "/googlelogo.png"
-import loginbackground from "/loginbackground.webp"
+import loginbackground from "/loginbackground.jpg"
 import ezrent from "/ezrent.png"
 
 const Login = () => {

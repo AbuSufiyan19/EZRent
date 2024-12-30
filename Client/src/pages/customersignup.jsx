@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../css/login.css";
 import loginlogo from "/loginlogo.png";
-import loginbackground from "/loginbackground.webp"
+import loginbackground from "/loginbackground.jpg"
 import ezrent from "/ezrent.png"
 
 const CustomerSignup = () => {

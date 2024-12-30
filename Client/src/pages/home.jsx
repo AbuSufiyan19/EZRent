@@ -6,6 +6,7 @@ import BackgroundSlider from "../components/backgroundslider"; // Import the new
 import CategoriesCarousel from "../components/categoriescarosal";
 import EquipmentSearch from "../components/equipmentsearch";
 import AboutUs from "../components/aboutus";
+import ContactUs from "../components/contactus/contactus";
 import Footer from "../components/footer";
 
 
@@ -38,6 +39,9 @@ const HomeMainPage = () => {
       </section>
       <section id="aboutus" className="aboutus-section">
         <AboutUs />
+      </section>
+      <section id="contactus" className="contactus-section">
+        <ContactUs />
       </section>
       <Footer />
       

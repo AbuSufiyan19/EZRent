@@ -1,0 +1,157 @@
+.equipmentdesc-card-outer{
+    display: flex;
+    flex-direction: column;
+    padding: 100px;
+    padding-bottom: 50px;
+    height: 100%;
+}
+.equipmentdesc-card {
+    display: flex;
+    gap: 20px;
+    padding: 30px;
+  }
+  
+  .equipmentdesc-card .equipmentdesc-image img {
+    width: 550px;
+    border-radius: 10px;
+  }
+  
+  .equipmentdesc-card .equipmentdesc-details {
+    flex: 1;
+  }
+  
+  .equipmentdesc-card .equipmentdesc-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 0;
+  }
+
+  
+  .equipmentdesc-card .equipmentdesc-description {
+    margin: 20px 0;
+    color: #666;
+    margin-top: 0;
+  }
+  
+  .equipmentdesc-card .equipmentdesc-pricing {
+    margin: 10px 0;
+  }
+  
+  .equipmentdesc-card .current-price {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #007bff;
+    margin-right: 10px;
+  }
+  
+  .equipmentdesc-card .original-price {
+    font-size: 1rem;
+    color: #aaa;
+  }
+  .equipmentdesc-datetimedetails {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .equipmentdesc-options {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .option label {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .option input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .equipmentdesc-totalprice {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #007bff;
+    margin-top: 10px;
+  }
+  
+  .equipmentdesc-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .booknow-button {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .booknow-button {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .booknow-button:hover {
+    background-color: #0056b3;
+  }
+  
+  @media (max-width: 1240px) {
+    .equipmentdesc-card-outer{
+        padding-top: 70px;
+    }
+    .equipmentdesc-card {
+        flex-direction: column;
+    }
+    .equipmentdesc-card .equipmentdesc-image{
+        display: flex;
+        justify-content: center;
+    }
+
+  }
+  @media (max-width: 1024px){
+    .equipmentdesc-card .equipmentdesc-image img {
+        max-width: 500px;
+    }
+  }
+  @media (max-width: 768px){
+    .equipmentdesc-card-outer{
+        padding: 50px;
+    }
+    .equipmentdesc-card .equipmentdesc-image img {
+        max-width: 100%;
+    }
+  }
+  @media (max-width: 640px){
+    .equipmentdesc-options {
+        flex-direction: column;    
+        justify-content: space-between;
+    }
+  }   
+
+  @media (max-width: 768px){
+    .equipmentdesc-card-outer{
+        padding: 10px;
+        padding-top: 70px;
+        padding-bottom: 40px;
+    }
+    .equipmentdesc-card .equipmentdesc-image img {
+        max-width: 100%;
+    }
+  }

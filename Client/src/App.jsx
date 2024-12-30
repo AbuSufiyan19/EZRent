@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './pages/login';
 import CustomerSignup from './pages/customersignup';
 import HomeMainPage from './pages/home';
+import EquipmentDescriptionPage from './pages/equipmentdescriptionpage';
+import EquipmentCategoriesPage from './pages/equipmentcategories'
 
 
 const App = () => {
@@ -12,6 +14,8 @@ const App = () => {
         <Route path="/" element={<HomeMainPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/customersignup" element={<CustomerSignup />} />
+        <Route path="/equipdesc" element={<EquipmentDescriptionPage />} />
+        <Route path="/equipcategories" element={<EquipmentCategoriesPage />} />
       </Routes>
     </Router>
   );

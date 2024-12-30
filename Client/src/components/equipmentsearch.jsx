@@ -25,6 +25,10 @@ const EquipmentGrid = () => {
     <div className="equipment-grid-container">
         <h2 className="equipmentsearch-title">EQUIPMENTS</h2>
       <div className="search-bar-container">
+        <div className="search-bar-inner">
+        <button className="search-btn">
+            <FontAwesomeIcon icon={faMagnifyingGlass} className="searchicon" size="lg" />
+        </button>
         <input
           type="text"
           placeholder=" Search Here..."
@@ -32,18 +36,17 @@ const EquipmentGrid = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <button className="search-btn">
-            <FontAwesomeIcon icon={faMagnifyingGlass} size="lg" />
-        </button>
+        </div>
       </div>
 
       <div className="grid">
         {filteredEquipment.map((equipment, index) => (
           <div key={index} className="equipment-card">
             <img src={equipment.img} alt={equipment.name} className="equipment-img" />
-            <h3 className="equipment-title">{equipment.name}</h3>
-            <p className="equipment-desc">{equipment.desc}</p>
-            <button className="equipment-btn">View Details</button>
+            <div className="equipment-overlay">
+              <h3 className="equipment-title">{equipment.name}</h3>
+              <button className="equipment-btn">View Details</button>
+            </div>
           </div>
         ))}
       </div>

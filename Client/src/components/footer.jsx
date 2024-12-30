@@ -10,7 +10,9 @@ const Footer = () => {
       <div className="footer-section about-company">
         <h3>About Company</h3>
         <div className="company-logo">
-          <img src={loginlogo} alt="EZRent" className="logo" />
+          <a href="/#home">
+              <img src={loginlogo} alt="EZRent" className="logo" />
+          </a>
           <h4>EZRent <br />Construction Equipment Rental</h4>
         </div>
         <p>
@@ -22,11 +24,11 @@ const Footer = () => {
       <div className="footer-section information">
         <h3>Information</h3>
         <ul>
-          <li><a href="#home">Main Home</a></li>
-          <li><a href="#categories">Categories</a></li>
-          <li><a href="#equipment">Search</a></li>
-          <li><a href="#contactus">Contact Us</a></li>
-          <li><a href="#aboutus">About Us</a></li>
+          <li><a href="/#home">Main Home</a></li>
+          <li><a href="/#categories">Categories</a></li>
+          <li><a href="/#equipment">Search</a></li>
+          <li><a href="/#contactus">Contact Us</a></li>
+          <li><a href="/#aboutus">About Us</a></li>
         </ul>
       </div>
 
