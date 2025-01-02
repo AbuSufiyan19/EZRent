@@ -1,19 +1,17 @@
-// File: src/pages/HomeMainPage.jsx
 import React from "react";
 import CustomerNavbar from "../components/customernavbar/customernavbar";
 import Footer from "../components/footer/footer";
-import EquipmentCategories from "../components/categories/categories"
+import ContactUs from "../components/contactus/contactus"
 
 
-const EquipmentCategoriesPage = () => {
+const ContactUsPage = () => {
   return (
     <>
       <CustomerNavbar />
-      <EquipmentCategories />
+      <ContactUs />
       <Footer />
-      
     </>
   );
 };
 
-export default EquipmentCategoriesPage;
+export default ContactUsPage;

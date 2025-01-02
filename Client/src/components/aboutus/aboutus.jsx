@@ -1,5 +1,5 @@
 import React from "react";
-import "../css/aboutus.css"; // Add CSS for styling
+import "./aboutus.css"; // Add CSS for styling
 
 const AboutUs = () => {
   return (
@@ -7,7 +7,7 @@ const AboutUs = () => {
       <div className="aboutus-overlay">
         <h1 className="aboutus-title">ABOUT US</h1>
         <p className="aboutus-description">
-        Welcome to Backhoe Equipment Rentals, your trusted partner in transforming 
+        Welcome to EZRent, your trusted partner in transforming 
         the construction rental industry. Our mission is to bridge the gap between 
         equipment renters and local vendors, ensuring seamless access to the tools 
         and machinery you need to complete your projects efficiently.

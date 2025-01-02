@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import "../css/equipmentsearch.css"; 
+import "./equipmentsearch.css"; 
 
 const EquipmentGrid = () => {
   const [searchTerm, setSearchTerm] = useState("");

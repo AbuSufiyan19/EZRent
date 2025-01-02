@@ -1,13 +1,12 @@
 // File: src/pages/HomeMainPage.jsx
 import React from "react";
 import "../css/home.css";
-import CustomerNavbar from "../components/customernavbar";
-import BackgroundSlider from "../components/backgroundslider"; // Import the new carousel component
-import CategoriesCarousel from "../components/categoriescarosal";
-import EquipmentSearch from "../components/equipmentsearch";
-import AboutUs from "../components/aboutus";
-import ContactUs from "../components/contactus/contactus";
-import Footer from "../components/footer";
+import CustomerNavbar from "../components/customernavbar/customernavbar";
+import BackgroundSlider from "../components/backgroundslider/backgroundslider"; // Import the new carousel component
+import CategoriesCarousel from "../components/categoriescarosal/categoriescarosal";
+import EquipmentSearch from "../components/equipmentsearch/equipmentsearch";
+import AboutUs from "../components/aboutus/aboutus";
+import Footer from "../components/footer/footer";
 
 
 const HomeMainPage = () => {
@@ -39,9 +38,6 @@ const HomeMainPage = () => {
       </section>
       <section id="aboutus" className="aboutus-section">
         <AboutUs />
-      </section>
-      <section id="contactus" className="contactus-section">
-        <ContactUs />
       </section>
       <Footer />
       

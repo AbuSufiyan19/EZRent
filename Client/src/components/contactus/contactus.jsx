@@ -4,8 +4,11 @@ import "./contactus.css"; // Add CSS for styling
 const ContactUs = () => {
   return (
     <div className="contactus-container">
-      <h1 className="contactus-heading">CONTACT US</h1>
       <div className="contactus-form-container-outer">
+      <h1 className="contactus-heading">CONTACT US</h1>
+      <p className="contactus-heading-desc">Have questions or need assistance with your construction equipment rental? Contact us via phone, email, or our online form for quick and reliable support.
+      We're here to ensure a seamless experience and assist you every step of the way!
+      </p>
         <div className="contactus-form-container">
         <div className="contactus-left">
           <input type="text" placeholder="Name" className="contactus-input" />

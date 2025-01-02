@@ -1,7 +1,7 @@
 // File: src/components/BackgroundSlider.jsx
 import React from "react";
 import Slider from "react-slick";
-import "../css/backgroundslider.css"; 
+import "./backgroundslider.css"; 
 
 // Example images for the slider
 import backgroundImage1 from "/home page carosal/truck.jpg";

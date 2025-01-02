@@ -9,17 +9,25 @@
     background-image: url("/contactus.jpg");
     background-size: cover;
     background-position: center;
-    min-height: 50vh;
-    max-height: 50vh;
+    min-height: 100vh;
+    max-height: 100vh;
   }
   
   .contactus-heading {
     font-size: 30px;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin: 0;
     color: #ffc107;
     text-shadow: 1.5px 1.5px 1px #0c1239;
     text-align: center;
+  }
+
+  .contactus-heading-desc{
+    margin: 40px;
+    margin-top: 0;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 10px;
   }
 
   .contactus-form-container-outer{
@@ -88,15 +96,15 @@
     height: 100%;
     resize: none;
   }
-  @media (max-width: 1024px) {
+  /* @media (max-width: 1024px) {
     .contactus-container {
         min-height: 30vh;
     }
-  }
+  } */
   @media (max-width: 768px) {
-    .contactus-container {
+    /* .contactus-container {
         min-height: 30vh;
-    }
+    } */
 
     .contactus-form-container {
       gap: 15px;
@@ -112,12 +120,21 @@
     }
   }
   @media (max-width: 431px){
-    .contactus-container {
+    /* .contactus-container {
         min-height: 40vh;
-    }
+    } */
     .contactus-form-container{
         flex-direction: column;
         padding: 20px;
+    }
+    .contactus-heading{
+      margin: 10px;
+    }
+
+    .contactus-heading-desc{
+      text-align: justify;
+      font-size: 8px;
+      margin-bottom: 0;
     }
     .contactus-input,
     .contactus-textarea {

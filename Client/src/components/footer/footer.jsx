@@ -1,7 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMapMarkerAlt, faPhoneAlt, faClock, faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import "../css/footer.css"; // Add CSS for styling
+import "./footer.css"; // Add CSS for styling
 import loginlogo from "/loginlogo.png"
 
 const Footer = () => {

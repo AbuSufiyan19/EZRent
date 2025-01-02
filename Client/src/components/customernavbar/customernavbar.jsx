@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../css/customernavbar.css";
+import "./customernavbar.css";
 import logo1 from "/loginlogo.png"; // Replace with your image path
 import logo2 from "/ezrent.png"; // Replace with your image path
 import locationIcon from "/locationlogo.png"; // Replace with your image path
@@ -34,7 +34,7 @@ const CustomerNavbar = () => {
           <li><a href="/#home">Home</a></li>
           <li><a href="/#categories">Equipments</a></li>
           <li><a href="/#aboutus">About Us</a></li>
-          <li><a href="/#contactus">Contact</a></li>
+          <li><a href="/contactus">Contact</a></li>
         </ul>
       </div>
 
@@ -68,7 +68,7 @@ const CustomerNavbar = () => {
         <li><a href="/#home" onClick={closeMenu}>Home</a></li>
           <li><a href="/#categories" onClick={closeMenu}>Equipments</a></li>
           <li><a href="/#aboutus" onClick={closeMenu}>About Us</a></li>
-          <li><a href="/#contactus" onClick={closeMenu}>Contact</a></li>
+          <li><a href="/contactus" onClick={closeMenu}>Contact</a></li>
         </ul>
         <button className="navbar-button">Sign In</button>
       </div>

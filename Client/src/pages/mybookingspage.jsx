@@ -1,19 +1,17 @@
-// File: src/pages/HomeMainPage.jsx
 import React from "react";
 import CustomerNavbar from "../components/customernavbar/customernavbar";
 import Footer from "../components/footer/footer";
-import EquipmentCategories from "../components/categories/categories"
+import MyBookings from "../components/mybookings/mybooking"
 
 
-const EquipmentCategoriesPage = () => {
+const MyBookingsPage = () => {
   return (
     <>
       <CustomerNavbar />
-      <EquipmentCategories />
+      <MyBookings />
       <Footer />
-      
     </>
   );
 };
 
-export default EquipmentCategoriesPage;
+export default MyBookingsPage;

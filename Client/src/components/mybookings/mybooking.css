@@ -1,0 +1,52 @@
+.my-booking-container {
+    padding: 80px;
+    padding-top: 60px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .my-booking-container .mybooking-heading{
+    color: #0c1239;
+  }
+  
+  .my-booking-container .my-booking-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .my-booking-container .my-booking-table th,
+  .my-booking-container .my-booking-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .my-booking-container .my-booking-table th {
+    background-color: #ff9900;
+    font-weight: bold;
+  }
+
+  .my-booking-container .my-booking-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .my-booking-container .my-booking-table tr:nth-child(odd) {
+    background-color: #ffffff;
+  }
+  
+  .my-booking-container .image-cell {
+    text-align: center;
+  }
+  
+  .my-booking-container .image-cell img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+  }
+  @media (max-width: 768px) {
+    .my-booking-container {
+        padding: 60px;
+    }
+  }

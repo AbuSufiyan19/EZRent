@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../css/categoriescarosal.css"; // Import the CSS for styling
+import "./categoriescarosal.css"; // Import the CSS for styling
 
 const CategoriesCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);

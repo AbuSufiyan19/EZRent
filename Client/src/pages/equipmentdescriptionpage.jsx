@@ -1,7 +1,7 @@
 // File: src/pages/HomeMainPage.jsx
 import React from "react";
-import CustomerNavbar from "../components/customernavbar";
-import Footer from "../components/footer";
+import CustomerNavbar from "../components/customernavbar/customernavbar";
+import Footer from "../components/footer/footer";
 import EquipmentDescription from "../components/equipmentdescription/equipmentdescription"
 
 
