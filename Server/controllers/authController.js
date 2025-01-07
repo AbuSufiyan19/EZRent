@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const User = require('../models/userModel');
 require('dotenv').config(); // Ensure .env variables are loaded
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 
 // Replace with your own secret key (store it in .env for security)
