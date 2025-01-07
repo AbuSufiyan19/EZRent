@@ -110,7 +110,7 @@ body{
     border: 1px solid #d1d5db;
     padding: 0.8rem 1rem;
     border-radius: 5px;
-    margin-bottom: .8rem;
+    margin-top: .8rem;
     color: #1f2937;
     font-size: .9rem;
   }
@@ -126,12 +126,17 @@ body{
     font-size: 0.8rem;
     color: #3b82f6;
     text-decoration: none;
-    margin-bottom: 1rem;
+    margin-top: 1rem;
     text-align: right;
   }
   
   .login-page .forgot-password:hover {
     text-decoration: none;
+  }
+
+  .login-page .error-text{
+    color: rgb(255, 75, 75);
+    font-size: 11px;
   }
   
   .login-page .login-button {
@@ -140,6 +145,7 @@ body{
     border: none;
     padding: 0.8rem 1rem;
     border-radius: 5px;
+    margin-top: .8rem;
     font-size: 1rem;
     cursor: pointer;
   }

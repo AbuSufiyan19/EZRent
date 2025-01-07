@@ -5,6 +5,7 @@
     background-position: center;
     height: 100vh; /* Adjust height as needed */
     display: flex;
+    border-bottom: .5px solid #fba31c;
     align-items: center;
     color: white;
   }

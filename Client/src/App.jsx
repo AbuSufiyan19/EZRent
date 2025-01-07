@@ -7,7 +7,9 @@ import EquipmentDescriptionPage from './pages/equipmentdescriptionpage';
 import EquipmentCategoriesPage from './pages/equipmentcategories'
 import MyBooking from './pages/mybookingspage';
 import ContactUs from './pages/contactuspage';
-
+import EmailVerificationSuccess from './pages/emailverificationsuccess'
+import EmailVerificationFailure from './pages/emailverificationfailure'
+import HomeRent from './pages/homerenter';
 
 const App = () => {
   return (
@@ -17,9 +19,13 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/customersignup" element={<CustomerSignup />} />
         <Route path="/contactus" element={<ContactUs/>} />
+        <Route path="/email-verification-success" element={<EmailVerificationSuccess />} />
+        <Route path="/email-verification-failure" element={<EmailVerificationFailure />} />
         <Route path="/mybookings" element={<MyBooking />} />
         <Route path="/equipdesc" element={<EquipmentDescriptionPage />} />
         <Route path="/equipcategories" element={<EquipmentCategoriesPage />} />
+
+        <Route path="/renterhome" element={<HomeRent />} />
 
       </Routes>
     </Router>

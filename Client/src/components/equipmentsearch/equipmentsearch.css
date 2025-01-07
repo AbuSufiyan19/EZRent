@@ -61,7 +61,7 @@
   /* Grid container */
   .equipment-grid-container .grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 cards per row for large screens */
+    grid-template-columns: repeat(4, 1fr); /* 3 cards per row for large screens */
     gap: 30px;
     padding: 30px;
     padding-top: 0;
