@@ -54,8 +54,7 @@ const HomeMainPage = () => {
       <CustomerNavbar />
       {/* Home Main Page Section */}
       <section id="home" className="home-main-page">
-        <BackgroundSlider />
-
+        <BackgroundSlider />  
         {/* Content Section */}
         <div className="content-section">
 

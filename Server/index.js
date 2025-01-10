@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const authRoutes = require('./routes/authRoutes');
+const userLocation = require('./routes/userLocation');
 
 // Load environment variables
 require("dotenv").config();
@@ -16,6 +17,7 @@ app.use(bodyParser.json());
 
 // Routes
 app.use('/auth', authRoutes);
+app.use('/users',userLocation);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })

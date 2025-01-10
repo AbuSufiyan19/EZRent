@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
   isVerified: { type: Boolean, default: false },
   verificationToken: { type: String },
   verificationTokenExpires: { type: Date },
+  location: {
+    lat: { type: Number, required: true },
+    lng: { type: Number, required: true },
+  },
 });
 
 const User = mongoose.model('User', userSchema);

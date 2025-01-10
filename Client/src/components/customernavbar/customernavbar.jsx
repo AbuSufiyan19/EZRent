@@ -1,38 +1,219 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./customernavbar.css";
 import logo1 from "/loginlogo.png";
 import logo2 from "/ezrent.png";
 import locationIcon from "/locationlogo.png";
+import config from "../../utils/configurl";
 
 const CustomerNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userType, setUserType] = useState("");
+  const [currentLocation, setCurrentLocation] = useState({ lat: null, lng: null });
+  const [stateName, setStateName] = useState("Fetching...");
+  const [isMapOpen, setIsMapOpen] = useState(false); // For the map modal
+  const [showLocation, setShowLocation] = useState(true); // Track visibility
+  const [lastScrollY, setLastScrollY] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if token exists in localStorage
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); // Update state based on token presence
+    setIsLoggedIn(!!token);
+    if (token) {
+      fetchUserType(token);
+    }
+    fetchUserLocation();
   }, []);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const fetchUserType = async (token) => {
+    try {
+      const response = await axios.get(`${config.BASE_API_URL}/auth/validate-token`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        setUserType(response.data.userType);
+      }
+    } catch (error) {
+      console.error("Invalid token:", error.response?.data?.message || error.message);
+      navigate("/login");
+    }
   };
 
-  const closeMenu = () => {
-    setIsMenuOpen(false);
+  const fetchUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          setCurrentLocation({ lat: latitude, lng: longitude });
+          fetchStateName(latitude, longitude);
+          await updateLocationInDB(latitude, longitude);
+        },
+        (error) => {
+          console.error("Error fetching location:", error.message);
+          setStateName("Unable to fetch location");
+        }
+      );
+    } else {
+      setStateName("Geolocation not supported");
+    }
   };
 
-  const handleSignInClick = () => {
-    navigate("/login");
-  };
+  const fetchStateName = async (lat, lng) => {
+  try {
+    console.log(`Fetching state for coordinates: Latitude ${lat}, Longitude ${lng}`);
+    const response = await axios.get(
+      `https://maps.googleapis.com/maps/api/geocode/json`,
+      {
+        params: {
+          latlng: `${lat},${lng}`,
+          key: "AIzaSyAiEvhHmhIdeKSVUF2DqUEVKdWi3LOOjIw", // Replace with a secured key in production
+        },
+      }
+    );
+
+    if (response.data.status !== "OK") {
+      console.error("API Error:", response.data.status);
+      setStateName("Error fetching state");
+      return;
+    }
+
+    const results = response.data.results || [];
+    if (results.length === 0) {
+      console.warn("No results found for the given coordinates.");
+      setStateName("Unknown State");
+      return;
+    }
+
+    const addressComponents = results[0]?.address_components || [];
+    console.log("Address Components:", addressComponents);
+
+   
+    const state = addressComponents.find((component) =>
+      component.types.includes("administrative_area_level_3")
+    );
+
+    if (!state) {
+      console.warn("State information not found in address components.");
+      setStateName("Unknown State");
+    } else {
+      setStateName(state.long_name);
+      console.log(`State Name: ${state.long_name}`);
+    }
+  } catch (error) {
+    console.error("Error fetching state name:", error.message);
+    setStateName("Error fetching state");
+  }
+};
+
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
+
+  const handleSignInClick = () => navigate("/login");
 
   const handleLogoutClick = () => {
-    localStorage.removeItem("token"); // Remove token from localStorage
-    setIsLoggedIn(false); // Update state
-    navigate("/"); // Redirect to login page
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    setUserType("");
+    navigate("/");
   };
+
+  const handlePinLocationClick = () => setIsMapOpen(true);
+
+  
+  const updateLocationInDB = async (lat, lng) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("User is not logged in.");
+        return;
+      }
+      
+      // Send the updated location to the backend API
+      const response = await axios.put(
+        `${config.BASE_API_URL}/users/update-location`,
+        {
+          lat,
+          lng,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      
+      if (response.status === 200) {
+        console.log("Location updated successfully.");
+      } else {
+        console.error("Failed to update location:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error updating location:", error.message);
+    }
+  };
+  const handleMapClick = async (lat, lng) => {
+    setCurrentLocation({ lat, lng });
+    await fetchStateName(lat, lng);
+    await updateLocationInDB(lat, lng);
+    setIsMapOpen(false); // Close the modal after updating
+  };
+  
+  
+  useEffect(() => {
+    if (isMapOpen) {
+      const loadGoogleMaps = async () => {
+        const script = document.createElement("script");
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAiEvhHmhIdeKSVUF2DqUEVKdWi3LOOjIw&callback=initMap`;
+        script.async = true;
+        document.body.appendChild(script);
+
+        window.initMap = () => {
+          const map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: currentLocation.lat || 10.0159, lng: currentLocation.lng || 76.9687 },
+            zoom: 12,
+          });
+
+          const marker = new google.maps.Marker({
+            position: map.getCenter(),
+            map: map,
+            draggable: true,
+          });
+
+          google.maps.event.addListener(marker, "dragend", function () {
+            const newLat = marker.getPosition().lat();
+            const newLng = marker.getPosition().lng();
+            handleMapClick(newLat, newLng); // Update location details
+          });
+        };
+      };
+
+      loadGoogleMaps();
+    }
+  }, [isMapOpen]);
+
+  const handleScroll = () => {
+    const currentScrollY = window.scrollY;
+    if (currentScrollY > lastScrollY) {
+      // User is scrolling down
+      setShowLocation(false);
+    } else {
+      // User is scrolling up
+      setShowLocation(true);
+    }
+    setLastScrollY(currentScrollY);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollY]);
 
   return (
     <nav className="navbar">
@@ -53,9 +234,9 @@ const CustomerNavbar = () => {
           <li><a href="/#categories">Equipments</a></li>
           <li><a href="/#aboutus">About Us</a></li>
           <li><a href="/contactus">Contact</a></li>
-          {isLoggedIn && (
-            <li><a href="/mybookings">MyBookings</a></li>
-          )}
+          {isLoggedIn && userType === "customer" && <li><a href="/mybookings">MyBookings</a></li>}
+          {isLoggedIn && userType === "provider" && <li><a href="/renterhome">Dashboard</a></li>}
+          {isLoggedIn && userType === "admin" && <li><a href="/admin-dashboard">Admin Dashboard</a></li>}
         </ul>
       </div>
 
@@ -70,9 +251,9 @@ const CustomerNavbar = () => {
             Sign In
           </button>
         )}
-        <div className="navbar-location">
+        <div className="navbar-location" onClick={handlePinLocationClick} style={{ cursor: "pointer" }}>
           <img src={locationIcon} alt="Location" className="navbar-location-icon" />
-          <span>Coimbatore, TN</span>
+          <span>{stateName}</span>
         </div>
       </div>
 
@@ -90,9 +271,9 @@ const CustomerNavbar = () => {
           <li><a href="/#categories" onClick={closeMenu}>Equipments</a></li>
           <li><a href="/#aboutus" onClick={closeMenu}>About Us</a></li>
           <li><a href="/contactus" onClick={closeMenu}>Contact</a></li>
-          {isLoggedIn && (
-            <li><a href="/mybookings">MyBookings</a></li>
-          )}
+          {isLoggedIn && userType === "customer" && <li><a href="/mybookings">MyBookings</a></li>}
+          {isLoggedIn && userType === "provider" && <li><a href="/renterhome">Dashboard</a></li>}
+          {isLoggedIn && userType === "admin" && <li><a href="/admin-dashboard">Admin Dashboard</a></li>}
         </ul>
         {isLoggedIn ? (
           <button className="navbar-button" onClick={handleLogoutClick}>
@@ -104,6 +285,32 @@ const CustomerNavbar = () => {
           </button>
         )}
       </div>
+     {/* Location Section (Mobile View Only) */}
+     {showLocation && (
+        <div className="navbar-location-container">
+          <div
+            className="navbar-location-mobile"
+            onClick={handlePinLocationClick}
+            style={{ cursor: "pointer" }}
+          >
+            <img
+              src={locationIcon}
+              alt="Location"
+              className="navbar-location-icon"
+            />
+            <span>{stateName}</span>
+          </div>
+        </div>
+      )}
+      {/* Map Modal */}
+      {isMapOpen && (
+        <div className="map-modal">
+          <div className="map-container">
+            <button className="close-map" onClick={() => setIsMapOpen(false)}>Close</button>
+            <div id="map" style={{ width: "100%", height: "400px" }}></div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
