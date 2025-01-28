@@ -1,0 +1,33 @@
+.renterequipment-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.renterequipment-table th, .renterequipment-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.renterequipment-table th {
+  background-color: #f4f4f4;
+}
+
+.renterequipment-table .equipment-image {
+  width: 150px;
+  height: auto;
+}
+
+.renterequipment-table .delete-btn {
+  color: white;
+  background-color: #fba31c;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.renterequipment-table .delete-btn:hover {
+  background-color: #df8b0f;
+}

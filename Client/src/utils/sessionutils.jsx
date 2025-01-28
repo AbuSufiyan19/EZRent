@@ -28,10 +28,13 @@ export const useRequireAuth = () => {
           // Redirect based on user type
           switch (userType) {
             case "admin":
-              navigate("/admin-dashboard");
+              navigate("/adminhome");
               break;
             case "provider":
               navigate("/renterhome");
+              break;
+            case "customer":
+              navigate("/");
               break;
             default:
               break;

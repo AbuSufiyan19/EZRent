@@ -1,0 +1,23 @@
+.renter-app {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .renter-main {
+    flex: 1;
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+  }
+  
+  .sidebar.open + .renter-main {
+    margin-left: 250px;
+  }
+  
+  main {
+    padding: 20px;
+    background-color: #f9f9f9;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+  }
+  
+  

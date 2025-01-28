@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const User = require('../models/userModel');
-require('dotenv').config(); // Ensure .env variables are loaded
+require('dotenv').config(); 
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 
@@ -155,6 +155,7 @@ async function login(req, res) {
     const token = jwt.sign(
       {
         id: user._id,
+        username: user.fullName,
         email: user.email,
         userType: user.userType,
       },

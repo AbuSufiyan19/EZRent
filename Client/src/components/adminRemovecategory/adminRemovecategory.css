@@ -1,0 +1,34 @@
+.admincategory-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .admincategory-table th, .admincategory-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .admincategory-table th {
+    background-color: #f4f4f4;
+  }
+  
+  .admincategory-table .category-image {
+    width: 100px;
+    height: auto;
+  }
+  
+  .admincategory-table .delete-btn {
+    color: white;
+    background-color: #fba31c;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .admincategory-table .delete-btn:hover {
+    background-color: #df8b0f;
+  }
+  

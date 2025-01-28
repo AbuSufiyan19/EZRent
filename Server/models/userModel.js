@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
     lat: { type: Number, required: true },
     lng: { type: Number, required: true },
   },
+  locationDistrict: {
+    type: String, 
+    default: "Click Here",
+  },
 });
 
 const User = mongoose.model('User', userSchema);

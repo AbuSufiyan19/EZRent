@@ -6,14 +6,18 @@ import logo1 from "/loginlogo.png";
 import logo2 from "/ezrent.png";
 import locationIcon from "/locationlogo.png";
 import config from "../../utils/configurl";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
 
 const CustomerNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userType, setUserType] = useState("");
   const [currentLocation, setCurrentLocation] = useState({ lat: null, lng: null });
-  const [stateName, setStateName] = useState("Fetching...");
-  const [isMapOpen, setIsMapOpen] = useState(false); // For the map modal
+  const [stateName, setStateName] = useState("Click Here");
+  const [isMapOpen, setIsMapOpen] = useState(false); // For the map modal user interface
   const [showLocation, setShowLocation] = useState(true); // Track visibility
   const [lastScrollY, setLastScrollY] = useState(0);
   const navigate = useNavigate();
@@ -24,6 +28,7 @@ const CustomerNavbar = () => {
     if (token) {
       fetchUserType(token);
     }
+    fetchUserDistrict();
     fetchUserLocation();
   }, []);
 
@@ -39,8 +44,20 @@ const CustomerNavbar = () => {
       }
     } catch (error) {
       console.error("Invalid token:", error.response?.data?.message || error.message);
-      navigate("/login");
-    }
+      toast.error('Session Expired. Please login to continue.', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setTimeout(() => {
+          navigate("/login");
+        }, 4000);    
+        }
+    
   };
 
   const fetchUserLocation = () => {
@@ -49,7 +66,7 @@ const CustomerNavbar = () => {
         async (position) => {
           const { latitude, longitude } = position.coords;
           setCurrentLocation({ lat: latitude, lng: longitude });
-          fetchStateName(latitude, longitude);
+          // fetchStateName(latitude, longitude);
           await updateLocationInDB(latitude, longitude);
         },
         (error) => {
@@ -61,6 +78,33 @@ const CustomerNavbar = () => {
       setStateName("Geolocation not supported");
     }
   };
+
+  const fetchUserDistrict = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("User is not logged in.");
+        setStateName("Click Here"); 
+        return;
+      }
+  
+      const response = await axios.get(`${config.BASE_API_URL}/users/get-districtname`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        const { district } = response.data;
+        setStateName(district || "Unknown District"); // Handle empty or missing district gracefully
+        console.log(`User District: ${district}`);
+      } else {
+        console.error("Failed to fetch user district:", response.status);
+      }
+    } catch (error) {
+      console.error("Error fetching user district:", error.response?.data?.message || error.message);
+    }
+  };
+  
 
   const fetchStateName = async (lat, lng) => {
   try {
@@ -101,6 +145,7 @@ const CustomerNavbar = () => {
       setStateName("Unknown State");
     } else {
       setStateName(state.long_name);
+      await updateLocationNameInDB(state.long_name);
       console.log(`State Name: ${state.long_name}`);
     }
   } catch (error) {
@@ -124,7 +169,37 @@ const CustomerNavbar = () => {
 
   const handlePinLocationClick = () => setIsMapOpen(true);
 
-  
+  const updateLocationNameInDB = async (locationarea) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("User is not logged in.");
+        return;
+      }
+      
+      // Send the updated location to the backend API
+      const response = await axios.put(
+        `${config.BASE_API_URL}/users/update-locationdistrict`,
+        {
+          locationarea
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      
+      if (response.status === 200) {
+        console.log("Location District updated successfully.");
+      } else {
+        console.error("Failed to update location district:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error updating location district:", error.message);
+    }
+  };
+
   const updateLocationInDB = async (lat, lng) => {
     try {
       const token = localStorage.getItem("token");
@@ -216,6 +291,7 @@ const CustomerNavbar = () => {
   }, [lastScrollY]);
 
   return (
+    <>
     <nav className="navbar">
       {/* Left Section: Logos */}
       <div className="navbar-left">
@@ -312,6 +388,8 @@ const CustomerNavbar = () => {
         </div>
       )}
     </nav>
+    <ToastContainer />
+    </>
   );
 };
 

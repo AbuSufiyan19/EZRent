@@ -9,7 +9,9 @@ import MyBooking from './pages/mybookingspage';
 import ContactUs from './pages/contactuspage';
 import EmailVerificationSuccess from './pages/emailverificationsuccess'
 import EmailVerificationFailure from './pages/emailverificationfailure'
-import HomeRent from './pages/homerenter';
+import HomeRent from './pages/renterPages/homerenter';
+import HomeAdmin from './pages/adminPages/homeadmin'; 
+
 
 const App = () => {
   return (
@@ -26,6 +28,8 @@ const App = () => {
         <Route path="/equipcategories" element={<EquipmentCategoriesPage />} />
 
         <Route path="/renterhome" element={<HomeRent />} />
+        <Route path="/adminhome" element={<HomeAdmin />} />
+
 
       </Routes>
     </Router>
