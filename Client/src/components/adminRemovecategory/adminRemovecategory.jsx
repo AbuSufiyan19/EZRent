@@ -3,6 +3,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./adminRemovecategory.css";
+import config from "../../utils/configurl"
 
 const RenterAddEquipments = () => {
   const [categories, setCategories] = useState([]);
@@ -26,7 +27,7 @@ const RenterAddEquipments = () => {
     if (!window.confirm("Are you sure you want to delete this category?")) return;
 
     try {
-      const response = await axios.delete(`http://localhost:5000/admin/remove-category/${id}`);
+      const response = await axios.delete(`${config.BASE_API_URL}/admin/remove-category/${id}`);
       toast.success(response.data.message, {
         position: "top-right",
         autoClose: 3000,
@@ -67,7 +68,7 @@ const RenterAddEquipments = () => {
                 <td>{category.name}</td>
                 <td>
                   <img
-                    src={`http://localhost:5000/multer/categoryuploads/${category.image}`}
+                    src={`${config.BASE_API_URL}/multer/categoryuploads/${category.image}`}
                     alt={category.name}
                     className="category-image"
                   />

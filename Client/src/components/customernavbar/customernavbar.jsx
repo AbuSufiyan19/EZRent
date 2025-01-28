@@ -249,16 +249,16 @@ const CustomerNavbar = () => {
 
         window.initMap = () => {
           const map = new google.maps.Map(document.getElementById("map"), {
-            center: { lat: currentLocation.lat || 10.0159, lng: currentLocation.lng || 76.9687 },
+            center: { lat: currentLocation.lat || 11.026432, lng: currentLocation.lng || 76.988416 },
             zoom: 12,
           });
-
+  
           const marker = new google.maps.Marker({
             position: map.getCenter(),
             map: map,
             draggable: true,
           });
-
+          
           google.maps.event.addListener(marker, "dragend", function () {
             const newLat = marker.getPosition().lat();
             const newLng = marker.getPosition().lng();

@@ -3,6 +3,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./renterRemoveEquipments.css";
+import config from "../../utils/configurl";
 
 const RenterRemoveEquipments = () => {
   const [equipments, setEquipments] = useState([]);
@@ -26,7 +27,7 @@ const RenterRemoveEquipments = () => {
     if (!window.confirm("Are you sure you want to delete this equipment?")) return;
 
     try {
-      const response = await axios.delete(`http://localhost:5000/renter/remove-equipment/${id}`);
+      const response = await axios.delete(`${config.BASE_API_URL}/renter/remove-equipment/${id}`);
       toast.success(response.data.message, {
         position: "top-right",
         autoClose: 3000,
@@ -72,7 +73,7 @@ const RenterRemoveEquipments = () => {
                 <td>{equipment.address}</td>
                 <td>
                   <img
-                    src={`http://localhost:5000/multer/equipmentuploads/${equipment.image}`}
+                    src={`${config.BASE_API_URL}/multer/equipmentuploads/${equipment.image}`}
                     alt={equipment.name}
                     className="equipment-image"
                     />

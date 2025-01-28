@@ -3,6 +3,8 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./adminAddcategory.css";
+import config from "../../utils/configurl";
+
 
 const adminAddcategory = () => {
   const [formData, setFormData] = useState({

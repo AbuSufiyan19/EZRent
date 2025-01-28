@@ -3,6 +3,8 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./renterDashboard.css";
+import config from "../../utils/configurl";
+
 
 const RenterDashboard = () => {
   const [equipments, setEquipments] = useState([]);
@@ -47,7 +49,7 @@ const RenterDashboard = () => {
                 <td>{equipment.name}</td>
                 <td>
                   <img
-                    src={`http://localhost:5000/multer/equipmentuploads/${equipment.image}`}
+                    src={`${config.BASE_API_URL}/multer/equipmentuploads/${equipment.image}`}
                     alt={equipment.name}
                     className="equipment-image"
                   />

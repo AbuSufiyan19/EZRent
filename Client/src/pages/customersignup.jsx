@@ -144,7 +144,7 @@ const CustomerSignup = () => {
           {errors.fullName && <span className="error-text">{errors.fullName}</span>}
 
           <input
-            type="number"
+            type="tel"
             placeholder="Mobile Number"
             name="mobileNumber"
             value={formData.mobileNumber}
