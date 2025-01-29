@@ -25,6 +25,9 @@
     cursor: pointer;
     display: block;
   }
+  .locationprovider{
+    display: block;
+  }
   
   .profile-icon {
     width: 32px;
@@ -50,4 +53,36 @@
     }
   }
   
-  
+
+  .navbar-location-container1 {
+    position: absolute;
+    margin-left: -20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 65px; /* Place right below the navbar */
+    width: 100%;
+    text-align: center;
+    z-index: 999; 
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  .navbar-location-container1.hide {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .navbar-location-mobile1 {
+    display: flex;
+    align-items: center;
+    margin: 10px auto; /* Add spacing and center alignment */
+    font-size: 16px;
+    color: #1f2937;
+    background: rgba( 255, 255, 255, 0.6 );
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4.5px);
+    -webkit-backdrop-filter: blur(4.5px);
+    padding: 5px 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+

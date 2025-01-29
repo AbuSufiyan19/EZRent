@@ -115,4 +115,15 @@ const getCustomerCount = async (req, res) => {
     }
   };
 
-module.exports = { addEquipmentCategory, fetchCategories, removeCategory, getCategoryCount, getEquipmentsCount, getProviderCount, getCustomerCount };
+// Fetch all equipment
+const fetchAllEquipments = async (req, res) => {
+  try {
+    const equipments = await Equipment.find(); // Fetch all equipment
+    res.status(200).json(equipments);
+  } catch (error) {
+    console.error("Error fetching equipment:", error);
+    res.status(500).json({ message: "Failed to fetch equipment", error: error.message });
+  }
+};
+
+module.exports = { addEquipmentCategory, fetchCategories, removeCategory, getCategoryCount, getEquipmentsCount, getProviderCount, getCustomerCount, fetchAllEquipments };

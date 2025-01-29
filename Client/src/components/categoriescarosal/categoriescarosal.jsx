@@ -1,19 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import axios from "axios"; // Import axios for API calls
 import "./categoriescarosal.css"; // Import the CSS for styling
+import config from "../../utils/configurl"; // Import config for API URL
 
 const CategoriesCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [categories, setCategories] = useState([]);
   const navigate = useNavigate(); // Initialize useNavigate hook
 
-  // Categories data (you can replace these with actual categories)
-  const categories = [
-    { name: "Excavators", img: "/home page carosal/excavator2.jpg" },
-    { name: "Cranes", img: "/home page carosal/towercrane.jpg" },
-    { name: "Bulldozers", img: "/home page carosal/skidder.jpg" },
-    { name: "Excavators", img: "/home page carosal/excavator1.jpg" },
-    { name: "Dump Trucks", img: "/home page carosal/truck.jpg" }
-  ];
+  // Fetch categories data from the server
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(`${config.BASE_API_URL}/customer/fetchcategories`);
+      setCategories(response.data); // Set the categories state with fetched data
+    } catch (err) {
+      console.error("Error fetching categories", err);
+    }
+  };
+
+  // Fetch categories on component mount
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   // Function to slide left
   const slideLeft = () => {
@@ -43,7 +52,7 @@ const CategoriesCarousel = () => {
             tabIndex={0} // For accessibility
             onKeyDown={(e) => e.key === "Enter" && handleCardClick(category)} // Handle Enter key for accessibility
           >
-            <img src={category.img} alt={category.name} className="category-img" />
+            <img src={`${config.BASE_API_URL}/multer/categoryuploads/${category.image}`} alt={category.name} className="category-img" />       
             <h3 className="category-name">{category.name}</h3>
           </div>
         ))}

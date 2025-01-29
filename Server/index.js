@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');
 const userLocation = require('./routes/userLocation');
 const adminRoutes = require("./routes/adminRoutes");
 const renterRoutes = require("./routes/renterRoutes");
+const customerRoutes = require("./routes/customerRoutes");
 
 const path = require("path");
 const app = express();
@@ -27,6 +28,8 @@ app.use('/auth', authRoutes);
 app.use('/users',userLocation);
 app.use('/admin',adminRoutes);
 app.use('/renter',renterRoutes);
+app.use('/customer',customerRoutes);
+
 
 // Routes
 

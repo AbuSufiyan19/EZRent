@@ -47,8 +47,21 @@
     padding-left: 0;
     padding-right: 0;
   }
+
+  .contactus-form-flex{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contactus-conts{
+    display: flex;
+    gap: 20px;
+    flex-direction: row;
+  }
+
   .contactus-form-container-outer button{
     width: 100px;
+    height: 40px;
     font-size: 15px;
     padding: 7px;
     border-radius: 50px;
@@ -62,9 +75,14 @@
   .contactus-form-container {
     display: flex;
     width: 80%;
+    justify-content: center;
     max-width: 800px;
     border-radius: 10px;
     gap: 20px;
+  }
+  .contactus-btn{
+    display: flex;
+    justify-content: center;
   }
   
   .contactus-left,

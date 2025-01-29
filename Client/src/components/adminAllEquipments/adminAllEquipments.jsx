@@ -2,21 +2,16 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./renterRemoveEquipments.css";
+import "./adminAllEquipments.css";
 import config from "../../utils/configurl";
 
-const RenterRemoveEquipments = () => {
+const AdminAllEquipments = () => {
   const [equipments, setEquipments] = useState([]);
 
   // Fetch equipments from the database
   const fetchEquipments = async () => {
-    const token = localStorage.getItem("token"); 
     try {
-      const response = await axios.get(`${config.BASE_API_URL}/renter/fetch-equipments`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(`${config.BASE_API_URL}/admin/fetchall-equipments`);
       setEquipments(response.data);
     } catch (err) {
       const errorMessage = err.response?.data?.message || "Failed to fetch equipments";
@@ -26,7 +21,6 @@ const RenterRemoveEquipments = () => {
       });
     }
   };
-  
 
   // Delete an equipment
   const handleDelete = async (id) => {
@@ -104,4 +98,4 @@ const RenterRemoveEquipments = () => {
   );
 };
 
-export default RenterRemoveEquipments;
+export default AdminAllEquipments;

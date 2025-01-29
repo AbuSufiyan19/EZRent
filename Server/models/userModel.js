@@ -10,8 +10,8 @@ const userSchema = new mongoose.Schema({
   verificationToken: { type: String },
   verificationTokenExpires: { type: Date },
   location: {
-    lat: { type: Number, required: true },
-    lng: { type: Number, required: true },
+    lat: { type: Number },
+    lng: { type: Number },
   },
   locationDistrict: {
     type: String, 

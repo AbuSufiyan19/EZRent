@@ -38,7 +38,7 @@ const AdminDashboard = () => {
   }, []); // Empty dependency array to run once on mount
 
   return (
-    <div className="renter-content">
+    <div className="renter-content admin-content">
       <div className="admindashboard-container">
         <div className="card">
           <h4>Categories</h4>

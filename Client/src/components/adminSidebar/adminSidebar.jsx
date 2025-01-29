@@ -95,6 +95,39 @@ const AdminSidebar = ({ isOpen, toggleSidebar, setActivePage }) => {
                 </ul>
               )}
             </li>
+
+            {/* All Equipments */}
+            <li
+              onClick={() => handleSetActivePage("all-equipments")}
+              className={activePage === "all-equipments" ? "active" : ""}
+            >
+              <div className="nav-item">Equipments List</div>
+            </li>
+
+            {/* Manage Providers */}
+            <li
+              onClick={() => handleSetActivePage("manage-providers")}
+              className={activePage === "manage-providers" ? "active" : ""}
+            >
+              <div className="nav-item">Manage Providers</div>
+            </li>
+
+            {/* Manage Customers */}
+            <li
+              onClick={() => handleSetActivePage("manage-customers")}
+              className={activePage === "manage-customers" ? "active" : ""}
+            >
+              <div className="nav-item">Manage Customers</div>
+            </li>
+
+            {/* Manage Customers */}
+            <li
+              onClick={() => handleSetActivePage("admin-allcontacts")}
+              className={activePage === "admin-allcontacts" ? "active" : ""}
+            >
+              <div className="nav-item">View Contact Support</div>
+            </li>
+            
           </ul>
         </nav>
       </div>

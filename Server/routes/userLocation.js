@@ -9,5 +9,4 @@ router.put("/update-locationdistrict", verifyToken, updateLocationDistrict);
 
 router.get("/get-districtname", verifyToken, getUserDistrict);
 
-
 module.exports = router;

@@ -245,7 +245,7 @@ const RenterAddEquipments = () => {
               name="price"
               value={formData.price}
               onChange={handleChange}
-              placeholder="Enter price per hour"
+              placeholder="Enter price per day"
               required
             />
           </div>

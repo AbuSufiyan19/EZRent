@@ -312,7 +312,7 @@ const CustomerNavbar = () => {
           <li><a href="/contactus">Contact</a></li>
           {isLoggedIn && userType === "customer" && <li><a href="/mybookings">MyBookings</a></li>}
           {isLoggedIn && userType === "provider" && <li><a href="/renterhome">Dashboard</a></li>}
-          {isLoggedIn && userType === "admin" && <li><a href="/admin-dashboard">Admin Dashboard</a></li>}
+          {isLoggedIn && userType === "admin" && <li><a href="/adminhome">Admin Dashboard</a></li>}
         </ul>
       </div>
 
@@ -349,7 +349,7 @@ const CustomerNavbar = () => {
           <li><a href="/contactus" onClick={closeMenu}>Contact</a></li>
           {isLoggedIn && userType === "customer" && <li><a href="/mybookings">MyBookings</a></li>}
           {isLoggedIn && userType === "provider" && <li><a href="/renterhome">Dashboard</a></li>}
-          {isLoggedIn && userType === "admin" && <li><a href="/admin-dashboard">Admin Dashboard</a></li>}
+          {isLoggedIn && userType === "admin" && <li><a href="/adminhome">Admin Dashboard</a></li>}
         </ul>
         {isLoggedIn ? (
           <button className="navbar-button" onClick={handleLogoutClick}>

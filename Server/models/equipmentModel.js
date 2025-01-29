@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const equipmentSchema = new mongoose.Schema({
+  equipmentId: { type: String, required: true, unique: true },
   category: { type: String, required: true },
   name: { type: String, required: true },
   description: { type: String, required: true },

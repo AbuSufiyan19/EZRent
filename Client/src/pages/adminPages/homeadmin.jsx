@@ -7,6 +7,10 @@ import Header from "../../components/renterHeader/renterHeader";
 import AdminDashboard from "../../components/adminDashboard/adminDashboard";
 import AddEquipmentscategory from "../../components/adminAddCategory/adminAddcategory";
 import RemoveEquipmentscategory from "../../components/adminRemovecategory/adminRemovecategory";
+import AllEquipments from "../../components/adminAllEquipments/adminAllEquipments";
+import ManageProviders from "../../components/adminManageProviders/adminManageProviders";
+import ManageCustomers from "../../components/adminManageCustomers/adminManageCustomers"; 
+import AdminAllContacts from "../../components/adminAllContacts/adminAllContacts";
 import "./homeadmin.css";
 
 const homeadmin = () => {
@@ -79,6 +83,14 @@ const homeadmin = () => {
         return <AddEquipmentscategory />;
       case "remove-equipmentscategory":
         return <RemoveEquipmentscategory />;
+      case "all-equipments":
+        return <AllEquipments />;
+      case "manage-providers":
+        return <ManageProviders />;
+      case "manage-customers":
+        return <ManageCustomers />;
+      case "admin-allcontacts":
+        return <AdminAllContacts />;
       default:
         return <AdminDashboard />;
     }

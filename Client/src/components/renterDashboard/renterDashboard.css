@@ -7,7 +7,7 @@
 .renterequipment-table th, .renterequipment-table td {
   border: 1px solid #ddd;
   padding: 8px;
-  text-align: left;
+  text-align: center;
 }
 
 .renterequipment-table th {
@@ -15,8 +15,8 @@
 }
 
 .renterequipment-table .equipment-image {
-  width: 150px;
-  height: auto;
+  width: 160px;
+  height: 110px;
 }
 
 .renterequipment-table .delete-btn {

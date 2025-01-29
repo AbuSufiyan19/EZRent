@@ -1,25 +1,25 @@
-.admincategory-table {
+.customers-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
   }
   
-  .admincategory-table th, .admincategory-table td {
+  .customers-table th, .customers-table td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
   }
   
-  .admincategory-table th {
+  .customers-table th {
     background-color: #f4f4f4;
   }
   
-  .admincategory-table .category-image {
+  .customers-table .customer-image {
     width: 160px;
     height: 110px;
   }
   
-  .admincategory-table .delete-btn {
+  .customers-table .delete-btn {
     color: white;
     background-color: #fba31c;
     border: none;
@@ -28,7 +28,7 @@
     border-radius: 4px;
   }
   
-  .admincategory-table .delete-btn:hover {
+  .customers-table .delete-btn:hover {
     background-color: #df8b0f;
   }
   

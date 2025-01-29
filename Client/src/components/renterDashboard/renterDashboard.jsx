@@ -11,16 +11,21 @@ const RenterDashboard = () => {
 
   // Fetch equipments from the database
   const fetchEquipments = async () => {
-    try {
-      const response = await axios.get(`${config.BASE_API_URL}/renter/fetch-equipments`);
-      setEquipments(response.data);
-    } catch (err) {
-      const errorMessage = err.response?.data?.message || "Failed to fetch equipments";
-      toast.error(errorMessage, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-    }
+  const token = localStorage.getItem("token"); 
+  try {
+    const response = await axios.get(`${config.BASE_API_URL}/renter/fetch-equipments`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setEquipments(response.data);
+  } catch (err) {
+    const errorMessage = err.response?.data?.message || "Failed to fetch equipments";
+    toast.error(errorMessage, {
+      position: "top-right",
+      autoClose: 3000,
+    });
+  }
   };
 
   useEffect(() => {
@@ -45,7 +50,7 @@ const RenterDashboard = () => {
           {equipments.length > 0 ? (
             equipments.map((equipment) => (
               <tr key={equipment._id}>
-                <td>{equipment._id}</td>
+                <td>{equipment.equipmentId}</td>
                 <td>{equipment.name}</td>
                 <td>
                   <img
