@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../css/home.css";
@@ -12,6 +12,19 @@ import config from "../utils/configurl";
 
 const HomeMainPage = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const wakeUpServer = async () => {
+      try {
+        await axios.get(`${config.BASE_API_URL}/ping`);
+      } catch (error) {
+        console.error("Server wake-up failed:", error.message);
+      }
+    };
+
+    wakeUpServer();
+  }, []);
+
 
   const handleInteraction = async () => {
     const token = localStorage.getItem("token");
@@ -33,7 +46,7 @@ const HomeMainPage = () => {
         const userType = response.data.userType;
           switch (userType) {
             case "admin":
-              navigate("/admin-dashboard");
+              navigate("/adminhome");
               break;
             case "provider":
               navigate("/renterhome");

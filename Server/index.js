@@ -44,6 +44,12 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
     console.error('MongoDB connection error:', err);
   });
 
+  app.get("/ping", (req, res) => {
+    console.log("Server is running"); 
+    res.status(200).json({ message: "Server is running" });
+  });
+  
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
