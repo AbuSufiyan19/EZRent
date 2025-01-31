@@ -21,16 +21,32 @@
   }
   
   .equipmentdesc-card .equipmentdesc-title {
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 1.7rem;
+    font-weight: bolder;
     margin-top: 0;
+    margin-bottom: 5px;
+    color: #ff9900;
+    margin-left: 0;
   }
 
   
   .equipmentdesc-card .equipmentdesc-description {
     margin: 20px 0;
+    text-align: justify;
     color: #666;
     margin-top: 0;
+  }
+
+  .equipmentdesc-card .equipmentdesc-eqid{
+    color: #0056b3;
+    margin: 2px;
+    margin-top: 0;
+    margin-bottom: 3px;
+    margin-left: 0;
+  }
+
+  .equipmentdesc-card .equipmentdesc-rentername{
+    color: black;
   }
   
   .equipmentdesc-card .equipmentdesc-pricing {

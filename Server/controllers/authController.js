@@ -92,6 +92,7 @@ async function registerUser(req, res) {
     verificationToken: token,
     verificationTokenExpires: verificationExpiry,
     isVerified: false, // Set the account as not verified
+    status: "registered",
   });
 
   await newUser.save();
@@ -193,10 +194,69 @@ const validateToken = async (req, res) => {
       return res.status(401).json({ message: "Invalid token or user not found" });
     }
 
-    return res.status(200).json({ message: "Token is valid", userType: user.userType });
+    return res.status(200).json({ message: "Token is valid", userType: user.userType, userId: user._id });
   } catch (error) {
     return res.status(401).json({ message: "Invalid token" });
   }
 };
 
-module.exports = { registerUser, verifyEmail, login, validateToken };
+const renterStatus = async (req, res) => {
+  try {
+    const provider = await User.findById(req.params.userId);
+    if (!provider) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json({ status: provider.status });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+const fs = require("fs");
+const path = require("path");
+
+const uploadIdProof = async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1]; // Get the token from Authorization header
+
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized: Token missing" });
+  }
+
+  try {
+    // Verify the token and extract the user ID
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id; // The user ID from the decoded token
+
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const newFilePath = req.file.filename; // New uploaded file name
+
+    // Find user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the user already has an ID proof uploaded
+    if (user.idProof) {
+      const oldFilePath = path.join(__dirname, "../multer/idproofuploads", user.idProof);
+      // Remove the old file if it exists
+      if (fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath);
+      }
+    }
+
+    // Update user with the new file path and set status to 'uploaded'
+    user.idProof = newFilePath;
+    user.status = "uploaded";
+
+    await user.save(); // Save the changes to the database
+
+    return res.status(200).json({ message: "ID Proof uploaded successfully!" });
+  } catch (error) {
+    return res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+module.exports = { registerUser, verifyEmail, login, validateToken, renterStatus, uploadIdProof};

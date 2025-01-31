@@ -17,6 +17,8 @@ const userSchema = new mongoose.Schema({
     type: String, 
     default: "Click Here",
   },
+  status: { type: String },
+  idProof: { type: String },
 });
 
 const User = mongoose.model('User', userSchema);

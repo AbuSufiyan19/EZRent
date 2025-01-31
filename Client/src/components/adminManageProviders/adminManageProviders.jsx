@@ -22,6 +22,86 @@ const AdminManageProviders = () => {
     }
   };
 
+  // Approve provider
+  const handleApprove = async (id) => {
+    try {
+      const response = await axios.put(`${config.BASE_API_URL}/admin/approve-provider/${id}`);
+      toast.success(response.data.message, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+
+      // Refresh the list after approval
+      fetchProviders();
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || "Failed to approve provider";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  };
+
+  // Reject provider
+  const handleReject = async (id) => {
+    if (!window.confirm("Are you sure you want to reject this provider?")) return;
+
+    try {
+      const response = await axios.put(`${config.BASE_API_URL}/admin/reject-provider/${id}`);
+      toast.success(response.data.message, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+
+      // Refresh the list after rejection
+      fetchProviders();
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || "Failed to reject provider";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  };
+
+  const handleReupload = async (id) => {
+    try {
+      const response = await axios.put(`${config.BASE_API_URL}/admin/reupload-provider/${id}`);
+      toast.success(response.data.message, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+
+      // Refresh the list after rejection
+      fetchProviders();
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || "Failed to reupload provider";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  };
+
+  const handleBlock = async (id) => {
+    try {
+      const response = await axios.put(`${config.BASE_API_URL}/admin/block-provider/${id}`);
+      toast.success(response.data.message, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+
+      // Refresh the list after rejection
+      fetchProviders();
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || "Failed to reupload provider";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  };
+
   // Delete a provider
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to remove this provider?")) return;
@@ -59,7 +139,9 @@ const AdminManageProviders = () => {
             <th>Email</th>
             <th>Phone</th>
             <th>Location</th>
-            <th>Actions</th>
+            <th>ID Proof</th>
+            <th>Status</th>
+            <th colSpan={2}>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -71,6 +153,94 @@ const AdminManageProviders = () => {
                 <td>{provider.email}</td>
                 <td>{provider.mobileNumber}</td>
                 <td>{provider.locationDistrict}</td>
+                  <td>
+                    {provider.idProof ? (
+                      <a
+                        href={`${config.BASE_API_URL}/multer/idproofuploads/${provider.idProof}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <img
+                          src={`${config.BASE_API_URL}/multer/idproofuploads/${provider.idProof}`}
+                          alt="ID Proof"
+                          className="provideridproof-image"
+                          style={{ cursor: "pointer" }}
+                        />
+                      </a>
+                    ) : (
+                      <span>Not Uploaded</span>
+                    )}
+                  </td>
+
+                <td className={`status-${provider.status}`}>{provider.status}
+                {provider.status === "registered" && (
+                    <> (Need to upload ID Proof)
+                    </>
+                  )}
+                {provider.status === "reupload" && (
+                  <> (Yet to Reupload ID Proof)
+                  </>
+                )}
+                </td>
+                <td>
+                    {(() => {
+                      switch (provider.status) {
+                        case "registered":
+                          return (
+                            <>
+                              {/* <button className="approve-btn" onClick={() => handleApprove(provider._id)}>
+                                Approve Registration
+                              </button> */}
+                              <button className="reject-btn" onClick={() => handleReject(provider._id)}>
+                                Reject Registration
+                              </button>
+                            </>
+                          );
+                  
+                        case "uploaded":
+                          return (
+                            <>
+                              <button className="activate-btn" onClick={() => handleApprove(provider._id)}>
+                                Activate Account
+                              </button>
+                              <button className="upload-btn" onClick={() => handleReupload(provider._id)}>
+                                Re-upload IDProof
+                              </button>
+                            </>
+                          );
+
+                          case "reupload":
+                            return (
+                              <>
+                                <button className="reject-btn" onClick={() => handleReject(provider._id)}>
+                                Reject Registration
+                                </button>
+                              </>
+                            );
+                          
+                            case "approved":
+                              return (
+                                <>
+                                  <button className="block-btn" onClick={() => handleBlock(provider._id)}>
+                                  Block Account
+                                  </button>
+                                </>
+                              );
+                            
+                              case "blocked":
+                                return (
+                                  <>
+                                    <button className="activate-btn" onClick={() => handleApprove(provider._id)}>
+                                    Activate Account
+                                    </button>
+                                  </>
+                                );
+                  
+                        default:
+                          return null; // No buttons for other statuses
+                      }
+                    })()}
+                </td>
                 <td>
                   <button className="delete-btn" onClick={() => handleDelete(provider._id)}>
                     Remove Account
@@ -80,7 +250,7 @@ const AdminManageProviders = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="6">No providers found</td>
+              <td colSpan="7">No providers found</td>
             </tr>
           )}
         </tbody>

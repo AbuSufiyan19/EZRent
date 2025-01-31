@@ -61,7 +61,7 @@ const RenterDashboard = () => {
                 </td>
                 <td>Rs {equipment.price}</td>
                 <td>{equipment.address}</td>
-                <td>{equipment.description}</td>
+                <td className="eq-desc">{equipment.description}</td>
                 
               </tr>
             ))

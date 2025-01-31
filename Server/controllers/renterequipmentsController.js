@@ -2,6 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const jwt = require("jsonwebtoken");
 const Equipment = require("../models/equipmentModel");
+
+
 const addEquipment = async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
 
@@ -18,10 +20,10 @@ const addEquipment = async (req, res) => {
     }
 
     const { id, username } = decoded;
-    const { category, name, description, price, lat, lng, address } = req.body;
+    const { category, categoryId, name, description, price, lat, lng, address, categoryName } = req.body;
     const image = req.file?.filename;
 
-    if (!category || !name || !description || !price || !lat || !lng || !address || !image) {
+    if (!category || !categoryId || !name || !description || !price || !lat || !lng || !address || !image) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -60,6 +62,7 @@ const addEquipment = async (req, res) => {
     const newEquipment = new Equipment({
       equipmentId, // Store custom ID
       category,
+      categoryId,
       name,
       description,
       image,

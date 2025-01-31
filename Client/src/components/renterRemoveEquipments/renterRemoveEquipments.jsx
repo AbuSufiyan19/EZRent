@@ -75,7 +75,7 @@ const RenterRemoveEquipments = () => {
               <tr key={equipment._id}>
                 <td>{equipment.equipmentId}</td>
                 <td>{equipment.name}</td>
-                <td>{equipment.price}</td>
+                <td>Rs {equipment.price}</td>
                 <td>{equipment.address}</td>
                 <td>
                   <img
@@ -84,7 +84,7 @@ const RenterRemoveEquipments = () => {
                     className="equipment-image"
                     />
                 </td>
-                <td>{equipment.description}</td>
+                <td className="eq-desc">{equipment.description}</td>
                 <td>
                   <button className="delete-btn" onClick={() => handleDelete(equipment._id)}>
                     Remove

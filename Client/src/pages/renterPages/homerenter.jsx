@@ -15,7 +15,6 @@ const HomeRent = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Token validation logic
     const validateToken = async () => {
       const token = localStorage.getItem("token");
 
@@ -25,20 +24,21 @@ const HomeRent = () => {
       }
 
       try {
-        // Validate the token by calling the backend
+        // Step 1: Validate the token
         const response = await axios.get(`${config.BASE_API_URL}/auth/validate-token`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         if (response.status === 200) {
           const userType = response.data.userType;
+
           switch (userType) {
             case "admin":
               navigate("/adminhome");
               break;
             case "provider":
+              // Step 2: Check the provider's status
+              checkProviderStatus(response.data.userId); // Call status check function
               break;
             case "customer":
               navigate("/");
@@ -50,7 +50,43 @@ const HomeRent = () => {
         }
       } catch (error) {
         console.error("Invalid token:", error.response?.data?.message || error.message);
-        // Navigate to login if the token is invalid
+        navigate("/login");
+      }
+    };
+
+    // Step 3: Check provider's status
+    const checkProviderStatus = async (userId) => {
+      try {
+        const statusResponse = await axios.get(`${config.BASE_API_URL}/renter/status/${userId}`);
+
+        if (statusResponse.status === 200) {
+          const status = statusResponse.data.status;
+
+          switch (status) {
+            case "approved":
+              break; // Stay on the same page
+            case "registered":
+              navigate("/account-uploadIdproof"); // Redirect to pending verification page
+              break;
+            case "uploaded":
+              navigate("/account-pendingverification"); 
+              break;
+            case "reupload":
+              navigate("/account-reuploadIdproof"); 
+              break;
+            case "blocked":
+              navigate("/account-blocked");
+              break;
+            case "rejected":
+              navigate("/account-rejected"); // Redirect to rejection page
+              break;
+            default:
+              navigate("/login"); // Fallback case
+              break;
+          }
+        }
+      } catch (error) {
+        console.error("Error checking provider status:", error.response?.data?.message || error.message);
         navigate("/login");
       }
     };
@@ -87,11 +123,7 @@ const HomeRent = () => {
   return (
     <div className="renter-app">
       {/* Sidebar Component */}
-      <Sidebar
-        isOpen={isSidebarOpen}
-        toggleSidebar={toggleSidebar}
-        setActivePage={setActivePage}
-      />
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} setActivePage={setActivePage} />
       <div className={`renter-main ${isSidebarOpen ? "sidebar-open" : ""}`}>
         {/* Header Component */}
         <Header toggleSidebar={toggleSidebar} />

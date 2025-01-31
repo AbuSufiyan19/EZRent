@@ -21,12 +21,58 @@
   
   .providers-table .delete-btn {
     color: white;
-    background-color: #fba31c;
+    background-color: #df8b0f;
     border: none;
     padding: 5px 10px;
     cursor: pointer;
+    font-size: 14px;
     border-radius: 4px;
   }
+  .providers-table .reject-btn {
+    color: white;
+    background-color: #ff3030;
+    border: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  .providers-table .upload-btn {
+    background-color: #1c84fb;
+    margin-top: 5px;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .provideridproof-image{
+    height: 100px;
+    width: 100px;
+  }
+
+  .providers-table .activate-btn {
+    color: white;
+    background-color: #29df26;
+    border: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .providers-table .block-btn {
+    color: white;
+    background-color: #ff3030;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+  }
+  
   
   .providers-table .delete-btn:hover {
     background-color: #df8b0f;

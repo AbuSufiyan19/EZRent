@@ -19,6 +19,11 @@
   height: 110px;
 }
 
+.renterequipment-table .eq-desc{
+  text-align: justify;
+}
+
+
 .renterequipment-table .delete-btn {
   color: white;
   background-color: #fba31c;

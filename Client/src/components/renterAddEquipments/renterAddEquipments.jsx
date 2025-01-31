@@ -9,6 +9,7 @@ import config from "../../utils/configurl";
 
 const RenterAddEquipments = () => {
   const [formData, setFormData] = useState({
+    categoryId: "",
     category: "",
     name: "",
     description: "",
@@ -63,6 +64,17 @@ const RenterAddEquipments = () => {
     }
   };
 
+  const handleCategoryChange = (e) => {
+    const selectedCategory = categories.find(cat => cat._id === e.target.value);
+    if (selectedCategory) {
+      setFormData((prev) => ({
+        ...prev,
+        categoryId: selectedCategory._id,
+        categoryName: selectedCategory.name,
+      }));
+    }
+  };
+
   const getAddressFromLatLng = async (lat, lng) => {
     const geocoder = new google.maps.Geocoder();
     return new Promise((resolve, reject) => {
@@ -81,7 +93,8 @@ const RenterAddEquipments = () => {
     e.preventDefault();
 
     const form = new FormData();
-    form.append("category", formData.category);
+    form.append("category", formData.categoryName);
+    form.append("categoryId", formData.categoryId); 
     form.append("name", formData.name);
     form.append("description", formData.description);
     form.append("price", formData.price);
@@ -109,6 +122,7 @@ const RenterAddEquipments = () => {
 
       // Reset form
       setFormData({
+        categoryId: "",
         category: "",
         name: "",
         description: "",
@@ -181,15 +195,15 @@ const RenterAddEquipments = () => {
             <label htmlFor="category">Category</label>
             <select
               id="category"
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
+              name="categoryId"
+              value={formData.categoryId}
+              onChange={handleCategoryChange}
               required
             >
               <option value="">Select a category</option>
               {categories.length > 0 ? (
                 categories.map((category) => (
-                  <option key={category._id} value={category.name}>
+                  <option key={category._id} value={category._id}>
                     {category.name}
                   </option>
                 ))

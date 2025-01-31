@@ -34,7 +34,6 @@ export const useRequireAuth = () => {
               navigate("/renterhome");
               break;
             case "customer":
-              navigate("/");
               break;
             default:
               break;

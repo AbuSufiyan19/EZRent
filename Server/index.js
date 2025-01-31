@@ -22,6 +22,7 @@ app.use(bodyParser.json());
 
 app.use("/multer/categoryuploads",   express.static(path.join(__dirname, "multer", "categoryuploads")));
 app.use("/multer/equipmentuploads", express.static(path.join(__dirname, "multer", "equipmentuploads")));
+app.use("/multer/idproofuploads", express.static(path.join(__dirname, "multer", "idproofuploads")));
 
 // Middleware
 app.use('/auth', authRoutes);

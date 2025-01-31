@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const equipmentSchema = new mongoose.Schema({
   equipmentId: { type: String, required: true, unique: true },
   category: { type: String, required: true },
+  categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "EquipmentCategory" }, 
   name: { type: String, required: true },
   description: { type: String, required: true },
   image: { type: String, required: true }, // Store the image filename

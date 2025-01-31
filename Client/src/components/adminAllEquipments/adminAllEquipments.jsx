@@ -78,7 +78,7 @@ const AdminAllEquipments = () => {
                     className="equipment-image"
                     />
                 </td>
-                <td>{equipment.description}</td>
+                <td className="eq-desc">{equipment.description}</td>
                 <td>
                   <button className="delete-btn" onClick={() => handleDelete(equipment._id)}>
                     Remove

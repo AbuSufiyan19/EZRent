@@ -100,4 +100,86 @@ const fetchAllProviders = async (req, res) => {
       res.status(500).json({ message: "Failed to fetch ContactMsg", error: error.message });
     }
   };
-module.exports = { fetchAllCustomers, fetchAllProviders, removeCustomer, removeProvider, storeContactsupport, fetchAllContactsupport };
+
+// Approve Provider
+const approveProvider = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Find provider by ID
+    const provider = await User.findById(id);
+    if (!provider) {
+      return res.status(404).json({ message: "Provider not found" });
+    }
+
+    // Update status to "approved"
+    provider.status = "approved";
+    await provider.save();
+
+    res.status(200).json({ message: "Provider approved successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error approving provider", error: error.message });
+  }
+};
+
+// Reject Provider
+const rejectProvider = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Find provider by ID
+    const provider = await User.findById(id);
+    if (!provider) {
+      return res.status(404).json({ message: "Provider not found" });
+    }
+
+    // Update status to "rejected"
+    provider.status = "rejected";
+    await provider.save();
+
+    res.status(200).json({ message: "Provider rejected successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error rejecting provider", error: error.message });
+  }
+};
+
+const reuploadProvider = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Find provider by ID
+    const provider = await User.findById(id);
+    if (!provider) {
+      return res.status(404).json({ message: "Provider not found" });
+    }
+
+    // Update status to "pending"
+    provider.status = "reupload";
+    await provider.save();
+
+    res.status(200).json({ message: "Provider reuploaded successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error reuploading provider", error: error.message });
+  }
+}
+
+const blockProvider = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Find provider by ID
+    const provider = await User.findById(id);
+    if (!provider) {
+      return res.status(404).json({ message: "Provider not found" });
+    }
+
+    // Update status to "blocked"
+    provider.status = "blocked";
+    await provider.save();
+
+    res.status(200).json({ message: "Provider blocked successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error blocking provider", error: error.message });
+  }
+}
+module.exports = { fetchAllCustomers, fetchAllProviders, removeCustomer, removeProvider, storeContactsupport, fetchAllContactsupport, approveProvider, rejectProvider, reuploadProvider, blockProvider };
