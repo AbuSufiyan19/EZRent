@@ -19,6 +19,11 @@
   transform: translateX(0); /* Default state for open sidebar */
 }
 
+.sidebar .icon{
+  margin-right: 10px;
+  margin-bottom: -3px;
+}
+
 .sidebar-content {
   padding: 20px;
 }

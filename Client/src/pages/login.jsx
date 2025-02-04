@@ -66,26 +66,20 @@ const Login = () => {
         email: formData.email,
         password: formData.password,
       });
-    
+
       setIsSubmitting(false);
-    
-      // Success: Handle login success message and redirect
       setSuccessMessage(response.data.message || "Login successful!");
       setErrorMessage("");
-    
-      // Optionally save the token and user info to localStorage or state
+
       localStorage.setItem("token", response.data.token);
-          
       const userType = response.data.userType;
-    if (userType === "customer") {
-      navigate("/");
-    } else {
-      navigate("/renterhome");
-    }
+      if (userType === "customer") {
+        navigate("/");
+      } else {
+        navigate("/renterhome");
+      }
     } catch (error) {
       setIsSubmitting(false);
-    
-      // Handle error response
       if (error.response) {
         const { status, data } = error.response;
         if (status === 400) {
@@ -96,12 +90,34 @@ const Login = () => {
           setErrorMessage(data.message || "Something went wrong. Please try again.");
         }
       } else {
-        // Handle network or unknown errors
         setErrorMessage("Unable to connect to the server. Please try again.");
       }
-    
       setSuccessMessage("");
-    }    
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    const emailError = validateField("email", formData.email);
+    if (emailError) {
+      setErrors((prev) => ({ ...prev, email: emailError }));
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${config.BASE_API_URL}/auth/forgot-password`, {
+        email: formData.email,
+      });
+
+      setSuccessMessage(response.data.message || "Reset link sent to your email.");
+      setErrorMessage("");
+    } catch (error) {
+      if (error.response) {
+        setErrorMessage(error.response.data.message || "Error sending reset link.");
+      } else {
+        setErrorMessage("Unable to connect to the server.");
+      }
+      setSuccessMessage("");
+    }
   };
 
   return (
@@ -134,9 +150,9 @@ const Login = () => {
           />
           {errors.password && <span className="error-text">{errors.password}</span>}
 
-          <a href="/forgot-password" className="forgot-password">
+          <button type="button" className="forgot-password" onClick={handleForgotPassword}>
             Forgot Password?
-          </a>
+          </button>
 
           <button type="submit" className="login-button" disabled={isSubmitting}>
             {isSubmitting ? "Signing In..." : "SIGN IN"}

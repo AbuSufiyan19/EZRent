@@ -45,7 +45,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
   });
 
   app.get("/ping", (req, res) => {
-    console.log("Server is running"); 
+    // console.log("Server is running"); 
     res.status(200).json({ message: "Server is running" });
   });
   

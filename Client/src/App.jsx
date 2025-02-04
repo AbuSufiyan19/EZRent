@@ -15,7 +15,7 @@ import AccountUploadIdProof from './pages/renterauthPages/accountuploadidproof';
 import AccountReUploadIdProof from './pages/renterauthPages/accountreuploadidproof';
 import AccountPendingVerification from './pages/renterauthPages/accountpendingverification';
 import AccountBlocked from './pages/renterauthPages/renteraccountblockedPage';
-
+import ResetPassword from './pages/resetPassword';
 
 const App = () => {
   return (
@@ -23,6 +23,7 @@ const App = () => {
       <Routes>  
         <Route path="/" element={<HomeMainPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/customersignup" element={<CustomerSignup />} />
         <Route path="/contactus" element={<ContactUs/>} />
         <Route path="/email-verification-success" element={<EmailVerificationSuccess />} />

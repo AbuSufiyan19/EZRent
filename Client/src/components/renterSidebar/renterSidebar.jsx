@@ -1,14 +1,13 @@
 import React, { useState } from "react";
+import { ChevronDown, ChevronUp, LayoutDashboard, Package, CalendarCheck, Star, ClipboardList } from "lucide-react";
 import "./renterSidebar.css";
 import logo1 from "/loginlogo.png";
 import logo2 from "/ezrent.png";
 
 const RenterSidebar = ({ isOpen, toggleSidebar, setActivePage }) => {
   const [dropdownOpen, setDropdownOpen] = useState({
-    dashboards: false,
     equipments: false,
     bookings: false,
-    feedbacks: false,
   });
 
   const [activePage, setActive] = useState("dashboard");
@@ -22,9 +21,8 @@ const RenterSidebar = ({ isOpen, toggleSidebar, setActivePage }) => {
 
   const handleSetActivePage = (page, dropdownKey = null) => {
     setActive(page);
-    setActivePage(page); // Update the parent component
+    setActivePage(page);
 
-    // Close the dropdown if dropdownKey is provided
     if (dropdownKey) {
       setDropdownOpen((prevState) => ({
         ...prevState,
@@ -46,42 +44,27 @@ const RenterSidebar = ({ isOpen, toggleSidebar, setActivePage }) => {
         </div>
         <nav>
           <ul>
-            {/* Dashboards */}
-            <li
-              onClick={() => handleSetActivePage("dashboard")}
-              className={activePage === "dashboard" ? "active" : ""}
-            >
-              <div className="nav-item">Renter Dashboard</div>
+            {/* Renter Dashboard */}
+            <li onClick={() => handleSetActivePage("dashboard")} className={activePage === "dashboard" ? "active" : ""}>
+              <div className="nav-item">
+                <LayoutDashboard size={18} className="icon" />
+                <span>Renter Dashboard</span>
+              </div>
             </li>
 
             {/* Manage Equipments */}
             <li>
-              <div
-                onClick={() => toggleDropdown("equipments")}
-                className={`nav-item ${
-                  dropdownOpen.equipments ? "active" : ""
-                }`}
-              >
-                Manage Equipments
+              <div onClick={() => toggleDropdown("equipments")} className={`nav-item ${dropdownOpen.equipments ? "active" : ""}`}>
+                <Package size={18} className="icon" />
+                <span>Manage Equipments</span>
+                {dropdownOpen.equipments ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
               </div>
               {dropdownOpen.equipments && (
                 <ul className="dropdown">
-                  <li
-                    onClick={() =>
-                      handleSetActivePage("add-equipments", "equipments")
-                    }
-                    className={activePage === "add-equipments" ? "active" : ""}
-                  >
+                  <li onClick={() => handleSetActivePage("add-equipments", "equipments")} className={activePage === "add-equipments" ? "active" : ""}>
                     Add Equipments
                   </li>
-                  <li
-                    onClick={() =>
-                      handleSetActivePage("remove-equipments", "equipments")
-                    }
-                    className={
-                      activePage === "remove-equipments" ? "active" : ""
-                    }
-                  >
+                  <li onClick={() => handleSetActivePage("remove-equipments", "equipments")} className={activePage === "remove-equipments" ? "active" : ""}>
                     Remove Equipments
                   </li>
                 </ul>
@@ -90,30 +73,17 @@ const RenterSidebar = ({ isOpen, toggleSidebar, setActivePage }) => {
 
             {/* Manage Bookings */}
             <li>
-              <div
-                onClick={() => toggleDropdown("bookings")}
-                className={`nav-item ${dropdownOpen.bookings ? "active" : ""}`}
-              >
-                Manage Bookings
+              <div onClick={() => toggleDropdown("bookings")} className={`nav-item ${dropdownOpen.bookings ? "active" : ""}`}>
+                <CalendarCheck size={18} className="icon" />
+                <span>Manage Bookings</span>
+                {dropdownOpen.bookings ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
               </div>
               {dropdownOpen.bookings && (
                 <ul className="dropdown">
-                  <li
-                    onClick={() =>
-                      handleSetActivePage("bookings", "bookings")
-                    }
-                    className={activePage === "bookings" ? "active" : ""}
-                  >
+                  <li onClick={() => handleSetActivePage("bookings", "bookings")} className={activePage === "bookings" ? "active" : ""}>
                     Bookings Overview
                   </li>
-                  <li
-                    onClick={() =>
-                      handleSetActivePage("approve-bookings", "bookings")
-                    }
-                    className={
-                      activePage === "approve-bookings" ? "active" : ""
-                    }
-                  >
+                  <li onClick={() => handleSetActivePage("approve-bookings", "bookings")} className={activePage === "approve-bookings" ? "active" : ""}>
                     Approve Bookings
                   </li>
                 </ul>
@@ -121,11 +91,11 @@ const RenterSidebar = ({ isOpen, toggleSidebar, setActivePage }) => {
             </li>
 
             {/* Ratings & Feedbacks */}
-            <li
-              onClick={() => handleSetActivePage("feedbacks")}
-              className={activePage === "feedbacks" ? "active" : ""}
-            >
-              <div className="nav-item">Ratings & Feedbacks</div>
+            <li onClick={() => handleSetActivePage("feedbacks")} className={activePage === "feedbacks" ? "active" : ""}>
+              <div className="nav-item">
+                <Star size={18} className="icon" />
+                <span>Ratings & Feedbacks</span>
+              </div>
             </li>
           </ul>
         </nav>

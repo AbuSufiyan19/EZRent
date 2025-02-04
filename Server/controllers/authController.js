@@ -259,4 +259,75 @@ const uploadIdProof = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, verifyEmail, login, validateToken, renterStatus, uploadIdProof};
+
+const forgotPassword = async (req, res) => {
+    try {
+      const { email } = req.body;
+      const user = await User.findOne({ email });
+  
+      if (!user) {
+        return res.status(400).json({ message: "Invalid Email" });
+      }
+  
+      // Generate reset token
+      const resetToken = crypto.randomBytes(32).toString("hex");
+      const resetTokenExpiry = Date.now() + 3600000; // Token valid for 1 hour
+  
+      // Save token & expiry to user
+      user.resetPasswordToken = resetToken;
+      user.resetPasswordExpires = resetTokenExpiry;
+      await user.save();
+  
+      // Send reset link via email
+      const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: user.email,
+        subject: "Password Reset Request - EZRent",
+        text: `You requested a password reset. Click the link below to reset your password:\n\n${resetLink}\n\nIf you did not request this, please ignore this email.`,
+      };
+  
+      await transporter.sendMail(mailOptions);
+  
+      res.json({ message: "Password reset link has been sent to your email." });
+  
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error." });
+    }
+  };
+
+  const resetPassword = async (req, res) => {
+      try {
+        const { token } = req.params;
+        const { newPassword } = req.body;
+        
+        const user = await User.findOne({ 
+          resetPasswordToken: token,
+          resetPasswordExpires: { $gt: Date.now() }, // Check if token is still valid
+        });
+    
+        if (!user) {
+          return res.status(400).json({ message: "Invalid or expired token." });
+        }
+    
+        // Hash new password
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(newPassword, salt);
+        
+        // Clear the reset token fields
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        
+        await user.save();
+        
+        res.json({ message: "Password has been reset successfully." });
+    
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error." });
+      }
+    };
+    
+  
+module.exports = { registerUser, verifyEmail, login, validateToken, renterStatus, uploadIdProof, forgotPassword, resetPassword};

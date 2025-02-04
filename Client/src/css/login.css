@@ -124,9 +124,12 @@ body{
   
   .login-page .forgot-password {
     font-size: 0.8rem;
+    font-weight: 400;
     color: #3b82f6;
     text-decoration: none;
     margin-top: 1rem;
+    background: none;
+    border: none;
     text-align: right;
   }
   
@@ -176,6 +179,15 @@ body{
   .login-page .create-account:hover {
     text-decoration: underline;
     text-decoration: none;
+  }
+  .login-page .success-message{
+    margin-top: 10px;
+    color: rgb(82, 255, 47);
+  }
+
+  .login-page .error-message{
+    margin-top: 10px;
+    color: rgb(255, 47, 47);
   }
   
   /* Responsive styles */
