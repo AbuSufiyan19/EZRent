@@ -121,10 +121,9 @@
   }
 
   .navbar-slide-menu.open {
+    z-index: 1000;
     right: 0;
   }
-  
-  
   
   /* Map Modal */
   .map-modal {
@@ -252,7 +251,7 @@
     .navbar-slide-menu {
         top: 70px;
         padding-top: 0;
-        height: 27vh;
+        height: 29vh;
     }
   }
 /* Mobile View */

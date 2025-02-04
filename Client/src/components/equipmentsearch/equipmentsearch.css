@@ -138,5 +138,8 @@
     .equipment-grid-container .equipmentsearch-title{
       font-size: 24px;
     }
+    .equipment-grid-container .search-input {
+      width: 200px;
+    }
   }
   

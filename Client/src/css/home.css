@@ -18,7 +18,7 @@
   .home-main-page .title {
     margin: 0;
     color: #fba31c;
-    font-size: 40px;
+    font-size: 39px;
     font-family: "Orbitron", sans-serif;
     font-weight: 900;
     text-shadow: 1px 1px 2px rgb(0, 0, 0);
@@ -43,10 +43,17 @@
     .home-main-page .description  {
         width: 580px;
     }
+    .home-main-page .title{
+      padding-left: 13px;
+      padding-right: 13px;
+    }
   }
   @media (max-width: 431px) {
     .home-main-page .description  {
         width: 380px;
+    }
+    .home-main-page .title{
+      font-size: 36px;
     }
   }
   

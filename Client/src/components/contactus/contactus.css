@@ -40,7 +40,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 80%;
+    /* width: 80%; */
     max-width: 800px;
     border-radius: 10px;
     padding: 30px;
@@ -130,6 +130,7 @@
     .contactus-form-container-outer {
         padding-top: 20px;
         padding-bottom: 20px;
+        width: 80%;
     }
   
     .contactus-left,
@@ -141,6 +142,19 @@
     /* .contactus-container {
         min-height: 40vh;
     } */
+
+    .contactus-conts{
+      display: block;
+    }
+
+    .contactus-right{
+      margin-top: 15px
+    }
+
+    .contactus-btn{
+      margin-top: 15px;
+    }
+
     .contactus-form-container{
         flex-direction: column;
         padding: 20px;
@@ -164,6 +178,7 @@
     }
     .contactus-form-container-outer{
         padding-top: 10px;
+        width: 100%;
     }
     .contactus-form-container-outer button{
         margin-top: 0;

@@ -76,11 +76,11 @@
   }
   @media (max-width: 768px) {
     .categories-carousel .category-card {
-      flex: 0 0 50%; /* Only 1 card visible at a time */
+      flex: 0 0 33%; 
     }
   
     .categories-carousel .carousel-container {
-      overflow-x: scroll; /* Allow horizontal scrolling */
+      /* overflow-x: scroll;  */
     }
   
     .categories-carousel .arrow {
@@ -89,7 +89,8 @@
   }
   @media (max-width: 431px) {
     .categories-carousel .category-card {
-        flex: 0 0 100%; /* Only 1 card visible at a time */
+        flex: 0 0 37%;     
+        padding: 5px; 
       }
     .categories-carousel .category-img {
       height: 150px; /* Reduce image size on smaller screens */
