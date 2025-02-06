@@ -13,6 +13,7 @@ const EquipmentGrid = () => {
   const [userLocation, setUserLocation] = useState({ lat: 0, lng: 0 });
   const [randomEquipments, setRandomEquipments] = useState([]);
   const [randomEquipmentsuser, setRandomEquipmentsuser] = useState([]);
+  const [hasToken, setHasToken] = useState(false);
   const navigate = useNavigate();
 
   const calculateDistance = (lat1, lng1, lat2, lng2) => {
@@ -27,6 +28,8 @@ const EquipmentGrid = () => {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    setHasToken(!!token);
     const fetchUserLocation = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -108,6 +111,7 @@ const EquipmentGrid = () => {
           </div>
         ))}
       </div>
+      {!hasToken && (
         <div className="grid">
           {randomEquipmentsuser.map((equipment) => (
             <div key={equipment._id} className="equipment-card">
@@ -125,6 +129,7 @@ const EquipmentGrid = () => {
             </div>
           ))}
         </div>
+      )}
     </div>
   );
 };
