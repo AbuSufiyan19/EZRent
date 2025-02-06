@@ -7,6 +7,8 @@ import Header from "../../components/renterHeader/renterHeader";
 import Dashboard from "../../components/renterDashboard/renterDashboard";
 import AddEquipments from "../../components/renterAddEquipments/renterAddEquipments";
 import RemoveEquipments from "../../components/renterRemoveEquipments/renterRemoveEquipments";
+import ApproveBookings from "../../components/renterApproveBookings/renterApproveBookings";
+import ViewAllBookings from "../../components/renterViewAllBookings/renterViewAllBookings";
 import "./homerenter.css";
 
 const HomeRent = () => {
@@ -115,6 +117,10 @@ const HomeRent = () => {
         return <AddEquipments />;
       case "remove-equipments":
         return <RemoveEquipments />;
+      case "approve-bookings":
+        return <ApproveBookings />;
+      case "viewall-bookings":
+        return <ViewAllBookings />;
       default:
         return <Dashboard />;
     }

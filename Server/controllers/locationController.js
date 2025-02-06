@@ -90,7 +90,19 @@ const getUserDistrict = async (req, res) => {
   }
 };
 
-
+const getUserLocation = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    // Send user location data
+    res.json({ location: user.location });
+  } catch (error) {
+    console.error("Error fetching user location:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 
 module.exports = {
@@ -98,4 +110,5 @@ module.exports = {
   updateLocation,
   updateLocationDistrict,
   getUserDistrict,
+  getUserLocation,
 };

@@ -15,6 +15,7 @@ const RenterAddEquipments = () => {
     description: "",
     image: null,
     price: "",
+    minHours: "",
     location: {
       lat: null,
       lng: null,
@@ -96,6 +97,7 @@ const RenterAddEquipments = () => {
     form.append("category", formData.categoryName);
     form.append("categoryId", formData.categoryId); 
     form.append("name", formData.name);
+    form.append("minHours", formData.minHours);
     form.append("description", formData.description);
     form.append("price", formData.price);
     form.append("lat", formData.location.lat);
@@ -125,6 +127,7 @@ const RenterAddEquipments = () => {
         categoryId: "",
         category: "",
         name: "",
+        minHours: "",
         description: "",
         image: null,
         price: "",
@@ -259,7 +262,20 @@ const RenterAddEquipments = () => {
               name="price"
               value={formData.price}
               onChange={handleChange}
-              placeholder="Enter price per day"
+              placeholder="Enter price per hour"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="minHours">Minimum Hours to Rent</label>
+            <input
+              type="number"
+              id="minHours"
+              name="minHours"
+              value={formData.minHours}
+              onChange={handleChange}
+              placeholder="Minimum Hours to Rent"
               required
             />
           </div>

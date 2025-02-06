@@ -1,42 +1,151 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "./equipmentdescription.css"; 
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import config from "../../utils/configurl"; 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const EquipmentDescriptionCard = () => {
   const location = useLocation();
-  const equipment = location.state?.equipment; // Retrieve equipment details
+  const equipment = location.state?.equipment;
 
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [fromTime, setFromTime] = useState("");
   const [toTime, setToTime] = useState("");
+  const [totalHours, setTotalHours] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [bookedSlots, setBookedSlots] = useState([]); // Store booked date-time ranges
+  const navigate = useNavigate();
+
+  const today = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     if (!equipment) {
       console.error("No equipment data found!");
+    } else {
+      fetchBookedSlots();
     }
   }, [equipment]);
 
-  const calculatePrice = () => {
-    if (fromDate && toDate) {
-      const pricePerDay = 3000; 
-      const from = new Date(fromDate);
-      const to = new Date(toDate);
-      const days = (to - from) / (1000 * 60 * 60 * 24) + 1;
+  const fetchBookedSlots = async () => {
+    try {
+      const response = await axios.get(`${config.BASE_API_URL}/bookings/equipment/${equipment._id}`);
+      setBookedSlots(response.data); 
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching booked slots:", error);
+    }
+  };
 
-      if (days > 0) {
-        setTotalPrice(days * pricePerDay);
-      } else {
+  const isDateBooked = (date) => {
+    return bookedSlots.some(slot => {
+      const from = new Date(slot.fromDateTime).toISOString().split("T")[0];
+      const to = new Date(slot.toDateTime).toISOString().split("T")[0];
+      return new Date(date) >= new Date(from) && new Date(date) <= new Date(to);
+    });
+  };
+
+  const isTimeBooked = (date, time) => {
+    return bookedSlots.some(slot => {
+      const fromDateTime = new Date(slot.fromDateTime);
+      const toDateTime = new Date(slot.toDateTime);
+      const checkDateTime = new Date(`${date}T${time}`);
+      return checkDateTime >= fromDateTime && checkDateTime < toDateTime;
+    });
+  };
+
+  const isBookingValid = (fromDateTime, toDateTime) => {
+    // Check if the selected booking time range overlaps with any existing booking
+    return !bookedSlots.some(slot => {
+      const existingFromDateTime = new Date(slot.fromDateTime);
+      const existingToDateTime = new Date(slot.toDateTime);
+
+      // Check for overlap: if the new booking range intersects with an existing one
+      return (new Date(fromDateTime) < existingToDateTime && new Date(toDateTime) > existingFromDateTime);
+    });
+  };
+
+  const calculatePrice = () => {
+    if (fromDate && toDate && fromTime && toTime) {
+      const fromDateTime = new Date(`${fromDate}T${fromTime}`);
+      const toDateTime = new Date(`${toDate}T${toTime}`);
+      
+      const hours = (toDateTime - fromDateTime) / (1000 * 60 * 60);
+
+      if (hours < equipment.minHours) {
+        setErrorMessage(`Minimum rental period is ${equipment.minHours} hours.`);
+        setTotalHours(0);
         setTotalPrice(0);
+      } else {
+        setErrorMessage("");
+        setTotalHours(hours);
+        setTotalPrice(hours * equipment.price);
       }
+    }
+  };
+
+  const handleBooking = async () => {
+    const token = localStorage.getItem("token");
+    if (!fromDate || !toDate || !fromTime || !toTime) {
+      toast.warn("Please select a valid date and time.");
+      return;
+    }
+  
+    // Convert to ISO format for comparison
+    const fromDateTime = new Date(`${fromDate}T${fromTime}`).toISOString();
+    const toDateTime = new Date(`${toDate}T${toTime}`).toISOString();
+
+    // Validate if the selected date-time range is available
+    if (!isBookingValid(fromDateTime, toDateTime)) {
+      toast.error("The selected time range is already booked. Please choose another slot.");
+      return;
+    }
+    try {
+      const response = await axios.post(`${config.BASE_API_URL}/bookings/book`, {
+        equipId: equipment.equipmentId,
+        renterId: equipment.renterid,
+        equipmentId: equipment._id,
+        equipimg: equipment.image,
+        fromDateTime,
+        toDateTime,
+        totalHours,
+        totalPrice
+      }, { 
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      toast.success("Booking successful!");
+      setTimeout(() => {
+        navigate("/mybookings");
+      }, 2000);
+
+      fetchBookedSlots(); // Refresh booked slots
+      setFromDate("");
+      setToDate("");
+      setFromTime("");
+      setToTime("");
+      setTotalHours(0);
+      setTotalPrice(0);
+      setErrorMessage("");
+
+    } catch (error) {
+      if (error.response?.status === 401) {
+        toast.error("Session expired. Redirecting to login...");
+        navigate('/login'); // Redirect to login page
+      } else {
+        toast.error(error.response?.data?.message || "Error booking equipment.");
+      }
+      console.error(error);
     }
   };
 
   useEffect(() => {
     calculatePrice();
-  }, [fromDate, toDate]);
+  }, [fromDate, toDate, fromTime, toTime]);
 
   if (!equipment) {
     return <h2 className="error-message">Equipment details not found!</h2>;
@@ -44,6 +153,7 @@ const EquipmentDescriptionCard = () => {
 
   return (
     <div className="equipmentdesc-card-outer">
+      <ToastContainer />
       <div className="equipmentdesc-card">
         <div className="equipmentdesc-image">
           <img src={`${config.BASE_API_URL}/multer/equipmentuploads/${equipment.image}`} alt={equipment.name} />
@@ -54,29 +164,46 @@ const EquipmentDescriptionCard = () => {
           <p className="equipmentdesc-description">{equipment.description}</p>
           <p className="equipmentdesc-rentername"><b>Renter Name:</b> {equipment.rentername}</p>
           <div className="equipmentdesc-pricing">
-            <span className="current-price">RS: {equipment.price}</span>
-            <span className="original-price">Per Hour</span>
+            <span className="current-price">Rs: {equipment.price}</span>
+            <span className="original-price">Per Hour (Min {equipment.minHours} hrs)</span>
           </div>
         </div>
       </div>
+
       <div className="equipmentdesc-datetimedetails">
         <div className="equipmentdesc-options">
-          <div className="option">
+        <div className="option">
             <label htmlFor="fromDate">From Date:</label>
             <input
               type="date"
               id="fromDate"
               value={fromDate}
-              onChange={(e) => setFromDate(e.target.value)}
+              min={today}
+              onChange={(e) => {
+                setFromDate(e.target.value);
+                setToDate("");
+              }}
+              style={{
+                backgroundColor:
+                  fromTime && !isTimeBooked(fromDate, fromTime) ? "lightgreen" : isDateBooked(fromDate) ? "red" : "lightgreen",
+                cursor: "pointer"
+              }}
             />
           </div>
+
           <div className="option">
             <label htmlFor="toDate">To Date:</label>
             <input
               type="date"
               id="toDate"
               value={toDate}
+              min={fromDate || today}
               onChange={(e) => setToDate(e.target.value)}
+              style={{
+                backgroundColor:
+                  toTime && !isTimeBooked(toDate, toTime) ? "lightgreen" : isDateBooked(toDate) ? "red" : "lightgreen",
+                cursor: "pointer"
+              }}
             />
           </div>
           <div className="option">
@@ -86,6 +213,7 @@ const EquipmentDescriptionCard = () => {
               id="fromTime"
               value={fromTime}
               onChange={(e) => setFromTime(e.target.value)}
+              style={{ backgroundColor: isTimeBooked(fromDate, fromTime) ? "red" : "lightgreen", cursor: "pointer" }}
             />
           </div>
           <div className="option">
@@ -95,15 +223,23 @@ const EquipmentDescriptionCard = () => {
               id="toTime"
               value={toTime}
               onChange={(e) => setToTime(e.target.value)}
+              style={{ backgroundColor: isTimeBooked(toDate, toTime) ? "red" : "lightgreen", cursor: "pointer" }}
             />
           </div>
         </div>
 
         <div className="equipmentdesc-actions">
-          <div className="equipmentdesc-totalprice">
-              <span>Total Price: Rs {totalPrice}</span>
-          </div>
-          <button className="booknow-button">Book Now</button>
+          {errorMessage ? (
+            <p className="error-message">{errorMessage}</p>
+          ) : (
+            <>
+              <div className="equipmentdesc-totalprice">
+                <span>Total Hours: {totalHours} hrs</span><br />
+                <span>Total Price: Rs {totalPrice}</span>
+              </div>
+              <button className="booknow-button" onClick={handleBooking}>Book Now</button>
+            </>
+          )}
         </div>
       </div>
     </div>

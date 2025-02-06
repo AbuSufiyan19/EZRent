@@ -1,0 +1,38 @@
+.mybooking-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .mybooking-table th, .mybooking-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .mybooking-table th {
+    background-color: #f4f4f4;
+  }
+  
+  .mybooking-table .mybooking-image {
+    width: 160px;
+    height: 110px;
+  }
+  
+  .mybooking-table .eq-desc{
+    text-align: justify;
+  }
+  
+  .mybooking-table .delete-btn {
+    color: white;
+    background-color: #fba31c;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .mybooking-table .delete-btn:hover {
+    background-color: #df8b0f;
+  }
+  

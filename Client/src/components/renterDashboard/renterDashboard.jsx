@@ -5,27 +5,49 @@ import "react-toastify/dist/ReactToastify.css";
 import "./renterDashboard.css";
 import config from "../../utils/configurl";
 
-
 const RenterDashboard = () => {
   const [equipments, setEquipments] = useState([]);
 
   // Fetch equipments from the database
   const fetchEquipments = async () => {
-  const token = localStorage.getItem("token"); 
-  try {
-    const response = await axios.get(`${config.BASE_API_URL}/renter/fetch-equipments`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    setEquipments(response.data);
-  } catch (err) {
-    const errorMessage = err.response?.data?.message || "Failed to fetch equipments";
-    toast.error(errorMessage, {
-      position: "top-right",
-      autoClose: 3000,
-    });
-  }
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(`${config.BASE_API_URL}/renter/fetch-equipments`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setEquipments(response.data);
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || "Failed to fetch equipments";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  };
+
+  // Update availability status
+  const updateAvailability = async (id, status) => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.patch(`${config.BASE_API_URL}/renter/update-availability/${id}`, { status }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success(response.data.message, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      fetchEquipments(); // Refresh the list after updating
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || "Failed to update availability";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
   };
 
   useEffect(() => {
@@ -42,8 +64,11 @@ const RenterDashboard = () => {
             <th>Equipment Name</th>
             <th>Equipment Image</th>
             <th>Price</th>
+            <th>Min Hours</th>
             <th>Location</th>
             <th>Description</th>
+            <th>Availability Status</th>
+            <th>Actions</th> {/* New column for actions */}
           </tr>
         </thead>
         <tbody>
@@ -60,14 +85,39 @@ const RenterDashboard = () => {
                   />
                 </td>
                 <td>Rs {equipment.price}</td>
-                <td>{equipment.address}</td>
+                <td>{equipment.minHours}</td>
+                <td className="eq-location">{equipment.address}</td>
                 <td className="eq-desc">{equipment.description}</td>
-                
+                <td>{equipment.availabilityStatus}</td>
+                <td>
+                  {(() => {
+                      switch (equipment.availabilityStatus) {
+                        case "unavailable":
+                          return (
+                            <>
+                              <button className="activate-btn" onClick={() => updateAvailability(equipment._id, 'available')}>
+                                Set Available</button>
+                            </>
+                          );
+                  
+                        case "available":
+                          return (
+                            <>
+                              <button className="reject-btn" onClick={() => updateAvailability(equipment._id, 'unavailable')}>
+                                Set Unavailable</button>
+                            </>
+                          );
+                  
+                        default:
+                          return null;
+                      }
+                    })()}
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="6">No equipments found</td>
+              <td colSpan="8">No equipments found</td>
             </tr>
           )}
         </tbody>

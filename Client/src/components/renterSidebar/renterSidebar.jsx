@@ -80,11 +80,11 @@ const RenterSidebar = ({ isOpen, toggleSidebar, setActivePage }) => {
               </div>
               {dropdownOpen.bookings && (
                 <ul className="dropdown">
-                  <li onClick={() => handleSetActivePage("bookings", "bookings")} className={activePage === "bookings" ? "active" : ""}>
-                    Bookings Overview
-                  </li>
                   <li onClick={() => handleSetActivePage("approve-bookings", "bookings")} className={activePage === "approve-bookings" ? "active" : ""}>
                     Approve Bookings
+                  </li>
+                  <li onClick={() => handleSetActivePage("viewall-bookings", "bookings")} className={activePage === "viewall-bookings" ? "active" : ""}>
+                    View All Bookings
                   </li>
                 </ul>
               )}

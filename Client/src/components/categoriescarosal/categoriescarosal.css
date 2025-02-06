@@ -79,9 +79,9 @@
       flex: 0 0 33%; 
     }
   
-    .categories-carousel .carousel-container {
+    /* .categories-carousel .carousel-container {
       /* overflow-x: scroll;  */
-    }
+    /* }  */
   
     .categories-carousel .arrow {
       display: block; /* Ensure arrows are visible on mobile */

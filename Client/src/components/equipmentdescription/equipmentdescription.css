@@ -13,6 +13,7 @@
   
   .equipmentdesc-card .equipmentdesc-image img {
     width: 550px;
+    height: 430px;
     border-radius: 10px;
   }
   
@@ -170,4 +171,8 @@
     .equipmentdesc-card .equipmentdesc-image img {
         max-width: 100%;
     }
+    .equipmentdesc-totalprice{
+      font-size: 17px;
+    }
   }
+  

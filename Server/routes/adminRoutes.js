@@ -1,5 +1,5 @@
 const express = require("express");
-const { addEquipmentCategory, fetchCategories, removeCategory, getCategoryCount, getEquipmentsCount, getCustomerCount, getProviderCount, fetchAllEquipments } = require("../controllers/admincategoryController");
+const { addEquipmentCategory, fetchCategories, removeCategory, getCategoryCount, getEquipmentsCount, getCustomerCount, getProviderCount, getBookingCount, fetchAllEquipments } = require("../controllers/admincategoryController");
 const { fetchAllCustomers, fetchAllProviders, removeCustomer, removeProvider, storeContactsupport, fetchAllContactsupport, approveProvider, rejectProvider, reuploadProvider, blockProvider } = require("../controllers/adminmanageController");
 const { upload } = require("../multer/categoryMulter"); // Correctly import 'upload'
 
@@ -15,6 +15,7 @@ router.get("/category-count", getCategoryCount);
 router.get("/equipment-count", getEquipmentsCount);
 router.get("/customer-count", getCustomerCount);
 router.get("/provider-count", getProviderCount);
+router.get("/booking-count", getBookingCount);
 
 router.get("/fetchall-equipments", fetchAllEquipments);
 router.get("/fetchall-customers", fetchAllCustomers);

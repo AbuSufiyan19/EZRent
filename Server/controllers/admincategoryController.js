@@ -3,6 +3,7 @@ const path = require("path");
 const EquipmentCategory = require("../models/equipmentcategoryModel");
 const Equipment = require("../models/equipmentModel");
 const User = require('../models/userModel');
+const Booking = require('../models/bookingModel');
 
 
 const addEquipmentCategory = async (req, res) => {
@@ -114,6 +115,18 @@ const getCustomerCount = async (req, res) => {
       res.status(500).json({ message: "Error fetching customer count" });
     }
   };
+  
+  const getBookingCount = async (req, res) => {
+    try {
+      // Count the number of users with userType as "provider"
+      const count = await Booking.countDocuments();
+  
+      res.status(200).json({ count });
+    } catch (error) {
+      console.error("Error fetching booking count:", error);
+      res.status(500).json({ message: "Error fetching booking count" });
+    }
+  };
 
 // Fetch all equipment
 const fetchAllEquipments = async (req, res) => {
@@ -126,4 +139,4 @@ const fetchAllEquipments = async (req, res) => {
   }
 };
 
-module.exports = { addEquipmentCategory, fetchCategories, removeCategory, getCategoryCount, getEquipmentsCount, getProviderCount, getCustomerCount, fetchAllEquipments };
+module.exports = { addEquipmentCategory, fetchCategories, removeCategory, getCategoryCount, getEquipmentsCount, getBookingCount, getProviderCount, getCustomerCount, fetchAllEquipments };

@@ -8,6 +8,7 @@ const AdminDashboard = () => {
   const [equipmentCount, setEquipmentCount] = useState(0); // New state for equipment count
   const [customerCount, setCustomerCount] = useState(0); // New state for customer count
   const [providerCount, setProviderCount] = useState(0); // New state for provider count
+  const [bookingCount, setBookingCount] = useState(0); 
 
   // Fetch counts from the server when the component mounts
   useEffect(() => {
@@ -28,6 +29,9 @@ const AdminDashboard = () => {
         // Fetch provider count
         const providerResponse = await axios.get(`${config.BASE_API_URL}/admin/provider-count`);
         setProviderCount(providerResponse.data.count);
+
+        const bookingResponse = await axios.get(`${config.BASE_API_URL}/admin/booking-count`);
+        setBookingCount(bookingResponse.data.count);
 
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -50,7 +54,7 @@ const AdminDashboard = () => {
         </div>
         <div className="card">
           <h4>Bookings</h4>
-          <p className="count">12</p> {/* Static bookings count */}
+          <p className="count">{bookingCount}</p> {/* Static bookings count */}
         </div>
         <div className="card">
           <h4>Customers</h4>

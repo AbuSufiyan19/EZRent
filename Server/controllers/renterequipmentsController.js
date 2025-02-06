@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const jwt = require("jsonwebtoken");
 const Equipment = require("../models/equipmentModel");
-
+const EquipmentCounter = require("../models/EquipmentCounter");
 
 const addEquipment = async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -20,7 +20,7 @@ const addEquipment = async (req, res) => {
     }
 
     const { id, username } = decoded;
-    const { category, categoryId, name, description, price, lat, lng, address, categoryName } = req.body;
+    const { category, categoryId, name, description, price, lat, lng, address, categoryName, minHours } = req.body;
     const image = req.file?.filename;
 
     if (!category || !categoryId || !name || !description || !price || !lat || !lng || !address || !image) {
@@ -30,22 +30,15 @@ const addEquipment = async (req, res) => {
     // Generate a custom equipment ID (EQYYYYEZN)
     const currentYear = new Date().getFullYear();
 
-    // Find the latest equipment ID for this year
-    const latestEquipment = await Equipment.findOne({ equipmentId: new RegExp(`^EQ${currentYear}EZ`) })
-      .sort({ equipmentId: -1 }) // Sort in descending order to get the latest entry
-      .exec();
+    // Retrieve or initialize the counter for the current year
+    const counter = await EquipmentCounter.findOneAndUpdate(
+      { year: currentYear }, // Find the counter for the current year
+      { $inc: { counter: 1 } }, // Increment the counter by 1
+      { new: true, upsert: true } // Create the counter if it doesn't exist
+    );
 
-    let nextNumber = 1; // Default to 1 if no equipment exists for the year
-    if (latestEquipment) {
-      const lastId = latestEquipment.equipmentId;
-      const lastNumberMatch = lastId.match(/EZ(\d+)$/); // Extract the numeric part after "EZ"
-
-      if (lastNumberMatch) {
-        nextNumber = parseInt(lastNumberMatch[1], 10) + 1; // Increment the extracted number
-      }
-    }
-
-    const equipmentId = `EQ${currentYear}EZ${nextNumber}`;
+    // Generate the equipment ID using the incremented counter
+    const equipmentId = `EQ${currentYear}EZ${counter.counter}`;
 
     // Check if the equipment already exists
     const equipmentExists = await Equipment.findOne({ name, category });
@@ -64,6 +57,7 @@ const addEquipment = async (req, res) => {
       category,
       categoryId,
       name,
+      minHours,
       description,
       image,
       price,
@@ -133,4 +127,26 @@ const fetchEquipments = async (req, res) => {
     }
   };
 
-module.exports = { addEquipment, fetchEquipments, removeEquipment };
+  const updateAvailability = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body; // Expecting { status: 'available' | 'unavailable' }
+  
+    try {
+      const equipment = await Equipment.findByIdAndUpdate(
+        id,
+        { availabilityStatus: status }, // Update the availability status
+        { new: true } // Return the updated document
+      );
+  
+      if (!equipment) {
+        return res.status(404).json({ message: "Equipment not found." });
+      }
+  
+      res.status(200).json({ message: "Availability status updated successfully.", equipment });
+    } catch (error) {
+      console.error("Error updating availability:", error);
+      res.status(500).json({ message: "Failed to update availability." });
+    }
+  };
+
+module.exports = { addEquipment, fetchEquipments, removeEquipment, updateAvailability };

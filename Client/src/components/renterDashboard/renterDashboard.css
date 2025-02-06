@@ -19,10 +19,14 @@
   height: 110px;
 }
 
-.renterequipment-table .eq-desc{
+.renterequipment-table .eq-desc,.eq-location{
   text-align: justify;
+  font-size: 10px; 
 }
-
+.renterequipment-table .eq-location{
+  text-align: justify;
+  font-size: 10px; 
+}
 
 .renterequipment-table .delete-btn {
   color: white;
@@ -36,3 +40,24 @@
 .renterequipment-table .delete-btn:hover {
   background-color: #df8b0f;
 }
+
+.renterequipment-table .activate-btn {
+  color: white;
+  background-color: #29df26;
+  border: none;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.renterequipment-table .reject-btn {
+  color: white;
+  background-color: #fe2929;
+  border: none;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+

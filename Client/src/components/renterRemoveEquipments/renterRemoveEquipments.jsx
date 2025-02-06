@@ -63,6 +63,7 @@ const RenterRemoveEquipments = () => {
             <th>Equipment ID</th>
             <th>Equipment Name</th>
             <th>Price</th>
+            <th>Min Hours</th>
             <th>Location</th>
             <th>Equipment Image</th>
             <th>Description</th>
@@ -76,7 +77,8 @@ const RenterRemoveEquipments = () => {
                 <td>{equipment.equipmentId}</td>
                 <td>{equipment.name}</td>
                 <td>Rs {equipment.price}</td>
-                <td>{equipment.address}</td>
+                <td>{equipment.minHours}</td>
+                <td className="eq-location">{equipment.address}</td>
                 <td>
                   <img
                     src={`${config.BASE_API_URL}/multer/equipmentuploads/${equipment.image}`}

@@ -14,7 +14,7 @@ const fetchCategories = async (req, res) => {
 
 const fetchEquipments = async (req, res) => {
   try {
-    const equipments = await Equipment.find({});
+    const equipments = await Equipment.find({ availabilityStatus: "available" });
     res.status(200).json(equipments);
   } catch (error) {
     console.error("Error fetching equipments:", error);
@@ -24,7 +24,10 @@ const fetchEquipments = async (req, res) => {
 
 const fetchRandomEquipments = async (req, res) => {
     try {
-        const equipments = await Equipment.aggregate([{ $sample: { size: 8 } }]);
+      const equipments = await Equipment.aggregate([
+        { $match: { availabilityStatus: "available" } }, // Ensure only available ones
+        { $sample: { size: 8 } }
+      ]);
         res.status(200).json(equipments);
     } catch (error) {
         console.error("Error fetching random equipments:", error);
@@ -44,7 +47,10 @@ const fetchRandomEquipments = async (req, res) => {
             return res.status(400).json({ message: "Invalid Category ID" });
           }
       
-          const equipments = await Equipment.find({ categoryId: new mongoose.Types.ObjectId(categoryId) });
+          const equipments = await Equipment.find({ 
+            categoryId: new mongoose.Types.ObjectId(categoryId), 
+            availabilityStatus: "available" 
+          });
           res.status(200).json(equipments);
         } catch (error) {
           console.error("Error fetching equipment:", error);
