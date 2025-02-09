@@ -16,7 +16,7 @@ const equipmentSchema = new mongoose.Schema({
   address: { type: String, required: true },
   renterid: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // Foreign key to User
   rentername: String,
-  availabilityStatus: { type: String, enum: ["available", "unavailable"], default: "available" },
+  availabilityStatus: { type: String, enum: ["available", "unavailable", "rented"], default: "available" },
 });
 
 const Equipment = mongoose.model("Equipment", equipmentSchema);

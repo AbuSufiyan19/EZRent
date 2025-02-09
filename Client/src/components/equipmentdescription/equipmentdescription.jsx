@@ -19,6 +19,7 @@ const EquipmentDescriptionCard = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
   const [bookedSlots, setBookedSlots] = useState([]); // Store booked date-time ranges
+  const [isBooking, setIsBooking] = useState(false); // New state to track booking status
   const navigate = useNavigate();
 
   const today = new Date().toISOString().split("T")[0];
@@ -88,13 +89,27 @@ const EquipmentDescriptionCard = () => {
     }
   };
 
+  const getCurrentTime = () => {
+    const now = new Date();
+    return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+  };
+  
+
   const handleBooking = async () => {
+    setIsBooking(true); 
     const token = localStorage.getItem("token");
     if (!fromDate || !toDate || !fromTime || !toTime) {
       toast.warn("Please select a valid date and time.");
+      setIsBooking(false);
       return;
     }
-  
+    const currentTime = getCurrentTime();
+    if (fromDate === today && fromTime < currentTime) {
+      toast.error("Cannot select a past time for today.");
+      setIsBooking(false);
+      return;
+    }
+
     // Convert to ISO format for comparison
     const fromDateTime = new Date(`${fromDate}T${fromTime}`).toISOString();
     const toDateTime = new Date(`${toDate}T${toTime}`).toISOString();
@@ -102,6 +117,7 @@ const EquipmentDescriptionCard = () => {
     // Validate if the selected date-time range is available
     if (!isBookingValid(fromDateTime, toDateTime)) {
       toast.error("The selected time range is already booked. Please choose another slot.");
+      setIsBooking(false);
       return;
     }
     try {
@@ -119,6 +135,11 @@ const EquipmentDescriptionCard = () => {
       });
 
       toast.success("Booking successful!");
+      // Send email confirmation
+      await axios.post(`${config.BASE_API_URL}/bookings/send-booking-email`, { 
+        bookingId: response.data.booking._id 
+    });
+
       setTimeout(() => {
         navigate("/mybookings");
       }, 2000);
@@ -138,8 +159,10 @@ const EquipmentDescriptionCard = () => {
         navigate('/login'); // Redirect to login page
       } else {
         toast.error(error.response?.data?.message || "Error booking equipment.");
+        setIsBooking(false);
       }
-      console.error(error);
+    } finally {
+      setIsBooking(false); // Re-enable the button after completion
     }
   };
 
@@ -212,6 +235,7 @@ const EquipmentDescriptionCard = () => {
               type="time"
               id="fromTime"
               value={fromTime}
+              min={fromDate === today ? new Date().toISOString().slice(11, 16) : ""}
               onChange={(e) => setFromTime(e.target.value)}
               style={{ backgroundColor: isTimeBooked(fromDate, fromTime) ? "red" : "lightgreen", cursor: "pointer" }}
             />
@@ -237,7 +261,13 @@ const EquipmentDescriptionCard = () => {
                 <span>Total Hours: {totalHours} hrs</span><br />
                 <span>Total Price: Rs {totalPrice}</span>
               </div>
-              <button className="booknow-button" onClick={handleBooking}>Book Now</button>
+              <button 
+                  className="booknow-button" 
+                  onClick={handleBooking} 
+                  disabled={isBooking} // Disable button when booking is in progress
+                >
+                  {isBooking ? "Booking..." : "Book Now"} {/* Show loading text */}
+                </button>
             </>
           )}
         </div>

@@ -61,6 +61,7 @@ const AdminAllEquipments = () => {
             <th>Location</th>
             <th>Equipment Image</th>
             <th>Description</th>
+            <th>Availability</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -81,6 +82,7 @@ const AdminAllEquipments = () => {
                     />
                 </td>
                 <td className="eq-desc">{equipment.description}</td>
+                <td>{equipment.availabilityStatus}</td>
                 <td>
                   <button className="delete-btn" onClick={() => handleDelete(equipment._id)}>
                     Remove
