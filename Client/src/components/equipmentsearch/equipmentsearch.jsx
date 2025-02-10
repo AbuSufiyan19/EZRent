@@ -69,7 +69,7 @@ const EquipmentGrid = () => {
   useEffect(() => {
     if (userLocation.lat && userLocation.lng && allEquipments.length > 0) {
       const filtered = allEquipments.filter(({ location }) =>
-        calculateDistance(userLocation.lat, userLocation.lng, location.lat, location.lng) <= 100
+        calculateDistance(userLocation.lat, userLocation.lng, location.lat, location.lng) <= 40
       );
       setFilteredEquipments(filtered);
       setRandomEquipments(filtered.sort(() => 0.5 - Math.random()).slice(0, 8));

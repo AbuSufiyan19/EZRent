@@ -67,7 +67,7 @@ const Categories = () => {
     if (userLocation.lat && userLocation.lng && equipments.length > 0) {
       const filtered = equipments.filter((equipment) => {
         const { lat, lng } = equipment.location;
-        return calculateDistance(userLocation.lat, userLocation.lng, lat, lng) <= 100;
+        return calculateDistance(userLocation.lat, userLocation.lng, lat, lng) <= 50;
       });
       setFilteredEquipments(filtered);
     }
