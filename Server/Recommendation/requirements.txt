@@ -1,6 +1,7 @@
 flask
-numpy<2  # To avoid compatibility issues
+numpy
 pandas
-surprise
+tensorflow
 scikit-learn
 gunicorn
+
