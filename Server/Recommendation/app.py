@@ -1,16 +1,19 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify  # type: ignore
 import os
 import pandas as pd
 import numpy as np
-import tensorflow as tf
-from tensorflow import keras
+import tensorflow as tf  # type: ignore
+from tensorflow import keras  # type: ignore
 from sklearn.model_selection import train_test_split
 
 app = Flask(__name__)
 
-# Load dataset
+# Load dataset efficiently
 data_path = "recommendation_dataset.csv"
-df = pd.read_csv(data_path)
+
+# Load dataset in chunks to avoid memory issues
+chunks = pd.read_csv(data_path, chunksize=10_000, low_memory=True)
+df = pd.concat(chunks)
 
 # Normalize Ratings
 min_rating, max_rating = df['rating'].min(), df['rating'].max()
@@ -54,7 +57,7 @@ def load_or_train_model():
     return model
 
 def train_model():
-    embedding_dim, l2_reg = 64, 0.0005
+    embedding_dim, l2_reg = 32, 0.0005  # Reduced embedding size
     
     def create_embedding(input_dim, name):
         input_layer = keras.layers.Input(shape=(1,), name=f"{name}_input")
@@ -69,9 +72,9 @@ def train_model():
     category_input, category_embedding = create_embedding(df['categoryId'].nunique(), "category")
     
     concat = keras.layers.Concatenate()([user_embedding, item_embedding, category_embedding])
-    dense1 = keras.layers.Dense(256, activation='relu', kernel_regularizer=keras.regularizers.l2(l2_reg))(concat)
+    dense1 = keras.layers.Dense(128, activation='relu', kernel_regularizer=keras.regularizers.l2(l2_reg))(concat)  # Reduced from 256
     dense1 = keras.layers.Dropout(0.3)(dense1)
-    dense2 = keras.layers.Dense(128, activation='relu', kernel_regularizer=keras.regularizers.l2(l2_reg))(dense1)
+    dense2 = keras.layers.Dense(64, activation='relu', kernel_regularizer=keras.regularizers.l2(l2_reg))(dense1)  # Reduced from 128
     dense2 = keras.layers.Dropout(0.2)(dense2)
     output = keras.layers.Dense(1, activation='linear')(dense2)
     
@@ -79,7 +82,7 @@ def train_model():
     model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.001), loss='mse', metrics=['mae'])
     
     early_stopping = keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
-    history = model.fit(X_train, y_train, epochs=50, batch_size=32, validation_data=(X_test, y_test), callbacks=[early_stopping])
+    history = model.fit(X_train, y_train, epochs=30, batch_size=64, validation_data=(X_test, y_test), callbacks=[early_stopping])  # Increased batch size
     
     test_loss, test_mae = model.evaluate(X_test, y_test)
     print(f"🔍 Test Loss: {test_loss:.4f}, Test MAE: {test_mae:.4f}")
@@ -95,13 +98,21 @@ def recommend_equipment(user_id, num_recommendations=10):
         return [equipment_mapping[eid] for eid in top_equipment_encoded]
     
     encoded_user_id = reverse_user_mapping[user_id]
-    user_array = np.full(len(df['equipmentId'].unique()), encoded_user_id)
-    category_array = df[df['equipmentId'].isin(df['equipmentId'].unique())]['categoryId'].values[:len(df['equipmentId'].unique())]
+    all_equipment_ids = df['equipmentId'].unique()
+    category_array = df.loc[df['equipmentId'].isin(all_equipment_ids), 'categoryId'].values[:len(all_equipment_ids)]
     
-    predictions = model.predict([user_array, df['equipmentId'].unique(), category_array])
-    predictions = predictions * (max_rating - min_rating) + min_rating
-    top_indices = np.argsort(-predictions.flatten())[:num_recommendations]
-    return [equipment_mapping[df['equipmentId'].unique()[i]] for i in top_indices]
+    # Batch processing for prediction
+    batch_size = 100
+    predictions = []
+    for i in range(0, len(all_equipment_ids), batch_size):
+        batch = all_equipment_ids[i:i+batch_size]
+        user_array = np.full(len(batch), encoded_user_id)
+        pred = model.predict([user_array, batch, category_array[i:i+batch_size]], verbose=0)
+        predictions.extend(pred.flatten())
+
+    predictions = np.array(predictions) * (max_rating - min_rating) + min_rating
+    top_indices = np.argsort(-predictions)[:num_recommendations]
+    return [equipment_mapping[all_equipment_ids[i]] for i in top_indices]
 
 model = load_or_train_model()
 
