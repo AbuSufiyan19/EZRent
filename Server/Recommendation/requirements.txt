@@ -1,0 +1,6 @@
+flask
+numpy<2  # To avoid compatibility issues
+pandas
+surprise
+scikit-learn
+gunicorn
