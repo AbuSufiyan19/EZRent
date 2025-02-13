@@ -1,8 +1,8 @@
 .equipmentdesc-card-outer{
     display: flex;
     flex-direction: column;
-    padding: 100px;
-    padding-bottom: 50px;
+    padding: 95px;
+    padding-bottom: 5px;
     height: 100%;
 }
 .equipmentdesc-card {

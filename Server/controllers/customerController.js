@@ -57,4 +57,40 @@ const fetchRandomEquipments = async (req, res) => {
           res.status(500).json({ message: "Error fetching equipment", error });
         }
       };
-module.exports = { fetchCategories, fetchEquipments, fetchRandomEquipments, getEquipmentsByCategory };
+
+    
+const getrecommendDetails = async (req, res) => {
+  try {
+    const { equipmentIds } = req.body;
+    // console.log("Received Equipment IDs:", equipmentIds);
+
+    if (!equipmentIds || equipmentIds.length === 0) {
+      return res.status(400).json({ message: "No equipment IDs provided" });
+    }
+
+    // Filter out non-ObjectID values
+    const validObjectIds = equipmentIds.filter((id) =>
+      mongoose.Types.ObjectId.isValid(id)
+    );
+
+    if (validObjectIds.length === 0) {
+      return res.status(400).json({ message: "No valid MongoDB ObjectIDs provided" });
+    }
+
+    // Convert to ObjectId format
+    const objectIds = validObjectIds.map((id) => new mongoose.Types.ObjectId(id));
+
+    // Fetch equipment details from MongoDB
+    const equipments = await Equipment.find({
+      _id: { $in: objectIds },
+      availabilityStatus: "available",
+    });    
+
+    res.json(equipments);
+  } catch (error) {
+    console.error("Error fetching equipment details:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = { fetchCategories, fetchEquipments, fetchRandomEquipments, getEquipmentsByCategory, getrecommendDetails };

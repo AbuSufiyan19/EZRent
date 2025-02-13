@@ -1,0 +1,84 @@
+.scrolling-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    display: flex;
+    scroll-behavior: smooth;
+    padding: 20px;
+    padding-top: 10px;
+  }
+  
+  .recommend-title{
+    margin: 10px;
+    margin-left: 20px;
+  }
+
+  .recommend-eqtitle{
+    margin: 0;
+    margin-left: 10px;
+  }
+
+  .scrolling-container .scrolling-content {
+    display: flex;
+    gap: 30px;
+    animation: scroll-r 40s linear infinite;
+  }
+  .scrolling-container .recommend-card{
+    flex: 0 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    height: 220px;
+    width: 400px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 2px 7px black;
+  }
+  .scrolling-container .recommend-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+  }
+  .scrolling-container .recommend-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.279);
+    color: #fff;
+  }
+  .scrolling-container .recommend-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+    text-align: left;
+  }
+
+  .scrolling-container .recommend-btn {
+    background-color: #fba31c;
+    color: #0c1239;
+    border: none;
+    font-weight: bold;
+    padding: 0.7rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: flex-end;
+    margin-right: 20px;
+    margin-bottom: 20px;
+  }
+
+  .scrolling-container .recommend-btn:hover {
+    background-color: #ff9900;
+  }
+
+  @keyframes scroll-left {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }

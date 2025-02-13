@@ -4,6 +4,7 @@ import CustomerNavbar from "../components/customernavbar/customernavbar";
 import Footer from "../components/footer/footer";
 import EquipmentDescription from "../components/equipmentdescription/equipmentdescription"
 import { useRequireAuth } from "../utils/sessionutils";
+import RecommendationCards from "../components/recommendation/recommendation";
 
 
 const EquipmentDescriptionPage = () => {
@@ -17,6 +18,7 @@ const EquipmentDescriptionPage = () => {
     <>
       <CustomerNavbar />
       <EquipmentDescription />
+      <RecommendationCards />
       <Footer />
       
     </>

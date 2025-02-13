@@ -3,10 +3,12 @@ import os
 import pandas as pd
 import numpy as np
 import tensorflow as tf  # type: ignore
+from flask_cors import CORS
 from tensorflow import keras  # type: ignore
 from sklearn.model_selection import train_test_split
 
 app = Flask(__name__)
+CORS(app)
 
 # Load dataset efficiently
 data_path = "recommendation_dataset.csv"
@@ -132,4 +134,4 @@ def retrain():
     return "✅ Model retrained successfully."
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 6000)))
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8000)))

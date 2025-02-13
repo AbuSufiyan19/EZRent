@@ -52,6 +52,7 @@ const HomeMainPage = () => {
               navigate("/renterhome");
               break;
             default:
+              await fetchAndStoreRecommendations();
               break;
           }
       }
@@ -59,6 +60,22 @@ const HomeMainPage = () => {
       console.error("Invalid token:", error.response?.data?.message || error.message);
       // Navigate to login if the token is invalid
       navigate("/login");
+    }
+  };
+  const fetchAndStoreRecommendations = async () => {
+    try {
+      const response = await axios.get(`${config.BASE_API_URL}/recommendationeqipments`);
+      const recommendations = response.data;
+
+      await axios.post(`${config.BASE_API_URL}/store-recommendations`, recommendations, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log("Recommendations fetched and stored successfully.");
+    } catch (error) {
+      console.error("Error fetching/storing recommendations:", error.message);
     }
   };
 

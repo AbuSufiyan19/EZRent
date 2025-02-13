@@ -52,6 +52,29 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
   });
   
 
+  const cron = require("node-cron");
+  const axios = require("axios");
+  
+  const RETRAIN_API_URL = process.env.PYURL; 
+  
+  const callRetrainAPI = async () => {
+    try {
+      const response = await axios.post(RETRAIN_API_URL);
+      console.log("Retrain API Response:", response.data);
+    } catch (error) {
+      console.error("Error calling retrain API:", error.message);
+    }
+  };
+  
+  // Schedule job to run every 7 days at 00:00 (midnight)
+  cron.schedule("0 0 */7 * *", () => {
+    console.log("Running scheduled retrain API call...");
+    callRetrainAPI();
+  });
+  
+  console.log("Cron job scheduled: Retrain API will run every 7 days.");
+  
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
