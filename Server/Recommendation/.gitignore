@@ -1,0 +1,30 @@
+# Ignore Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore virtual environment
+myenv/
+venv/
+
+# Ignore environment variables and credentials
+.env
+.env.local
+*.log
+
+# Ignore Jupyter Notebook checkpoints (if any)
+.ipynb_checkpoints/
+
+# Ignore dependency files (except requirements.txt)
+Pipfile
+Pipfile.lock
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE/project files
+.vscode/
+.idea/
+*.iml
