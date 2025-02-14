@@ -91,10 +91,10 @@ const RenterSidebar = ({ isOpen, toggleSidebar, setActivePage }) => {
             </li>
 
             {/* Ratings & Feedbacks */}
-            <li onClick={() => handleSetActivePage("feedbacks")} className={activePage === "feedbacks" ? "active" : ""}>
+            <li onClick={() => handleSetActivePage("ratings")} className={activePage === "ratings" ? "active" : ""}>
               <div className="nav-item">
                 <Star size={18} className="icon" />
-                <span>Ratings & Feedbacks</span>
+                <span>Ratings & Reviews</span>
               </div>
             </li>
           </ul>

@@ -58,6 +58,7 @@ const AdminAllEquipments = () => {
             <th>Equipment Name</th>
             <th>Price</th>
             <th>Min Hours</th>
+            <th>Rating</th>
             <th>Location</th>
             <th>Equipment Image</th>
             <th>Description</th>
@@ -73,6 +74,7 @@ const AdminAllEquipments = () => {
                 <td>{equipment.name}</td>
                 <td>{equipment.price}</td>
                 <td>{equipment.minHours}</td>
+                <td>{equipment.averageRating ? `${equipment.averageRating}` : "--"}</td>
                 <td className="eq-location">{equipment.address}</td>
                 <td>
                   <img

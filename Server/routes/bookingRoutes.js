@@ -6,6 +6,13 @@ const Equipment = require("../models/equipmentModel");
 const User = require("../models/userModel");
 const mongoose = require("mongoose");
 
+const fs = require("fs");
+const path = require("path");
+const csvParser = require("csv-parser")
+const createCsvWriter = require("csv-writer").createObjectCsvWriter;
+
+// Define the CSV file path (ensure this file exists)
+const csvFilePath = path.join(__dirname, "../Recommendation/recommendation_dataset.csv");
 
 // Store a new booking
 router.post("/book", async (req, res) => {
@@ -37,12 +44,14 @@ router.post("/book", async (req, res) => {
     // Check for overlapping bookings
     const existingBookings = await Booking.find({
       equipmentId,
+      status: { $ne: "Cancelled" }, // Exclude cancelled bookings
       $or: [
-        { fromDateTime: { $lt: toDate, $gte: fromDate } },
-        { toDateTime: { $gt: fromDate, $lte: toDate } },
-        { fromDateTime: { $lte: fromDate }, toDateTime: { $gte: toDate } }
+          { fromDateTime: { $lt: toDate, $gte: fromDate } },
+          { toDateTime: { $gt: fromDate, $lte: toDate } },
+          { fromDateTime: { $lte: fromDate }, toDateTime: { $gte: toDate } }
       ]
-    });
+  });
+  
 
     if (existingBookings.length > 0) {
       return res.status(400).json({ message: "This time slot is already booked!" });
@@ -151,13 +160,165 @@ router.post("/send-booking-email", async (req, res) => {
     }
 });
 
+router.post('/check-extra-availability', async (req, res) => {
+  try {
+      const { bookingId, extraHours } = req.body;
+      console.log(bookingId, extraHours);
+
+      if (!bookingId || !extraHours) {  
+          return res.status(400).json({ message: 'Booking ID and extra time are required.' });
+      }
+
+      if (extraHours < 1 || extraHours > 3) {
+          return res.status(400).json({ message: 'Extra time must be between 1 and 3 hours.' });
+      }
+
+      const booking = await Booking.findById(bookingId);
+      if (!booking) {
+          return res.status(404).json({ message: 'Booking not found.' });
+      }
+
+      const newEndTime = new Date(booking.toDateTime);
+      newEndTime.setHours(newEndTime.getHours() + extraHours);
+      const isBooked = await Booking.findOne({
+          equipId: booking.equipId,
+          fromDateTime: { $lt: newEndTime },
+          toDateTime: { $gt: booking.toDateTime }
+      });
+
+      if (isBooked) {
+          return res.status(400).json({ message: 'Requested extra time is not available.' });
+      }
+
+      res.json({ available: true, message: 'Extra time is available.' });
+
+  } catch (error) {
+      console.error('Error checking availability:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+router.post('/extend-booking', async (req, res) => {
+  try {
+      const { bookingId, extraHours } = req.body;
+
+      if (!bookingId || !extraHours) {
+          return res.status(400).json({ message: 'Booking ID and extra time are required.' });
+      }
+
+      const booking = await Booking.findById(bookingId);
+      if (!booking) {
+          return res.status(404).json({ message: 'Booking not found.' });
+      }
+
+      const newEndTime = new Date(booking.toDateTime);
+      newEndTime.setHours(newEndTime.getHours() + extraHours);
+
+      // Check again before updating
+      const isBooked = await Booking.findOne({
+          equipId: booking.equipId,
+          fromDateTime: { $lt: newEndTime },
+          toDateTime: { $gt: booking.toDateTime }
+      });
+
+      if (isBooked) {
+          return res.status(400).json({ message: 'Extra time is no longer available.' });
+      }
+
+      booking.toDateTime = newEndTime;
+      booking.extraTimehours =  extraHours;
+      booking.extraPrice = extraHours * (booking.totalPrice / booking.totalHours); 
+
+      await booking.save();
+      res.json({ message: 'Booking extended successfully.', updatedBooking: booking });
+
+  } catch (error) {
+      console.error('Error extending booking:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+router.post("/submit-review", async (req, res) => {
+  try {
+    const { bookingId, equipId, rating, review } = req.body;
+
+    // Find booking and update with review
+    const booking = await Booking.findById(bookingId);
+    if (!booking) return res.status(404).json({ message: "Booking not found" });
+
+    // Ensure the booking is completed before allowing a review
+    if (booking.status !== "Completed") {
+      return res.status(400).json({ message: "Only completed bookings can be reviewed" });
+    }
+
+    // Update booking with rating & review
+    booking.ratings = rating;
+    booking.reviews = review;
+    await booking.save();
+
+      updateCsvRating(bookingId, rating);
+
+
+    // Update Equipment Average Rating
+    const equipment = await Equipment.findById(equipId);
+    if (!equipment) return res.status(404).json({ message: "Equipment not found" });
+
+    const eqrating = equipment.averageRating || 0; // Default to 0 if null/undefined
+    equipment.averageRating = (rating + eqrating) / (eqrating ? 2 : 1); // Avoid division by 2 if first rating
+    await equipment.save();
+
+    res.json({ message: "Review submitted successfully!" });
+  } catch (error) {
+    console.error("Error submitting review:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}); 
+
+const updateCsvRating = (bookingId, newRating) => {
+  const tempFilePath = path.join(__dirname, "../Recommendation/temp_bookings.csv");
+
+  // Read and update CSV
+  const rows = [];
+  fs.createReadStream(csvFilePath)
+    .pipe(csvParser())
+    .on("data", (row) => {
+      if (row.bookingId === bookingId) {
+        row.rating = newRating; // Update rating
+      }
+      rows.push(row);
+    })
+    .on("end", () => {
+      // Write updated data to a temporary file
+      const csvWriter = createCsvWriter({
+        path: tempFilePath,
+        header: [
+          { id: "bookingId", title: "bookingId" },
+          { id: "userId", title: "userId" },
+          { id: "equipmentId", title: "equipmentId" },
+          { id: "categoryId", title: "categoryId" },
+          { id: "rating", title: "rating" }
+        ]
+      });
+
+      csvWriter.writeRecords(rows).then(() => {
+        // Replace original CSV with updated file
+        fs.renameSync(tempFilePath, csvFilePath);
+        // console.log(`✅ CSV updated for booking ID: ${bookingId}`);
+      });
+    });
+};
+
+
 
 router.get("/equipment/:equipmentId", async (req, res) => {
     try {
         const { equipmentId } = req.params;
-        const bookings = await Booking.find({ equipmentId: new mongoose.Types.ObjectId(equipmentId) });
-        res.status(200).json(bookings);
-    } catch (error) {
+        const bookings = await Booking.find({
+          equipmentId: new mongoose.Types.ObjectId(equipmentId),
+          status: { $ne: "Cancelled" }  // Exclude cancelled bookings
+      });
+              res.status(200).json(bookings);
+    } catch (error) {       
         console.error("Error fetching bookings:", error);
         res.status(500).json({ message: "Error fetching bookings" });
     }
@@ -342,5 +503,64 @@ router.put("/update-status/:id", async (req, res) => {
       res.status(500).json({ message: "Error updating booking status", error: error.message });
   }
 });
+
+
+
+// CSV Writer Setup
+const csvWriter = createCsvWriter({
+  path: csvFilePath,
+  header: [
+    { id: "userId", title: "userId" },
+    { id: "equipmentId", title: "equipmentId" },
+    { id: "categoryId", title: "categoryId" },
+    { id: "rating", title: "rating" },
+    { id: "bookingId", title: "bookingId" },
+  ],
+  append: true // Ensures new data is added without overwriting existing data
+});
+
+// API Endpoint to Save Data in CSV
+router.post("/save-datacsv", async (req, res) => {
+  try {
+    const { bookingId, equipmentId } = req.body;
+
+    if (!bookingId || !equipmentId) {
+      return res.status(400).json({ message: "Both bookingId and equipmentId are required" });
+    }
+
+    // Fetch booking details
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    // Fetch equipment details
+    const equipment = await Equipment.findById(equipmentId);
+    if (!equipment) {
+      return res.status(404).json({ message: "Equipment not found" });
+    }
+
+    // Prepare data for CSV
+    const csvData = [{
+      userId: booking.userId,
+      equipmentId: booking.equipmentId,
+      categoryId: equipment.categoryId,
+      rating: booking.ratings || 0, 
+      bookingId: booking._id,
+    }];
+
+    // Append data to CSV
+    await csvWriter.writeRecords(csvData);
+
+    // console.log("✅ Data successfully saved to CSV:", csvData);
+
+    res.status(200).json({ message: "Data successfully saved to CSV", data: csvData });
+
+  } catch (error) {
+    console.error("❌ Error saving to CSV:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 
 module.exports = router;

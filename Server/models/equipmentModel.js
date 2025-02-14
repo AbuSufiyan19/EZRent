@@ -13,6 +13,7 @@ const equipmentSchema = new mongoose.Schema({
     lat: { type: Number, required: true },
     lng: { type: Number, required: true },
   },
+  averageRating: { type: Number},
   address: { type: String, required: true },
   renterid: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // Foreign key to User
   rentername: String,

@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 import config from "../../utils/configurl"; 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar, faStarHalfAlt, faStar as faStarEmpty } from "@fortawesome/free-solid-svg-icons";
+
 
 const EquipmentDescriptionCard = () => {
   const location = useLocation();
@@ -60,15 +63,22 @@ const EquipmentDescriptionCard = () => {
   };
 
   const isBookingValid = (fromDateTime, toDateTime) => {
-    // Check if the selected booking time range overlaps with any existing booking
     return !bookedSlots.some(slot => {
       const existingFromDateTime = new Date(slot.fromDateTime);
       const existingToDateTime = new Date(slot.toDateTime);
-
-      // Check for overlap: if the new booking range intersects with an existing one
-      return (new Date(fromDateTime) < existingToDateTime && new Date(toDateTime) > existingFromDateTime);
+  
+      // Add a 1-hour buffer before and after existing bookings
+      const bufferBefore = new Date(existingFromDateTime);
+      bufferBefore.setHours(bufferBefore.getHours() - 1);
+  
+      const bufferAfter = new Date(existingToDateTime);
+      bufferAfter.setHours(bufferAfter.getHours() + 1);
+  
+      // Check for overlap considering the buffer time
+      return (new Date(fromDateTime) < bufferAfter && new Date(toDateTime) > bufferBefore);
     });
   };
+  
 
   const calculatePrice = () => {
     if (fromDate && toDate && fromTime && toTime) {
@@ -133,8 +143,14 @@ const EquipmentDescriptionCard = () => {
       }, { 
         headers: { Authorization: `Bearer ${token}` },
       });
-
+      
       toast.success("Booking successful!");
+
+      await axios.post(`${config.BASE_API_URL}/bookings/save-datacsv`, {
+        bookingId: response.data.booking._id,
+        equipmentId: response.data.equipment._id
+      });
+  
       // Send email confirmation
       await axios.post(`${config.BASE_API_URL}/bookings/send-booking-email`, { 
         bookingId: response.data.booking._id 
@@ -173,6 +189,26 @@ const EquipmentDescriptionCard = () => {
   if (!equipment) {
     return <h2 className="error-message">Equipment details not found!</h2>;
   }
+  const StarRating = ({ rating }) => {
+    if (rating === 0) return null; // Hide stars if no rating
+  
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 !== 0;
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+  
+    return (
+      <div style={{ color: "gold", fontSize: "18px" }}>
+        {[...Array(fullStars)].map((_, i) => (
+          <FontAwesomeIcon key={i} icon={faStar} />
+        ))}
+        {halfStar && <FontAwesomeIcon icon={faStarHalfAlt} />}
+        {[...Array(emptyStars)].map((_, i) => (
+          <FontAwesomeIcon key={i + fullStars + 1} icon={faStarEmpty} style={{ color: "gray" }} />
+        ))}
+      </div>
+    );
+  };
+  
 
   return (
     <div className="equipmentdesc-card-outer">
@@ -186,6 +222,7 @@ const EquipmentDescriptionCard = () => {
           <p className="equipmentdesc-eqid">Equipment ID: {equipment.equipmentId}</p>
           <p className="equipmentdesc-description">{equipment.description}</p>
           <p className="equipmentdesc-rentername"><b>Renter Name:</b> {equipment.rentername}</p>
+            <StarRating rating={equipment.averageRating || 0} />
           <div className="equipmentdesc-pricing">
             <span className="current-price">Rs: {equipment.price}</span>
             <span className="original-price">Per Hour (Min {equipment.minHours} hrs)</span>

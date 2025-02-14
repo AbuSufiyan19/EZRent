@@ -89,6 +89,10 @@ const RenterViewAllBookings = () => {
             <th>To Date</th>
             <th>Total Hours</th>
             <th>Total Amount</th>
+            <th>Extra Time</th>
+            <th>Extra Amount</th>
+            <th>Ratings</th>
+            <th>Reviews</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -109,6 +113,10 @@ const RenterViewAllBookings = () => {
                 <td>{new Date(booking.toDateTime).toLocaleString()}</td>
                 <td>{booking.totalHours} hrs</td>
                 <td>Rs {booking.totalPrice}</td>
+                <td>{booking.extraTimehours ? `${booking.extraTimehours} hrs` : "--"}</td>
+                <td>{booking.extraPrice ? `Rs ${booking.extraPrice}` : "--"}</td>
+                <td>{booking.ratings ? `${booking.ratings}` : "--"}</td>
+                <td>{booking.reviews ? `${booking.reviews}` : "--"}</td>
                 <td>{booking.status}</td>
                 <td>
                   {booking.status === "Confirmed" && (
