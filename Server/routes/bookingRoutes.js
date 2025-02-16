@@ -271,13 +271,13 @@ cron.schedule("* * * * *", async () => {
 
         // Commented out SMS sending process
         
-        // await client.messages.create({
-        //   body: `Hello ${user.fullName}, your booking for equipment ${booking.equipId} (${equipment.name}) has ended. Please return the equipment. Thank you!`,
-        //   from: process.env.TWILIO_PHONE,
-        //   to: `+91${user.mobileNumber}` // Assuming India numbers
-        // });
+        await client.messages.create({
+          body: `Hello ${user.fullName}, your booking for equipment ${booking.equipId} (${equipment.name}) has ended. Please return the equipment. Thank you!`,
+          from: process.env.TWILIO_PHONE,
+          to: `+91${user.mobileNumber}` // Assuming India numbers
+        });
 
-        // console.log(`SMS sent to ${user.mobileNumber}`);
+        console.log(`SMS sent to ${user.mobileNumber}`);
         
 
         // Mark the booking as notified
