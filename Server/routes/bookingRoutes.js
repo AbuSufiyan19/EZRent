@@ -68,6 +68,7 @@ router.post("/book", async (req, res) => {
       toDateTime: toDate,
       totalHours,
       totalPrice,
+      notifiedSMS: false,
     });
 
     await newBooking.save();
@@ -237,6 +238,70 @@ router.post('/extend-booking', async (req, res) => {
       res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
+const cron = require("node-cron");const twilio = require('twilio');
+const client = new twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
+
+
+// Run this job every minute to check for expired bookings
+cron.schedule("* * * * *", async () => {
+  try {
+    console.log("Checking for expired bookings to send SMS...");
+
+    const now = new Date();
+    const expiredBookings = await Booking.find({
+      toDateTime: { $lt: now }, // Booking end time has passed
+      status: "Confirmed", // Only confirmed bookings
+      notifiedSMS: { $ne: true } // Ensure user hasn't been notified yet
+    });
+
+    console.log(`Found ${expiredBookings.length} expired bookings`);
+
+    for (const booking of expiredBookings) {
+      // console.log("Processing booking:", booking);
+
+      const user = await User.findById(new mongoose.Types.ObjectId(booking.userId));
+      // console.log("Fetched user:", user);
+
+      const equipment = await Equipment.findById(new mongoose.Types.ObjectId(booking.equipmentId));
+      // console.log("Fetched equipment:", equipment);
+
+      if (user && user.mobileNumber) {
+        // console.log(`User ${user.fullName} has a valid mobile number: ${user.mobileNumber}`);
+
+        // Commented out SMS sending process
+        
+        // await client.messages.create({
+        //   body: `Hello ${user.fullName}, your booking for equipment ${booking.equipId} (${equipment.name}) has ended. Please return the equipment. Thank you!`,
+        //   from: process.env.TWILIO_PHONE,
+        //   to: `+91${user.mobileNumber}` // Assuming India numbers
+        // });
+
+        // console.log(`SMS sent to ${user.mobileNumber}`);
+        
+
+        // Mark the booking as notified
+        booking.notifiedSMS = true;
+        booking.status = "Completed";
+        await booking.save();
+
+        let updatedEquipment = null;
+        updatedEquipment = await Equipment.findByIdAndUpdate(
+          booking.equipmentId,
+          { availabilityStatus: "available" },
+          { new: true }
+        );
+        
+        console.log(`Booking marked as notified: ${booking._id}`);
+      } else {
+        console.log(`User ${user ? user.fullName : "Unknown"} has no valid mobile number`);
+      }
+    }
+  } catch (error) {
+    console.error("Error checking expired bookings:", error);
+  }
+});
+
 
 router.post("/submit-review", async (req, res) => {
   try {
@@ -510,11 +575,11 @@ router.put("/update-status/:id", async (req, res) => {
 const csvWriter = createCsvWriter({
   path: csvFilePath,
   header: [
+    { id: "bookingId", title: "bookingId" },
     { id: "userId", title: "userId" },
     { id: "equipmentId", title: "equipmentId" },
     { id: "categoryId", title: "categoryId" },
     { id: "rating", title: "rating" },
-    { id: "bookingId", title: "bookingId" },
   ],
   append: true // Ensures new data is added without overwriting existing data
 });

@@ -14,6 +14,7 @@ const bookingSchema = new mongoose.Schema({
   extraPrice: { type: Number},
   ratings: {type: Number},
   reviews: {type: String},
+  notifiedSMS: { type: Boolean},
   status: { type: String, enum: ["Pending", "Confirmed", "Cancelled", "Completed"], default: "Pending" },
 }, { timestamps: true });
 
