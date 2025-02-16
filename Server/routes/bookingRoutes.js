@@ -607,11 +607,11 @@ router.post("/save-datacsv", async (req, res) => {
 
     // Prepare data for CSV
     const csvData = [{
+      bookingId: booking._id,
       userId: booking.userId,
       equipmentId: booking.equipmentId,
       categoryId: equipment.categoryId,
       rating: booking.ratings || 0, 
-      bookingId: booking._id,
     }];
 
     // Append data to CSV
