@@ -80,7 +80,7 @@ const AdminManageCustomers = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="5">No customers found</td>
+              <td colSpan="6">No customers found</td>
             </tr>
           )}
         </tbody>

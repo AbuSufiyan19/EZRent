@@ -119,7 +119,7 @@ const RenterDashboard = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="8">No equipments found</td>
+              <td colSpan="10">No equipments found</td>
             </tr>
           )}
         </tbody>

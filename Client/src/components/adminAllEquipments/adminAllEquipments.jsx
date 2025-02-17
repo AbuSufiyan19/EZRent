@@ -94,7 +94,7 @@ const AdminAllEquipments = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="7">No equipments found</td>
+              <td colSpan="10">No equipments found</td>
             </tr>
           )}
         </tbody>

@@ -250,7 +250,7 @@ const AdminManageProviders = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="7">No providers found</td>
+              <td colSpan="8">No providers found</td>
             </tr>
           )}
         </tbody>

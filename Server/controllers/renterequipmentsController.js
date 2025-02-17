@@ -45,19 +45,19 @@ const addEquipment = async (req, res) => {
     const equipmentId = `EQ${currentYear}EZ${counter.counter}`;
 
     // Check if the equipment already exists
-    const equipmentExists = await Equipment.findOne({ name, category });
-    if (equipmentExists) {
-      const publicId = req.file.filename.split('.')[0]; // Assuming the public ID is based on the file's original name
-      cloudinary.uploader.destroy(publicId, (error, result) => {
-        if (error) {
-          console.error("Error deleting image from Cloudinary:", error);
-        } else {
-          console.log("Image deleted from Cloudinary:", result);
-        }
-      });
+    // const equipmentExists = await Equipment.findOne({ name, category });
+    // if (equipmentExists) {
+    //   const publicId = req.file.filename.split('.')[0]; // Assuming the public ID is based on the file's original name
+    //   cloudinary.uploader.destroy(publicId, (error, result) => {
+    //     if (error) {
+    //       console.error("Error deleting image from Cloudinary:", error);
+    //     } else {
+    //       console.log("Image deleted from Cloudinary:", result);
+    //     }
+    //   });
 
-      return res.status(400).json({ message: "Equipment already exists" });
-    }
+    //   return res.status(400).json({ message: "Equipment already exists" });
+    // }
 
     // Create and save the new equipment
     const newEquipment = new Equipment({

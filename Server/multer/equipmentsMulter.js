@@ -12,12 +12,17 @@ cloudinary.config({
 // Multer storage using Cloudinary
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: {
-    folder: "equipmentuploads", // Cloudinary folder name (same as your local one)
-    format: async (req, file) => "png", // Convert all uploads to PNG
-    public_id: (req, file) => file.originalname.split(".")[0], // Keep original name
+  params: async (req, file) => {
+    const uniqueSuffix = Date.now(); // Unique timestamp to differentiate files
+    const filename = file.originalname.split(".")[0]; // Extract base filename
+    return {
+      folder: "equipmentuploads",
+      format: "png",
+      public_id: `${filename}-${uniqueSuffix}`, // Unique filename to prevent overwriting
+    };
   },
 });
+
 
 // Multer upload configuration
 const upload = multer({
