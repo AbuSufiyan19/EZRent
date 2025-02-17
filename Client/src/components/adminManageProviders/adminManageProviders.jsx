@@ -156,12 +156,12 @@ const AdminManageProviders = () => {
                   <td>
                     {provider.idProof ? (
                       <a
-                        href={`${config.BASE_API_URL}/multer/idproofuploads/${provider.idProof}`}
+                        href={`${provider.idProof}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         <img
-                          src={`${config.BASE_API_URL}/multer/idproofuploads/${provider.idProof}`}
+                          src={`${provider.idProof}`}
                           alt="ID Proof"
                           className="provideridproof-image"
                           style={{ cursor: "pointer" }}

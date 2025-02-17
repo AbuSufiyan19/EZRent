@@ -81,7 +81,7 @@ const RenterRemoveEquipments = () => {
                 <td className="eq-location">{equipment.address}</td>
                 <td>
                   <img
-                    src={`${config.BASE_API_URL}/multer/equipmentuploads/${equipment.image}`}
+                    src={`${equipment.image}`}
                     alt={equipment.name}
                     className="equipment-image"
                     />

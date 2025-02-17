@@ -1,33 +1,29 @@
 const multer = require("multer");
-const fs = require("fs");
-const path = require("path");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("cloudinary").v2;
 
-const UPLOAD_DIR = path.join(__dirname, "idproofuploads");
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: UPLOAD_DIR,
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
+// Multer storage using Cloudinary
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "idproofuploads", // Cloudinary folder name (same as your local one)
+    format: async (req, file) => "png", // Convert all uploads to PNG
+    public_id: (req, file) => `${Date.now()}-${file.originalname.split(".")[0]}`, // Custom file name (removing the comma)
   },
 });
 
-const fileFilter = (req, file, cb) => {
-  const allowedMimeTypes = ["image/jpeg", "image/png", "image/jpg", "application/pdf"];
-  if (allowedMimeTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error("Only jepg/jpg/png and PDF files are allowed!"), false);
-  }
-};
-
+// Multer upload configuration
 const uploadid = multer({
   storage,
-  fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 },
-}).single("idProof");  // Ensure this matches the field name in your form
+  limits: { fileSize: 5 * 1024 * 1024 }, // Limit to 5 MB
+}).single("idProof"); // Ensure this matches the field name in your form
+
 
 module.exports = { uploadid };

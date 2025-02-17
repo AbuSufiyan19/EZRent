@@ -146,7 +146,7 @@ const MyBooking = () => {
           ) : (
             bookings.map((booking) => (
               <tr key={booking._id}>
-                <td className="image-cell"><img src={`${config.BASE_API_URL}/multer/equipmentuploads/${booking.equipimg}`} alt={booking.equipimg} /></td>
+                <td className="image-cell"><img src={`${booking.equipimg}`} alt={booking.equipimg} /></td>
                 <td>{booking.equipId}</td>
                 <td>{new Date(booking.fromDateTime).toLocaleString()}</td>
                 <td>{new Date(booking.toDateTime).toLocaleString()}</td>

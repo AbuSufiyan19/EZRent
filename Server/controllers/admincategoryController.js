@@ -6,10 +6,21 @@ const User = require('../models/userModel');
 const Booking = require('../models/bookingModel');
 
 
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("cloudinary").v2;
+
+// Cloudinary Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Add Equipment Category with image upload
 const addEquipmentCategory = async (req, res) => {
   try {
     const { name } = req.body;
-    const image = req.file ? req.file.filename : null;
+    const image = req.file ? req.file.path : null;
 
     if (!name || !image) {
       return res.status(400).json({ message: "Name and image are required" });
@@ -17,12 +28,17 @@ const addEquipmentCategory = async (req, res) => {
 
     // Check if the category already exists
     const categoryExists = await EquipmentCategory.findOne({ name });
+
     if (categoryExists) {
-      // Delete the uploaded image
-      const imagePath = path.join(__dirname, "../multer/categoryuploads", image);
-      if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
-      }
+      // Delete the uploaded image from Cloudinary if category exists
+      const publicId = req.file.filename.split('.')[0]; // Assuming the public ID is based on the file's original name
+      cloudinary.uploader.destroy(publicId, (error, result) => {
+        if (error) {
+          console.error("Error deleting image from Cloudinary:", error);
+        } else {
+          console.log("Image deleted from Cloudinary:", result);
+        }
+      });
 
       return res.status(400).json({ message: "Category name already exists" });
     }
@@ -36,9 +52,11 @@ const addEquipmentCategory = async (req, res) => {
     await newCategory.save();
     res.status(201).json({ message: "Category added successfully", newCategory });
   } catch (error) {
+    console.error("Error during category creation:", error);
     res.status(500).json({ message: error.message });
   }
 };
+
 
 const fetchCategories = async (req, res) => {
     try {
@@ -49,29 +67,40 @@ const fetchCategories = async (req, res) => {
     }
   };
   
-const removeCategory = async (req, res) => {
-        try {
-          const { id } = req.params;
-          const category = await EquipmentCategory.findById(id);
-      
-          if (!category) {
-            return res.status(404).json({ message: "Category not found" });
-          }
-      
-          // Delete the image file from the uploads folder
-          const imagePath = path.join(__dirname, "../multer/categoryuploads", category.image);
-          if (fs.existsSync(imagePath)) {
-            fs.unlinkSync(imagePath);
-          }
-      
-          // Delete the category from the database
-          await EquipmentCategory.findByIdAndDelete(id);
-          res.status(200).json({ message: "Category deleted successfully" });
-        } catch (error) {
-          res.status(500).json({ message: "Failed to delete category" });
-        }
-      };     
-      
+  const removeCategory = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const category = await EquipmentCategory.findById(id);
+  
+      if (!category) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+  
+      const url = category.image; // The Cloudinary URL stored in the 'image' field
+      const publicId = decodeURIComponent(url.split("/").slice(-2, -1).concat(url.split("/").pop().split(".")[0]).join("/"));
+      // Delete the image from Cloudinary
+      const result = await cloudinary.uploader.destroy(publicId);
+  
+      if (result.result !== 'ok') {
+        console.error("Error deleting image from Cloudinary:", result);
+        return res.status(500).json({ message: "Failed to delete image from Cloudinary" });
+      }
+  
+      console.log("Image deleted from Cloudinary:", result);
+      await Equipment.updateMany(
+        { categoryId: id }, // Query for documents with the categoryId
+        { availabilityStatus: 'blocked' } // Update availability to "blocked"
+      );
+  
+      // Delete the category from the database
+      await EquipmentCategory.findByIdAndDelete(id);
+      res.status(200).json({ message: "Category deleted successfully" });
+    } catch (error) {
+      console.error("Error during category deletion:", error);
+      res.status(500).json({ message: "Failed to delete category" });
+    }
+  };
+        
 const getCategoryCount = async (req, res) => {
   try {
     const count = await EquipmentCategory.countDocuments();

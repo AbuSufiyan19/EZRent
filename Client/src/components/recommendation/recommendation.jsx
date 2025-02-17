@@ -115,7 +115,7 @@ const RecommendationCards = () => {
             equipments.map((equipment) => (
               <div key={equipment._id} className="recommend-card">
                 <img
-                  src={`${config.BASE_API_URL}/multer/equipmentuploads/${equipment.image}`}
+                  src={`${equipment.image}`}
                   alt={equipment.name}
                   className="recommend-img"
                 />

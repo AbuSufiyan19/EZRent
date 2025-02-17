@@ -76,7 +76,7 @@ const RenterReviews = () => {
                 <tr key={booking._id}>
                   <td className="image-cell">
                     <img
-                      src={`${config.BASE_API_URL}/multer/equipmentuploads/${booking.equipimg}`}
+                      src={`${booking.equipimg}`}
                       alt={booking.equipimg}
                       className="mybooking-image"
                       />

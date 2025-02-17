@@ -4,6 +4,10 @@ const jwt = require("jsonwebtoken");
 const Equipment = require("../models/equipmentModel");
 const EquipmentCounter = require("../models/EquipmentCounter");
 
+
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("cloudinary").v2;
+
 const addEquipment = async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
 
@@ -21,7 +25,7 @@ const addEquipment = async (req, res) => {
 
     const { id, username } = decoded;
     const { category, categoryId, name, description, price, lat, lng, address, categoryName, minHours } = req.body;
-    const image = req.file?.filename;
+    const image = req.file?.path;
 
     if (!category || !categoryId || !name || !description || !price || !lat || !lng || !address || !image) {
       return res.status(400).json({ message: "All fields are required" });
@@ -43,10 +47,14 @@ const addEquipment = async (req, res) => {
     // Check if the equipment already exists
     const equipmentExists = await Equipment.findOne({ name, category });
     if (equipmentExists) {
-      const imagePath = path.join(__dirname, "../multer/equipmentuploads", image);
-      if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
-      }
+      const publicId = req.file.filename.split('.')[0]; // Assuming the public ID is based on the file's original name
+      cloudinary.uploader.destroy(publicId, (error, result) => {
+        if (error) {
+          console.error("Error deleting image from Cloudinary:", error);
+        } else {
+          console.log("Image deleted from Cloudinary:", result);
+        }
+      });
 
       return res.status(400).json({ message: "Equipment already exists" });
     }
@@ -113,11 +121,17 @@ const fetchEquipments = async (req, res) => {
         return res.status(404).json({ message: "Equipment not found" });
       }
   
-      // Delete associated image file
-      const imagePath = path.join(__dirname, "../multer/equipmentuploads", equipment.image);
-      if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
+      const url = equipment.image; 
+      const publicId = decodeURIComponent(url.split("/").slice(-2, -1).concat(url.split("/").pop().split(".")[0]).join("/"));
+      // Delete the image from Cloudinary
+      const result = await cloudinary.uploader.destroy(publicId);
+  
+      if (result.result !== 'ok') {
+        console.error("Error deleting image from Cloudinary:", result);
+        return res.status(500).json({ message: "Failed to delete image from Cloudinary" });
       }
+  
+      console.log("Image deleted from Cloudinary:", result);
   
       await Equipment.deleteOne({ _id: id });
       res.status(200).json({ message: "Equipment removed successfully" });

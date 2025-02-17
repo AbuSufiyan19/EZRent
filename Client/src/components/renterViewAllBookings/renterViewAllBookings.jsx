@@ -104,7 +104,7 @@ const RenterViewAllBookings = () => {
                 <td>{booking.equipId}</td>
                 <td className="image-cell">
                   <img
-                    src={`${config.BASE_API_URL}/multer/equipmentuploads/${booking.equipimg}`}
+                    src={`${booking.equipimg}`}
                     alt={booking.equipimg}
                     className="mybooking-image"
                   />

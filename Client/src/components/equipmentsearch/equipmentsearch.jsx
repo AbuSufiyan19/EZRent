@@ -100,7 +100,7 @@ const EquipmentGrid = () => {
       <div className="grid">
         {displayedEquipments.map((equipment) => (
           <div key={equipment._id} className="equipment-card">
-            <img src={`${config.BASE_API_URL}/multer/equipmentuploads/${equipment.image}`} 
+            <img src={`${equipment.image}`} 
                  alt={equipment.name} className="equipment-img" />
             <div className="equipment-overlay">
               <h3 className="equipment-title">{equipment.name}</h3>
@@ -115,7 +115,7 @@ const EquipmentGrid = () => {
         <div className="grid">
           {randomEquipmentsuser.map((equipment) => (
             <div key={equipment._id} className="equipment-card">
-              <img src={`${config.BASE_API_URL}/multer/equipmentuploads/${equipment.image}`} 
+              <img src={`${equipment.image}`} 
                    alt={equipment.name} className="equipment-img" />
               <div className="equipment-overlay">
                 <h3 className="equipment-title">{equipment.name}</h3>

@@ -107,7 +107,7 @@ const Categories = () => {
           searchedEquipments.map((equipment) => (
             <div key={equipment._id} className="categories-card">
               <img
-                src={`${config.BASE_API_URL}/multer/equipmentuploads/${equipment.image}`}
+                src={`${equipment.image}`}
                 alt={equipment.name}
                 className="categories-img"
               />

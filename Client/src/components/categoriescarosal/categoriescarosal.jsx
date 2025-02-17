@@ -52,7 +52,7 @@ const CategoriesCarousel = () => {
             tabIndex={0} // For accessibility
             onKeyDown={(e) => e.key === "Enter" && handleCardClick(category)} // Handle Enter key for accessibility
           >
-            <img src={`${config.BASE_API_URL}/multer/categoryuploads/${category.image}`} alt={category.name} className="category-img" />       
+            <img src={`${category.image}`} alt={category.name} className="category-img" />       
             <h3 className="category-name">{category.name}</h3>
           </div>
         ))}

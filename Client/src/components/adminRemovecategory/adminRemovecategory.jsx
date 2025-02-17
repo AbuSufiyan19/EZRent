@@ -68,7 +68,7 @@ const RenterAddEquipments = () => {
                 <td>{category.name}</td>
                 <td>
                   <img
-                    src={`${config.BASE_API_URL}/multer/categoryuploads/${category.image}`}
+                    src={`${category.image}`}
                     alt={category.name}
                     className="category-image"
                   />

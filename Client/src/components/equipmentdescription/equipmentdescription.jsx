@@ -215,7 +215,7 @@ const EquipmentDescriptionCard = () => {
       <ToastContainer />
       <div className="equipmentdesc-card">
         <div className="equipmentdesc-image">
-          <img src={`${config.BASE_API_URL}/multer/equipmentuploads/${equipment.image}`} alt={equipment.name} />
+          <img src={`${equipment.image}`} alt={equipment.name} />
         </div>
         <div className="equipmentdesc-details">
           <h2 className="equipmentdesc-title">{equipment.name}</h2>

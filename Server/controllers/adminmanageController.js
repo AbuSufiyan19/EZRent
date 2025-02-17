@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const User = require('../models/userModel');
+const Equipment = require('../models/equipmentModel');
 const ContactSupport = require("../models/contactsupportModel");
 
 // Fetch all customers
@@ -59,13 +60,15 @@ const fetchAllProviders = async (req, res) => {
       if (!Provider) {
         return res.status(404).json({ message: "Provider not found" });
       }
-  
-    //   // Delete associated image file
-    //   const imagePath = path.join(__dirname, "../multer/equipmentuploads", Provider.image);
-    //   if (fs.existsSync(imagePath)) {
-    //     fs.unlinkSync(imagePath);
-    //   }
-  
+       // Find all equipment where renterid matches the provider ID
+       const equipments = await Equipment.find({ renterid: id });
+
+       if (equipments.length > 0) {
+           // Update all matched equipment to set availabilityStatus to 'Blocked'
+           await Equipment.updateMany({ renterid: id }, { $set: { availabilityStatus: "Blocked" } });
+           console.log(`Updated ${equipments.length} equipment items to "Blocked"`);
+       }
+
       await Provider.deleteOne({ _id: id });
       res.status(200).json({ message: "Provider removed successfully" });
     } catch (error) {

@@ -230,7 +230,7 @@ const uploadIdProof = async (req, res) => {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    const newFilePath = req.file.filename; // New uploaded file name
+    const newFilePath = req.file.path; // New uploaded file name
 
     // Find user by ID
     const user = await User.findById(userId);
@@ -238,14 +238,21 @@ const uploadIdProof = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if the user already has an ID proof uploaded
-    if (user.idProof) {
-      const oldFilePath = path.join(__dirname, "../multer/idproofuploads", user.idProof);
-      // Remove the old file if it exists
-      if (fs.existsSync(oldFilePath)) {
-        fs.unlinkSync(oldFilePath);
-      }
-    }
+  //   if (user.idProof) {
+  //     const url = user.idProof; // The Cloudinary URL stored in the 'idProof' field
+  //     const decodedUrl = decodeURIComponent(url); // Decode the URL to handle any %20 or other encoded characters
+  //     const publicId = decodedUrl.split("/").slice(-2).join("/").split(".")[0]; // Extract public ID and remove file extension
+
+  //     console.log("Public ID:", publicId);
+  
+  // // Delete the image from Cloudinary
+  //     const result = await cloudinary.uploader.destroy(publicId);
+  //     console.log(result);
+  //     if (result.result !== 'ok') {
+  //       console.error("Error deleting image from Cloudinary:", result);
+  //       return res.status(500).json({ message: "Failed to delete image from Cloudinary" });
+  //     }
+  //   }
 
     // Update user with the new file path and set status to 'uploaded'
     user.idProof = newFilePath;
