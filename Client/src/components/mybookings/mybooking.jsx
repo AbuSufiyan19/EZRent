@@ -142,7 +142,7 @@ const MyBooking = () => {
         </thead>
         <tbody>
           {bookings.length === 0 ? (
-            <tr><td colSpan="8" style={{ textAlign: 'center' }}>No bookings available.</td></tr>
+            <tr><td colSpan="13" style={{ textAlign: 'center' }}>No bookings available.</td></tr>
           ) : (
             bookings.map((booking) => (
               <tr key={booking._id}>
