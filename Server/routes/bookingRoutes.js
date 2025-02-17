@@ -69,13 +69,14 @@ router.post("/book", async (req, res) => {
       totalHours,
       totalPrice,
       notifiedSMS: false,
+      statusEq: false,
     });
 
     await newBooking.save();
     // Update equipment availability
     const updatedEquipment = await Equipment.findByIdAndUpdate(
       equipmentId, // Ensure this is the correct ID
-      { availabilityStatus: "rented" }, // Set status as rented
+      { availabilityStatus: "available" }, // Set status as rented
       { new: true } // Return updated document
   );
 
@@ -291,14 +292,56 @@ cron.schedule("* * * * *", async () => {
           { availabilityStatus: "available" },
           { new: true }
         );
-        
         console.log(`Booking marked as notified: ${booking._id}`);
+
       } else {
         console.log(`User ${user ? user.fullName : "Unknown"} has no valid mobile number`);
       }
     }
   } catch (error) {
     console.error("Error checking expired bookings:", error);
+  }
+});
+
+
+cron.schedule("* * * * *", async () => {  // Runs every minute
+  try {
+    console.log("Checking for upcoming bookings...");
+
+    const now = new Date();
+    const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
+
+    // Find bookings starting within the next hour that haven't been processed yet
+    const upcomingBookings = await Booking.find({
+      fromDateTime: { $lte: oneHourLater, $gt: now },
+      status: "Confirmed",
+      statusEq: false,  // Ensure we don't process the same booking again
+    });
+
+    console.log(`Found ${upcomingBookings.length} upcoming bookings`);
+
+    for (const booking of upcomingBookings) {
+      const updatedEquipment = await Equipment.findByIdAndUpdate(
+        booking.equipmentId,
+        { availabilityStatus: "rented" },
+        { new: true }
+      );
+
+      if (updatedEquipment) {
+        console.log(`Equipment ${updatedEquipment._id} marked as rented.`);
+      }
+
+      // Update the booking to prevent re-processing
+      await Booking.findByIdAndUpdate(
+        booking._id,
+        { statusEq: true },
+        { new: true }
+      );
+
+      console.log(`Booking ${booking._id} statusEq set to true.`);
+    }
+  } catch (error) {
+    console.error("Error updating equipment status:", error);
   }
 });
 

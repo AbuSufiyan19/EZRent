@@ -1,11 +1,11 @@
 from flask import Flask, jsonify  # type: ignore
 import os
-import pandas as pd
-import numpy as np
+import pandas as pd # type: ignore
+import numpy as np # type: ignore
 import tensorflow as tf  # type: ignore
-from flask_cors import CORS
+from flask_cors import CORS # type: ignore
 from tensorflow import keras  # type: ignore
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split # type: ignore
 
 app = Flask(__name__)
 CORS(app)
