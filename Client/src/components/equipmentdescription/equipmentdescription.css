@@ -162,14 +162,16 @@
     }
   }   
 
-  @media (max-width: 768px){
+  @media (max-width: 450px){
     .equipmentdesc-card-outer{
         padding: 10px;
         padding-top: 95px;
         padding-bottom: 40px;
     }
     .equipmentdesc-card .equipmentdesc-image img {
-        max-width: 100%;
+          width: 350px;
+          height: 230px;
+          border-radius: 10px;
     }
     .equipmentdesc-totalprice{
       font-size: 17px;

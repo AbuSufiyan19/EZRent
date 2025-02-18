@@ -6,18 +6,24 @@
   .renter-main {
     flex: 1;
     margin-left: 0;
+    width: 100%;
     transition: margin-left 0.3s ease;
   }
   
   .sidebar.open + .renter-main {
-    margin-left: 250px;
+    /* margin-left: 250px; */
   }
-  
+  @media (min-width: 769px) {
+    .sidebar.open + .renter-main {
+      margin-left: 250px;
+      /* width: 0; */
+    }
+  }
   main {
     padding: 20px;
     background-color: #f9f9f9;
     height: calc(100vh - 60px);
-    overflow-y: auto;
+    /* overflow-y: auto; */
   }
   
   

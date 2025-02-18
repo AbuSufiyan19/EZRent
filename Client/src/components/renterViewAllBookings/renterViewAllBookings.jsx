@@ -134,7 +134,7 @@ const RenterViewAllBookings = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="8" style={{ textAlign: "center" }}>No bookings available.</td>
+              <td colSpan="12" style={{ textAlign: "center" }}>No bookings available.</td>
             </tr>
           )}
         </tbody>

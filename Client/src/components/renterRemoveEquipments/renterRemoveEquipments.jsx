@@ -96,7 +96,7 @@ const RenterRemoveEquipments = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="7">No equipments found</td>
+              <td colSpan="8">No equipments found</td>
             </tr>
           )}
         </tbody>

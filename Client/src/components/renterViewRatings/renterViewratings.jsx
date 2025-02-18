@@ -88,7 +88,7 @@ const RenterReviews = () => {
               ))
           ) : (
             <tr>
-              <td colSpan="3" style={{ textAlign: "center" }}>No reviews available.</td>
+              <td colSpan="4" style={{ textAlign: "center" }}>No reviews available.</td>
             </tr>
           )}
         </tbody>
