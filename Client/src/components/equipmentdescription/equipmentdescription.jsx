@@ -131,34 +131,49 @@ const EquipmentDescriptionCard = () => {
       return;
     }
     try {
-      const response = await axios.post(`${config.BASE_API_URL}/bookings/book`, {
-        equipId: equipment.equipmentId,
+    //   const response = await axios.post(`${config.BASE_API_URL}/bookings/book`, {
+    //     equipId: equipment.equipmentId,
+    //     renterId: equipment.renterid,
+    //     equipmentId: equipment._id,
+    //     equipimg: equipment.image,
+    //     fromDateTime,
+    //     toDateTime,
+    //     totalHours,
+    //     totalPrice
+    //   }, { 
+    //     headers: { Authorization: `Bearer ${token}` },
+    //   });
+      
+    //   toast.success("Booking successful!");
+
+    //   await axios.post(`${config.BASE_API_URL}/bookings/save-datacsv`, {
+    //     bookingId: response.data.booking._id,
+    //     equipmentId: response.data.equipment._id
+    //   });
+  
+    //   // Send email confirmation
+    //   await axios.post(`${config.BASE_API_URL}/bookings/send-booking-email`, { 
+    //     bookingId: response.data.booking._id 
+    // });
+
+    const bookingData = {
+      equipId: equipment.equipmentId,
         renterId: equipment.renterid,
         equipmentId: equipment._id,
         equipimg: equipment.image,
-        fromDateTime,
-        toDateTime,
-        totalHours,
-        totalPrice
-      }, { 
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      
-      toast.success("Booking successful!");
+        fromdate: fromDateTime,
+        todate: toDateTime,
+        totalhours: totalHours,
+        totalprice: totalPrice,
+        eqname: equipment.name,
+    };
 
-      await axios.post(`${config.BASE_API_URL}/bookings/save-datacsv`, {
-        bookingId: response.data.booking._id,
-        equipmentId: response.data.equipment._id
-      });
-  
-      // Send email confirmation
-      await axios.post(`${config.BASE_API_URL}/bookings/send-booking-email`, { 
-        bookingId: response.data.booking._id 
-    });
+    navigate("/checkout", { state: bookingData });
 
-      setTimeout(() => {
-        navigate("/mybookings");
-      }, 2000);
+
+      // setTimeout(() => {
+      //   navigate("/mybookings");
+      // }, 2000);
 
       fetchBookedSlots(); // Refresh booked slots
       setFromDate("");
@@ -303,7 +318,7 @@ const EquipmentDescriptionCard = () => {
                   onClick={handleBooking} 
                   disabled={isBooking} // Disable button when booking is in progress
                 >
-                  {isBooking ? "Booking..." : "Book Now"} {/* Show loading text */}
+                  {isBooking ? "Booking..." : "Proceed to pay"} {/* Show loading text */}
                 </button>
             </>
           )}

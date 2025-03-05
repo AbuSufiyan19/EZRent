@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChevronDown, ChevronUp, LayoutDashboard, Package, CalendarCheck, Star, ClipboardList } from "lucide-react";
+import { ChevronDown, ChevronUp, LayoutDashboard, Package, CalendarCheck, Star, ClipboardList, User } from "lucide-react";
 import "./renterSidebar.css";
 import logo1 from "/loginlogo.png";
 import logo2 from "/ezrent.png";
@@ -97,6 +97,15 @@ const RenterSidebar = ({ isOpen, toggleSidebar, setActivePage }) => {
                 <span>Ratings & Reviews</span>
               </div>
             </li>
+
+            {/* Profile */}
+            <li onClick={() => handleSetActivePage("profile")} className={activePage === "profile" ? "active" : ""}>
+              <div className="nav-item">
+                <User size={18} className="icon" />
+                <span>Profile</span>
+              </div>
+            </li>
+
           </ul>
         </nav>
       </div>

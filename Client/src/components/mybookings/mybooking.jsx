@@ -134,8 +134,10 @@ const MyBooking = () => {
             <th>Extra Hours</th>
             <th>Extra Amount</th>
             <th>Status</th>
-            <th>Ratings</th>
-            <th>Reviews</th>
+            <th>Transaction-Id</th>
+            <th>Payment Status</th>
+            {/* <th>Ratings</th>
+            <th>Reviews</th> */}
             <th>Action</th>
             <th>Rate Equipment</th>
           </tr>
@@ -155,8 +157,10 @@ const MyBooking = () => {
                 <td>{booking.extraTimehours ? `${booking.extraTimehours} hrs` : "--"}</td>
                 <td>{booking.extraPrice ? `Rs ${booking.extraPrice}` : "--"}</td>
                 <td>{booking.status}</td>
-                <td>{booking.ratings ? `${booking.ratings}` : "--"}</td>
-                <td>{booking.reviews ? `${booking.reviews}` : "--"}</td>
+                <td>{booking.transactionId}</td>
+                <td>{booking.paymentStatus}</td>
+                {/* <td>{booking.ratings ? `${booking.ratings}` : "--"}</td>
+                <td>{booking.reviews ? `${booking.reviews}` : "--"}</td> */}
                 <td>
                   {booking.status === "Confirmed" && !booking.extraPrice ? (
                     <button className="extend-btn" onClick={() => handleRequestExtraTime(booking)}>

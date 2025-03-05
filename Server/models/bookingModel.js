@@ -16,6 +16,9 @@ const bookingSchema = new mongoose.Schema({
   reviews: {type: String},
   notifiedSMS: { type: Boolean},
   statusEq: { type: Boolean},
+  transactionId: {type: String},
+  upitransactionId: {type: String},
+  paymentStatus: {type: String},
   status: { type: String, enum: ["Pending", "Confirmed", "Cancelled", "Completed"], default: "Pending" },
 }, { timestamps: true });
 

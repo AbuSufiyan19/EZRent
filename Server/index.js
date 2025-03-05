@@ -8,6 +8,7 @@ const adminRoutes = require("./routes/adminRoutes");
 const renterRoutes = require("./routes/renterRoutes");
 const customerRoutes = require("./routes/customerRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 
 const path = require("path");
 const app = express();
@@ -32,6 +33,7 @@ app.use('/admin',adminRoutes);
 app.use('/renter',renterRoutes);
 app.use('/customer',customerRoutes);
 app.use('/bookings',bookingRoutes);
+app.use('/payment', paymentRoutes);
 
 
 // Routes

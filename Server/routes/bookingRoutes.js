@@ -30,10 +30,14 @@ router.post("/book", async (req, res) => {
     }
 
     const { id, username } = decoded;
-    const { equipmentId, fromDateTime, toDateTime, totalHours, totalPrice, equipId, equipimg, renterId} = req.body;
+    const { equipmentId, fromDateTime, toDateTime, totalHours, totalPrice, equipId, equipimg, renterId, transactionId, upitransactionId,
+      paymentStatus,} = req.body;
+
+      console.log(req.body);
 
     // Ensure all required fields are provided
-    if (!equipmentId || !fromDateTime || !toDateTime || !totalHours || !totalPrice || !equipId) {
+    if (!equipmentId || !fromDateTime || !toDateTime || !totalHours || !totalPrice || !equipId || !transactionId ||!upitransactionId ||
+      !paymentStatus) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -70,6 +74,9 @@ router.post("/book", async (req, res) => {
       totalPrice,
       notifiedSMS: false,
       statusEq: false,
+      transactionId,
+      upitransactionId,
+      paymentStatus,
     });
 
     await newBooking.save();
@@ -83,7 +90,7 @@ router.post("/book", async (req, res) => {
   if (!updatedEquipment) {
       return res.status(404).json({ message: "Equipment not found" });
   }
-    res.status(201).json({ message: "Booking successful!", booking: newBooking, equipment: updatedEquipment });
+    res.status(200).json({ message: "Booking successful!", booking: newBooking, equipment: updatedEquipment });
 
   } catch (error) {
     console.error("Error booking equipment:", error);
@@ -143,7 +150,7 @@ router.post("/send-booking-email", async (req, res) => {
                     <li><b>Total Price:</b> ₹${totalPrice}</li>
                 </ul>
                 <p><strong>${equipment.name}</strong></p>
-                  <img src="${encodeURI(process.env.BACKEND_URL + '/multer/equipmentuploads/' + equipment.image)}"
+                  <img src="${encodeURI(equipment.image)}"
                       alt="${equipment.name}"
                       style="width: 200px; height: auto; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.1);"/>
 
@@ -515,9 +522,12 @@ router.get('/fetchmybookings', async (req, res) => {
     try {
       const booking = await Booking.findByIdAndUpdate(
         id,
-        { status: 'Confirmed' }, // Change status to 'booked'
-        { new: true } // Return the updated document
-      );
+        { 
+          status: "Confirmed", // Update status
+          paymentStatus: "Paid" // Update payment status
+        },
+          { new: true } // Return the updated document
+        );
   
       if (!booking) {
         return res.status(404).json({ message: "Booking not found." });
@@ -538,7 +548,7 @@ router.get('/fetchmybookings', async (req, res) => {
         // Find the booking to get the equipmentId
         const booking = await Booking.findByIdAndUpdate(
             id,
-            { status: 'Cancelled' }, // Change status to 'Cancelled'
+            { status: 'Cancelled', paymentStatus: " -- " }, // Change status to 'Cancelled'
             { new: true } // Return the updated document
         );
 
@@ -584,6 +594,9 @@ router.put("/update-status/:id", async (req, res) => {
 
       // Update booking status
       booking.status = status;
+      if (status === "Cancelled"){
+        booking.paymentStatus = " -- ";
+      }
       await booking.save();
 
       let updatedEquipment = null;

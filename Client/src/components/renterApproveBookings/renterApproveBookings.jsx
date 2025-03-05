@@ -97,6 +97,9 @@ const RenterApproveBookings = () => {
             <th>To Date</th>
             <th>Total Hours</th>
             <th>Total Amount</th>
+            <th>Payment Status</th>
+            <th>Transaction-Id</th>
+            <th>UPI-PaymentId</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -116,6 +119,9 @@ const RenterApproveBookings = () => {
                 <td>{new Date(booking.toDateTime).toLocaleString()}</td>
                 <td>{booking.totalHours} hrs</td>
                 <td>Rs {booking.totalPrice}</td>
+                <td>{booking.paymentStatus}</td>
+                <td>{booking.transactionId}</td>
+                <td>{booking.upitransactionId}</td>
                 <td>
                    <button className="activate-btn" onClick={() => handleApprove(booking._id)}>Approve</button>
                    <button className="reject-btn" onClick={() => handleReject(booking._id)}>Reject</button>
@@ -124,7 +130,7 @@ const RenterApproveBookings = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="7" style={{ textAlign: 'center' }}>
+              <td colSpan="10" style={{ textAlign: 'center' }}>
                 No bookings available.
               </td>
             </tr>

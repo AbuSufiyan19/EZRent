@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
   },
   status: { type: String },
   idProof: { type: String },
+  upiId: { type: String },
 
   resetPasswordToken: { type: String },
   resetPasswordExpires: { type: Date },

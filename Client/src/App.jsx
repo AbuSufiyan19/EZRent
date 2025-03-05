@@ -16,6 +16,7 @@ import AccountReUploadIdProof from './pages/renterauthPages/accountreuploadidpro
 import AccountPendingVerification from './pages/renterauthPages/accountpendingverification';
 import AccountBlocked from './pages/renterauthPages/renteraccountblockedPage';
 import ResetPassword from './pages/resetPassword';
+import CheckoutPage from './pages/checkoutpage';  
 
 const App = () => {
   return (
@@ -38,6 +39,9 @@ const App = () => {
         <Route path="/account-pendingverification" element={<AccountPendingVerification />} /> 
         <Route path="/account-reuploadIdproof" element={<AccountReUploadIdProof />} />
         <Route path="/account-blocked" element={<AccountBlocked />} />
+
+        <Route path="/checkout" element={<CheckoutPage />} />
+
 
 
       </Routes>

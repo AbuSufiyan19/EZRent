@@ -163,4 +163,44 @@ const fetchEquipments = async (req, res) => {
     }
   };
 
-module.exports = { addEquipment, fetchEquipments, removeEquipment, updateAvailability };
+  const User = require("../models/userModel");
+  const getRenterData = async (req, res) => { 
+    try {
+      const renter = await User.findById(req.params.renterId);
+      if (!renter) {
+        return res.status(404).json({ message: "Renter not found" });
+      }
+      res.json(renter);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching renter details" });
+    }
+  };
+
+  
+  // Update Renter Profile
+  const updateProfile = async (req, res) => {
+    try {
+      const { renterId } = req.params; // Get renterId from request parameters
+      const { fullName, mobileNumber, upiId } = req.body; // Get data from request body
+  
+      // Check if the renter exists
+      const renter = await User.findById(renterId);
+      if (!renter) {
+        return res.status(404).json({ message: "Renter not found" });
+      }
+  
+      // Update only the provided fields
+      if (fullName) renter.fullName = fullName;
+      if (mobileNumber) renter.mobileNumber = mobileNumber;
+      if (upiId) renter.upiId = upiId;
+  
+      await renter.save(); // Save changes
+  
+      res.status(200).json({ message: "Profile updated successfully", renter });
+    } catch (error) {
+      console.error("Update error:", error);
+      res.status(500).json({ message: "Failed to update profile" });
+    }
+  };
+    
+module.exports = { addEquipment, fetchEquipments, removeEquipment, updateAvailability, getRenterData, updateProfile };

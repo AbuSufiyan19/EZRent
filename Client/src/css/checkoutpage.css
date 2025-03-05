@@ -1,0 +1,181 @@
+/* Checkout Page Layout */
+.checkout-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-width: 900px;
+    margin: auto;
+    padding: 10px;
+    padding-top: 80px;
+  }
+  
+  /* Shopping Cart Section */
+  .shopping-cart {
+    flex: 1;
+    max-width: 45%;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  .shopping-cart h2{
+    margin-bottom: 0;
+  }
+
+  .cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .cart-img {
+    width: 80px;
+    height: 80px;
+    margin-right: 15px;
+  }
+  
+  .cart-details {
+    flex: 1;
+  }
+
+  .qrcontainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .price {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .summary p {
+    margin: 5px 0;
+  }
+  
+  .summary h3 {
+    margin-top: 10px;
+  }
+  
+  /* Checkout Form Section */
+  .checkout-form {
+    flex: 1;
+    max-width: 45%;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .tnx-input {
+    width: 100%;
+    height: 20px;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .nx-container{
+    display: inline;
+    justify-content: center;
+    align-items: center;  
+  }
+
+  .logocontainercheckout{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;    
+
+  }
+  
+  .checkout-btn, .paypal-btn, .upi-btn, .gateway-btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  .confirmtnx-btn{
+    width: 100%;
+    padding: 3px;
+    margin-top: 10px;
+    height: 40px;
+    background: green;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .checkout-btn {
+    background: black;
+    color: white;
+  }
+  
+  .paypal-btn {
+    background: #ffc439;
+    color: black;
+  }
+  
+  .upi-btn {
+    background: green;
+    color: white;
+  }
+  
+  .gateway-btn {
+    background: blue;
+    color: white;
+  }
+  
+  .payment-options {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .payment-options button {
+    width: 48%;
+  }
+  
+  /* Next Steps */
+  .next-steps {
+    margin-top: 20px;
+    font-size: 14px;
+  }
+
+  .next-steps h3{
+    margin: 0;
+  } 
+
+  /* Responsive Design */
+  @media screen and (max-width: 768px) {
+    .checkout-container {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .shopping-cart{
+        margin-bottom: 0 !important;
+    }
+
+    .logocontainercheckout{
+        display: none;
+    }
+  
+    .shopping-cart, .checkout-form {
+      max-width: 100%;
+      margin-bottom: 20px;
+    }
+  
+    .payment-options {
+      flex-direction: column;
+    }
+  
+    .payment-options button {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+  

@@ -58,7 +58,7 @@ const RenterReviews = () => {
 
   return (
     <div className="renter-content">
-      <h2>Customer Ratings & Reviews</h2>
+      <h2>Equipment Ratings & Reviews</h2>
       <table className="mybooking-table">
         <thead>
           <tr>

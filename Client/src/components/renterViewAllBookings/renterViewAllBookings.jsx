@@ -91,8 +91,9 @@ const RenterViewAllBookings = () => {
             <th>Total Amount</th>
             <th>Extra Time</th>
             <th>Extra Amount</th>
-            <th>Ratings</th>
-            <th>Reviews</th>
+            <th>Payment Status</th>
+            <th>Transaction-Id</th>
+            <th>UPI-PaymentId</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -115,8 +116,9 @@ const RenterViewAllBookings = () => {
                 <td>Rs {booking.totalPrice}</td>
                 <td>{booking.extraTimehours ? `${booking.extraTimehours} hrs` : "--"}</td>
                 <td>{booking.extraPrice ? `Rs ${booking.extraPrice}` : "--"}</td>
-                <td>{booking.ratings ? `${booking.ratings}` : "--"}</td>
-                <td>{booking.reviews ? `${booking.reviews}` : "--"}</td>
+                <td>{booking.paymentStatus}</td>
+                <td>{booking.transactionId}</td>
+                <td>{booking.upitransactionId}</td>
                 <td>{booking.status}</td>
                 <td>
                   {booking.status === "Confirmed" && (
@@ -134,7 +136,7 @@ const RenterViewAllBookings = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="12" style={{ textAlign: "center" }}>No bookings available.</td>
+              <td colSpan="13" style={{ textAlign: "center" }}>No bookings available.</td>
             </tr>
           )}
         </tbody>

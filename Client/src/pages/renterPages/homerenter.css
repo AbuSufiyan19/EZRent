@@ -10,9 +10,6 @@
     transition: margin-left 0.3s ease;
   }
   
-  .sidebar.open + .renter-main {
-    /* margin-left: 250px; */
-  }
   @media (min-width: 769px) {
     .sidebar.open + .renter-main {
       margin-left: 250px;

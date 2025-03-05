@@ -10,6 +10,9 @@ import RemoveEquipments from "../../components/renterRemoveEquipments/renterRemo
 import ApproveBookings from "../../components/renterApproveBookings/renterApproveBookings";
 import ViewAllBookings from "../../components/renterViewAllBookings/renterViewAllBookings";
 import RatingsReviews from "../../components/renterViewRatings/renterViewratings";
+import RenterProfile from "../../components/renterProfile/renterProfile";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./homerenter.css";
 
 const HomeRent = () => {
@@ -34,6 +37,7 @@ const HomeRent = () => {
 
         if (response.status === 200) {
           const userType = response.data.userType;
+          const userId = response.data.userId;
 
           switch (userType) {
             case "admin":
@@ -41,7 +45,7 @@ const HomeRent = () => {
               break;
             case "provider":
               // Step 2: Check the provider's status
-              checkProviderStatus(response.data.userId); // Call status check function
+              checkProviderStatus(userId);
               break;
             case "customer":
               navigate("/");
@@ -67,6 +71,7 @@ const HomeRent = () => {
 
           switch (status) {
             case "approved":
+              checkProviderUPI(userId);
               break; // Stay on the same page
             case "registered":
               navigate("/account-uploadIdproof"); // Redirect to pending verification page
@@ -91,6 +96,20 @@ const HomeRent = () => {
       } catch (error) {
         console.error("Error checking provider status:", error.response?.data?.message || error.message);
         navigate("/login");
+      }
+    };
+
+    const checkProviderUPI = async (userId) => {
+      try {
+        const profileResponse = await axios.get(`${config.BASE_API_URL}/renter/renterdata/${userId}`);
+        
+        if (!profileResponse.data.upiId) {
+          toast.warning("Please update your UPI ID in the Profile section!");
+          setActivePage("profile"); // Set Profile as the active page
+        }
+      } catch (error) {
+        console.error("Error fetching provider details:", error.response?.data?.message || error.message);
+        toast.error("Failed to load profile details.");
       }
     };
 
@@ -124,6 +143,8 @@ const HomeRent = () => {
         return <ViewAllBookings />;
       case "ratings":
         return <RatingsReviews />;
+      case "profile":
+        return <RenterProfile />;
       default:
         return <Dashboard />;
     }
@@ -138,6 +159,7 @@ const HomeRent = () => {
         <Header toggleSidebar={toggleSidebar} />
         <main>{renderPage()}</main>
       </div>
+      <ToastContainer />
     </div>
   );
 };
