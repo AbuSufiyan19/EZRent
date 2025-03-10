@@ -70,13 +70,13 @@ const HomeMainPage = () => {
         <BackgroundSlider />  
         {/* Content Section */}
         <div className="content-section">
-
+    
           {/* Overlay Image */}
-          <h1 className="title">Construction Equipment Rental</h1>
+          <h1 className="title">Construction Equipments Rental</h1>
 
           {/* Description */}
           <p className="description">
-            Welcome to EZRent, your ultimate partner in construction equipment rental.
+            Welcome to EZRent, your ultimate partner in construction equipments rental. 
             Join us today and explore a world of possibilities!
           </p>
         </div>

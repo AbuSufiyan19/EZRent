@@ -29,8 +29,24 @@ const formatDateTime = (isoString) => {
 const CheckoutPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const bookingDetails = location.state || {}; 
-  const [renterDetails, setRenterDetails] = useState(null);
+//   const bookingData = location.state || {}; 
+  const {  renterDetails, bookingData } = location.state || {};
+
+  useEffect(() => {
+    if (!bookingData || !renterDetails) {
+        toast.error("Booking details are missing. Please try again.");
+        navigate(-1); // Go back to the previous page
+    }
+}, [bookingData, renterDetails, navigate]); // Run only if missing data
+
+// Prevent rendering the page while redirecting
+if (!bookingData || !renterDetails) {
+    return null;
+}
+
+
+
+//   const [renterDetails, setRenterDetails] = useState(null);
   const [qrCode, setQrCode] = useState("");
   const [transactionId, setTransactionId] = useState("");   
   const [upitransactionId, setupitransactionId] = useState("");
@@ -53,28 +69,171 @@ const generateQrCode = async (upiLink) => {
     }
 };
 
-  useEffect(() => {
-    if (bookingDetails.renterId) {
-      fetchRenterDetails(bookingDetails.renterId);
-    }
-  }, [bookingDetails.renterId]);
+// useEffect(() => {
+//     if (bookingData.renterId) {
+//         fetchRenterDetails(bookingData.renterId);
+//     } else {
+//         console.warn("No renterId found in booking details."); // Debugging
+//     }
+// }, [bookingData.renterId]);
 
-  const fetchRenterDetails = async (renterId) => {
-    try {
-        const response = await axios.get(`${config.BASE_API_URL}/renter/renterdata/${renterId}`);
-        if (mountedRef.current) {
-            setRenterDetails(response.data);
-        }
-    } catch (error) {
-        console.error("Error fetching renter details:", error);
+
+//   const fetchRenterDetails = async (renterId) => {
+//     try {
+//         const response = await axios.get(`${config.BASE_API_URL}/renter/renterdata/${renterId}`);
+//         if (mountedRef.current) {
+//             setRenterDetails(response.data);
+//         }
+//     } catch (error) {
+//         console.error("Error fetching renter details:", error);
+//     }
+//   };
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => console.log("Razorpay script loaded successfully");
+    document.body.appendChild(script);
+}, []);
+
+const handleRazorpayPayment = async () => {
+    if (!renterDetails || !bookingData) {
+        toast.error("Booking or renter details are not loaded. Please wait and try again.");
+        return;
     }
-  };
+
+    try {
+        const { data } = await axios.post(`${config.BASE_API_URL}/payment/create-order`, { 
+            amount: bookingData.totalprice, 
+            currency: "INR" 
+        });
+
+        if (!data || !data.id) {
+            toast.error("Failed to create order. Please try again.");
+            return;
+        }
+
+        const options = {
+            key: config.RP_API_KEY_ID, // Access environment variable correctly
+            amount: data.amount,
+            currency: data.currency,
+            order_id: data.id,
+            name: "EZRent Payment",
+            description: `Rental Payment for ${bookingData.eqname}`,
+            handler: async function (response) {
+                try {
+                    console.log("Razorpay Response:", response);
+
+                    const verifyResponse = await axios.post(`${config.BASE_API_URL}/payment/verify-payment`, response);
+
+                    if (verifyResponse.data.status === "success") {
+                        toast.success("Payment successful!");
+
+                        // ✅ Assign transaction ID & mark as Success
+                        handleConfirmPaymentRazorpay(data.id, "Success");
+                    } else {
+                        toast.error("Payment verification failed.");
+                        handleConfirmPaymentRazorpay(data.id, "Failed");
+                    }
+                } catch (error) {
+                    console.error("Error verifying payment:", error);
+                    toast.error("Error verifying payment.");
+                    handleConfirmPaymentRazorpay(data.id, "Failed");
+                }
+            },
+            prefill: {
+                name: renterDetails.fullName || "Customer",
+                email: renterDetails.email || "customer@example.com",
+                contact: renterDetails.mobileNumber || "9999999999",
+            },
+            notes: {
+                "Equipment Name": bookingData.eqname || "N/A",
+                "Equipment ID": bookingData.equipId || "N/A",
+                "Rental From": formatDateTime(bookingData.fromdate),
+                "Rental To": formatDateTime(bookingData.todate),
+                "Total Hours": formatNumber(bookingData.totalhours),
+                "Total Price": `₹ ${formatNumber(bookingData.totalprice)}`,
+                "Renter Name": renterDetails.fullName || "N/A",
+                "Renter Contact": renterDetails.mobileNumber || "N/A",
+                "Renter Email": renterDetails.email || "N/A",
+            },
+            theme: {
+                color: "#3399cc",
+            },
+        };
+
+        const razor = new window.Razorpay(options);
+        razor.open();
+    } catch (error) {
+        console.error("Error in payment:", error);
+        toast.error("Payment process failed.");
+    }
+};
+
+const handleConfirmPaymentRazorpay = async (transactionId, paymentStatus) => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                toast.error("User authentication failed. Please log in again.");
+                return;
+            }        
+
+            const response = await axios.post(`${config.BASE_API_URL}/bookings/book`, {
+                equipId: bookingData.equipId,
+                renterId: bookingData.renterId,
+                equipmentId: bookingData.equipmentId,
+                equipimg: bookingData.equipimg,
+                fromDateTime: bookingData.fromdate,
+                toDateTime: bookingData.todate,
+                totalHours: bookingData.totalhours,
+                totalPrice: bookingData.totalprice,
+                transactionId,  // ✅ Assign Razorpay Order ID as transactionId
+                upitransactionId: "--",  // ✅ UPI Transaction ID is not applicable for Razorpay
+                paymentStatus
+            }, { 
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (response.status === 200 && response.data?.booking?._id) {
+                toast.success("Booking successful!");
+                setupitransactionId("");
+            
+                try {
+                    await Promise.all([
+                         axios.post(`${config.BASE_API_URL}/bookings/save-datacsv`, {
+                            bookingId: response.data.booking._id,
+                            equipmentId: response.data.equipment._id
+                        }),
+                
+                         axios.post(`${config.BASE_API_URL}/bookings/send-booking-email`, { 
+                            bookingId: response.data.booking._id 
+                        })  
+                    ]);
+            
+                    setTimeout(() => {
+                        navigate("/mybookings");
+                    }, 500);
+                } catch (error) {
+                    console.error("Post-booking tasks failed:", error);
+                    toast.error("Error processing booking details. Please check again.");
+                }
+            } else {
+                toast.error("Unexpected response. Please try again.");
+            }
+            
+        } catch (error) {
+            toast.error("Payment confirmation failed. Please try again.");
+        }
+};
+
+
+
   const handleUPIPayment = async () => {
     try {
         const response = await axios.post(`${config.BASE_API_URL}/payment/generate-upi-link`, {
-            renterId: bookingDetails.renterId,
-            amount: bookingDetails.totalprice,
-            equipmentId: bookingDetails.equipId
+            renterId: bookingData.renterId,
+            amount: bookingData.totalprice,
+            equipmentId: bookingData.equipId
         });
 
         if (!response.data.upiLink) {
@@ -113,6 +272,8 @@ const generateQrCode = async (upiLink) => {
         alert("Payment processing failed. Please try again.");
     }
 };
+
+
 const handleConfirmPayment = async () => {
     if (!upitransactionId.trim()) {
         toast.error("Transaction ID is missing. Complete the payment first.");
@@ -125,14 +286,14 @@ const handleConfirmPayment = async () => {
             return;
         }        
             const response = await axios.post(`${config.BASE_API_URL}/bookings/book`, {
-                equipId: bookingDetails.equipId,
-                renterId: bookingDetails.renterId,
-                equipmentId: bookingDetails.equipmentId,
-                equipimg: bookingDetails.equipimg,
-                fromDateTime: bookingDetails.fromdate,
-                toDateTime: bookingDetails.todate,
-                totalHours: bookingDetails.totalhours,
-                totalPrice: bookingDetails.totalprice,
+                equipId: bookingData.equipId,
+                renterId: bookingData.renterId,
+                equipmentId: bookingData.equipmentId,
+                equipimg: bookingData.equipimg,
+                fromDateTime: bookingData.fromdate,
+                toDateTime: bookingData.todate,
+                totalHours: bookingData.totalhours,
+                totalPrice: bookingData.totalprice,
                 transactionId,
                 upitransactionId,
                 paymentStatus: "Pending"
@@ -158,7 +319,7 @@ const handleConfirmPayment = async () => {
             
                     setTimeout(() => {
                         navigate("/mybookings");
-                    }, 2000);
+                    }, 1000);
                 } catch (error) {
                     console.error("Post-booking tasks failed:", error);
                     toast.error("Error processing booking details. Please check again.");
@@ -183,10 +344,10 @@ const handleConfirmPayment = async () => {
       <div className="shopping-cart">
         <h2>Checkout</h2>
         <div className="cart-item">
-          <img src={bookingDetails.equipimg} alt="Equipment" className="cart-img" />
+          <img src={bookingData.equipimg} alt="Equipment" className="cart-img" />
           <div className="cart-details">
-            <p><strong>Equipment ID:</strong> {bookingDetails.equipId}</p>
-            <p><strong>Equipment Name:</strong> {bookingDetails.eqname}</p>
+            <p><strong>Equipment ID:</strong> {bookingData.equipId}</p>
+            <p><strong>Equipment Name:</strong> {bookingData.eqname}</p>
 
             {renterDetails && (
                 <div>
@@ -195,17 +356,17 @@ const handleConfirmPayment = async () => {
                 <p><strong>Email:</strong> {renterDetails.email}</p>
                 </div>
             )}
-            <p><strong>From:</strong> {formatDateTime(bookingDetails.fromdate)}</p>
-            <p><strong>To:</strong> {formatDateTime(bookingDetails.todate)}</p>
-            <p><strong>Total Hours:</strong> {formatNumber(bookingDetails.totalhours)} hrs</p>
+            <p><strong>From:</strong> {formatDateTime(bookingData.fromdate)}</p>
+            <p><strong>To:</strong> {formatDateTime(bookingData.todate)}</p>
+            <p><strong>Total Hours:</strong> {formatNumber(bookingData.totalhours)} hrs</p>
           </div>
         </div>
         <hr />
         <div className="summary">
-          {/* <p><strong>Subtotal:</strong> ₹{bookingDetails.totalprice}</p>
+          {/* <p><strong>Subtotal:</strong> ₹{bookingData.totalprice}</p>
           <p><strong>Discount:</strong> -₹0.00</p>
           <p><strong>Shipping:</strong> Free</p> */}
-          <h3><strong>Total Amount :</strong> ₹ {formatNumber(bookingDetails.totalprice)}</h3>
+          <h3><strong>Total Amount :</strong> ₹ {formatNumber(bookingData.totalprice)}</h3>
           <div className="qrcontainer">
         {qrCode && (
                 <div>
@@ -240,7 +401,7 @@ const handleConfirmPayment = async () => {
         <button className="upi-btn" onClick={handleUPIPayment}>
             Pay Using UPI
         </button>          
-        <button className="gateway-btn">Pay Using Payment Gateway</button>
+        <button className="gateway-btn" onClick={handleRazorpayPayment}>Pay Using Razorpay</button>
         </div>
         <div className="qrcontainer">
         {qrCode && (

@@ -168,7 +168,10 @@ const EquipmentDescriptionCard = () => {
         eqname: equipment.name,
     };
 
-    navigate("/checkout", { state: bookingData });
+    handleProceedToCheckout(bookingData);
+
+    // navigate("/checkout", { state: bookingData });
+    
 
 
       // setTimeout(() => {
@@ -196,6 +199,18 @@ const EquipmentDescriptionCard = () => {
       setIsBooking(false); // Re-enable the button after completion
     }
   };
+
+  const handleProceedToCheckout = async (bookingData) => {
+    try {
+        const response = await axios.get(`${config.BASE_API_URL}/renter/renterdata/${bookingData.renterId}`);
+        const renterDetails = response.data;
+        // Pass both booking details and renter details to CheckoutPage
+        navigate("/checkout", { state: { renterDetails, bookingData } });
+    } catch (error) {
+        console.error("Error fetching renter details:", error);
+        toast.error("Failed to fetch renter details. Please try again.");
+    }
+};
 
   useEffect(() => {
     calculatePrice();

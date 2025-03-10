@@ -42,8 +42,6 @@ const App = () => {
 
         <Route path="/checkout" element={<CheckoutPage />} />
 
-
-
       </Routes>
     </Router>
   );
