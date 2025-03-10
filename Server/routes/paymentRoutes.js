@@ -49,4 +49,52 @@ router.post("/generate-upi-qr", async (req, res) => {
     }
 });
 
+const Razorpay = require("razorpay");
+const crypto = require("crypto");
+require("dotenv").config();
+
+
+const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
+
+// 📌 API to create an order
+router.post("/create-order", async (req, res) => {
+    try {
+        const { amount, currency } = req.body;
+
+        const options = {
+            amount: amount * 100, // Convert to paise
+            currency: currency || "INR",
+            receipt: `receipt_${Date.now()}`,
+        };
+
+        const order = await razorpay.orders.create(options);
+        res.json(order);
+    } catch (error) {
+        res.status(500).json({ message: "Error creating order", error });
+    }
+});
+
+// 📌 API to verify payment signature
+router.post("/verify-payment", (req, res) => {
+    try {
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+
+        const secret = process.env.RAZORPAY_KEY_SECRET;
+        const hash = crypto.createHmac("sha256", secret)
+            .update(razorpay_order_id + "|" + razorpay_payment_id)
+            .digest("hex");
+
+        if (hash === razorpay_signature) {
+            res.json({ message: "Payment verified successfully", status: "success" });
+        } else {
+            res.status(400).json({ message: "Invalid payment signature", status: "failure" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Error verifying payment", error });
+    }
+});
+
 module.exports = router;
