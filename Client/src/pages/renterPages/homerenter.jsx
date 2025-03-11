@@ -103,7 +103,10 @@ const HomeRent = () => {
       try {
         const profileResponse = await axios.get(`${config.BASE_API_URL}/renter/renterdata/${userId}`);
         
-        if (!profileResponse.data.upiId) {
+        const renterData = profileResponse.data;
+        
+        // Check if 'upiId' field does not exist or is empty
+        if (!renterData.hasOwnProperty("upiId") || !renterData.upiId) {
           toast.warning("Please update your UPI ID in the Profile section!");
           setActivePage("profile"); // Set Profile as the active page
         }
@@ -112,6 +115,7 @@ const HomeRent = () => {
         toast.error("Failed to load profile details.");
       }
     };
+    
 
     validateToken();
 
