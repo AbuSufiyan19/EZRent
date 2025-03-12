@@ -114,8 +114,7 @@ const HomeRent = () => {
         console.error("Error fetching provider details:", error.response?.data?.message || error.message);
         toast.error("Failed to load profile details.");
       }
-    };
-    
+    };    
 
     validateToken();
 
