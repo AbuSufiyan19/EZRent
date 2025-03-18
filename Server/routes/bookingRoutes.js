@@ -144,13 +144,13 @@ router.post("/send-booking-email", async (req, res) => {
                     <li><b>Equipment Name:</b> ${equipment.name}</li>
                     <li><b>Renter Name:</b> ${renter.fullName}</li>
                     <li><b>Renter Mobile Number:</b> ${renter.mobileNumber}</li>
-                    <li><b>From:</b> ${new Date(fromDateTime).toLocaleString()}</li>
-                    <li><b>To:</b> ${new Date(toDateTime).toLocaleString()}</li>
+                    <li><b>From:</b> ${new Date(fromDateTime).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</li>
+                    <li><b>To:</b> ${new Date(toDateTime).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}</li>
                     <li><b>Total Hours:</b> ${totalHours} hours</li>
                     <li><b>Total Price:</b> ₹${totalPrice}</li>
                 </ul>
                 <p><strong>${equipment.name}</strong></p>
-                  <img src="${encodeURI(equipment.image)}"
+                    <img src="${encodeURI(equipment.image)}"
                       alt="${equipment.name}"
                       style="width: 200px; height: auto; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.1);"/>
 
