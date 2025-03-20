@@ -6,6 +6,7 @@ The **Construction Equipment Rental Platform** streamlines renting construction 
 
 - **Real-Time Availability Tracking**: Calendar-based scheduling for transparent equipment availability.
 - **Location-Based Search**: Easily locate equipment near project sites, reducing transportation costs and delays.
+- **AI-Powered Recommendation System**: Uses Neural collaborative filtering (NCF) to suggest the best equipment based on users rental history.
 - **Rating and Review System**: Empower users to share feedback on vendors and equipment, ensuring high service quality.
 - **Diverse Inventory**: A wide network of local vendors offers varied options for all construction needs.
 - **Admin Panel**: Ensures platform integrity by authenticating users, managing support escalations, and maintaining smooth operations.
