@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./eqrecommendation.css";
 import config from "../../utils/configurl";
 
-const RecommendationCards = () => {
+const RecommendationCards = ({ equipmentId }) => {
   const scrollRef = useRef(null);
   const navigate = useNavigate();
   const [equipments, setEquipments] = useState([]);
@@ -36,8 +36,13 @@ const RecommendationCards = () => {
 
   const fetchAndStoreRecommendations = async (userId) => {
     try {
-      const response = await axios.get(`${config.PY_API_URL}/recommend/${userId}`);
-      const equipmentIds = response.data.recommended_equipment || [];
+      let apiUrl = `${config.PY_API_URL}/recommend/${userId}`;
+      if (equipmentId) {
+        apiUrl += `?clicked_equipment_id=${equipmentId}`;
+      }
+
+    const response = await axios.get(apiUrl);
+    const equipmentIds = response.data.recommended_equipment || [];
 
       if (equipmentIds.length === 0) {
         setEquipments([]);

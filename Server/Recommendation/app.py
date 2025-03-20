@@ -1,4 +1,4 @@
-from flask import Flask, jsonify  # type: ignore
+from flask import Flask, jsonify, request  # type: ignore
 import os
 import pandas as pd # type: ignore
 import numpy as np # type: ignore
@@ -93,11 +93,51 @@ def train_model():
     print("✅ Model saved successfully.")
     return model
 
-def recommend_equipment(user_id, num_recommendations=10):
+def recommend_equipment(user_id, clicked_equipment_id=None, num_recommendations=10):
     if user_id not in reverse_user_mapping:
-        print("⚠️ New User Detected! Recommending Top 10 Equipment.")
-        top_equipment_encoded = df.groupby('equipmentId')['rating'].mean().nlargest(num_recommendations).index
-        return [equipment_mapping[eid] for eid in top_equipment_encoded]
+        print("⚠️ New User Detected!")        
+        if clicked_equipment_id is not None:
+            print(f"🔍 User clicked on equipment {clicked_equipment_id}. Finding similar rentals...")
+
+            # Step 1: Convert clicked_equipment_id to encoded format
+            if clicked_equipment_id in reverse_equipment_mapping:
+                encoded_equipment_id = reverse_equipment_mapping[clicked_equipment_id]
+            else:
+                print("⚠️ Clicked equipment ID not found in dataset.")
+                return get_top_rated_equipment(num_recommendations)
+
+            # print(f"🔄 Encoded Equipment ID: {encoded_equipment_id}")
+
+            # Step 2: Find users who rented this equipment
+            similar_users = df[df['equipmentId'] == encoded_equipment_id]['userId'].unique()
+            # print(f"👥 Users who rented {clicked_equipment_id}: {similar_users}")
+
+            # Step 3: Find what other equipment these users rented
+            rented_equipment = df[(df['userId'].isin(similar_users)) & (df['equipmentId'] != encoded_equipment_id)]
+            # print(f"🛠️ Other equipment rented by these users:\n{rented_equipment[['userId', 'equipmentId']]}")
+
+            if rented_equipment.empty:
+                # print("⚠️ No similar rentals found. Falling back to top-rated equipment.")
+                return get_top_rated_equipment(num_recommendations)
+
+            # Step 4: Rank equipment by rental count
+            top_equipment_encoded = (
+                rented_equipment.groupby('equipmentId')['rating']
+                .count()
+                .nlargest(num_recommendations)
+                .index
+            )
+
+            # Step 5: Convert back to original equipment IDs before returning
+            recommended_equipment_ids = [equipment_mapping[eid] for eid in top_equipment_encoded]
+            # print(f"✅ Recommended equipment IDs for user: {recommended_equipment_ids}")
+
+            return recommended_equipment_ids
+
+        else:
+            print("⚠️ No clicked equipment provided. Suggesting top-rated equipment.")
+            return get_top_rated_equipment(num_recommendations)
+
     
     encoded_user_id = reverse_user_mapping[user_id]
     all_equipment_ids = df['equipmentId'].unique()
@@ -118,14 +158,24 @@ def recommend_equipment(user_id, num_recommendations=10):
 
 model = load_or_train_model()
 
+def get_top_rated_equipment(num_recommendations):
+    """ Returns top-rated equipment when no user history is available. """
+    top_equipment_encoded = df.groupby('equipmentId')['rating'].mean().nlargest(num_recommendations).index
+    top_equipment_ids = [equipment_mapping[eid] for eid in top_equipment_encoded]
+    # print(f"🏆 Returning top-rated equipment: {top_equipment_ids}")
+    return top_equipment_ids
+
+
 @app.route('/')
 def home():
     return "Welcome to the Equipment Recommendation API!"
 
 @app.route('/recommend/<user_id>', methods=['GET'])
 def recommend(user_id):
-    recommendations = recommend_equipment(user_id)
+    clicked_equipment_id = request.args.get('clicked_equipment_id')  # Now it remains a string
+    recommendations = recommend_equipment(user_id, clicked_equipment_id=clicked_equipment_id)
     return jsonify({'recommended_equipment': recommendations})
+
 
 @app.route('/retrain', methods=['POST'])
 def retrain():

@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faStarHalfAlt, faStar as faStarEmpty } from "@fortawesome/free-solid-svg-icons";
 
 
-const EquipmentDescriptionCard = () => {
+const EquipmentDescriptionCard = ({setEquipmentId}) => {
   const location = useLocation();
   const equipment = location.state?.equipment;
 
@@ -28,12 +28,19 @@ const EquipmentDescriptionCard = () => {
   const today = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
-    if (!equipment) {
-      console.error("No equipment data found!");
-    } else {
+    console.log("Equipment received in DescriptionCard:", equipment);
+
+    if (equipment) {
+      if (setEquipmentId) {
+        console.log("Setting Equipment ID:", equipment._id);
+        setEquipmentId(equipment._id); // ✅ Only call if setEquipmentId is provided
+      }
       fetchBookedSlots();
+    } else {
+      console.error("No equipment data found!");
     }
-  }, [equipment]);
+  }, [equipment, setEquipmentId]);
+
 
   const fetchBookedSlots = async () => {
     try {
