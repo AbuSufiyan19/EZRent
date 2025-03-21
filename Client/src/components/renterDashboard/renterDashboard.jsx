@@ -63,7 +63,8 @@ const RenterDashboard = () => {
             <th>Equipment ID</th>
             <th>Equipment Name</th>
             <th>Equipment Image</th>
-            <th>Price</th>
+            <th>Rent per Hour</th>
+            <th>Deposit Amount</th>
             <th>Min Hours</th>
             <th>Rating</th>
             <th>Location</th>
@@ -86,6 +87,7 @@ const RenterDashboard = () => {
                   />
                 </td>
                 <td>Rs {equipment.price}</td>
+                <td>Rs {equipment.deposit}</td>
                 <td>{equipment.minHours}</td>
                 <td>{equipment.averageRating ? `${equipment.averageRating}` : "--"}</td>
                 <td className="eq-location">{equipment.address}</td>
@@ -119,7 +121,7 @@ const RenterDashboard = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="10">No equipments found</td>
+              <td colSpan="11">No equipments found</td>
             </tr>
           )}
         </tbody>

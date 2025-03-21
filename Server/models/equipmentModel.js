@@ -8,6 +8,7 @@ const equipmentSchema = new mongoose.Schema({
   description: { type: String, required: true },
   image: { type: String, required: true }, // Store the image filename
   price: { type: Number, required: true },
+  deposit: { type: Number },
   minHours: { type: Number},
   location: {
     lat: { type: Number, required: true },

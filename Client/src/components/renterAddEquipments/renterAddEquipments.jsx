@@ -16,6 +16,7 @@ const RenterAddEquipments = () => {
     image: null,
     price: "",
     minHours: "",
+    deposit: "",
     location: {
       lat: null,
       lng: null,
@@ -100,6 +101,7 @@ const RenterAddEquipments = () => {
     form.append("minHours", formData.minHours);
     form.append("description", formData.description);
     form.append("price", formData.price);
+    form.append("deposit", formData.deposit);
     form.append("lat", formData.location.lat);
     form.append("lng", formData.location.lng);
     form.append("address", formData.address);
@@ -131,6 +133,7 @@ const RenterAddEquipments = () => {
         description: "",
         image: null,
         price: "",
+        deposit: "",
         location: { lat: null, lng: null },
         address: "",
       });
@@ -264,6 +267,18 @@ const RenterAddEquipments = () => {
               onChange={handleChange}
               placeholder="Enter price per hour"
               required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="deposit">Caution Deposit</label>
+            <input type="number"
+              id="deposit" 
+              name="deposit" 
+              value={formData.deposit} 
+              onChange={handleChange} 
+              placeholder="Enter caution deposit"
+              required 
             />
           </div>
 

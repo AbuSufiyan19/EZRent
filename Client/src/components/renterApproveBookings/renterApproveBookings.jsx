@@ -96,7 +96,7 @@ const RenterApproveBookings = () => {
             <th>From Date</th>
             <th>To Date</th>
             <th>Total Hours</th>
-            <th>Total Amount</th>
+            <th>Total Amount (Rent + Depost)</th>
             <th>Payment Status</th>
             <th>Transaction-Id</th>
             <th>UPI-PaymentId</th>

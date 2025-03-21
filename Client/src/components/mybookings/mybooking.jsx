@@ -130,6 +130,8 @@ const MyBooking = () => {
             <th>From Date</th>
             <th>To Date</th>
             <th>Total Hours</th>
+            <th>Rent Amount</th>
+            <th>Deposit Amount</th>
             <th>Total Amount</th>
             <th>Extra Hours</th>
             <th>Extra Amount</th>
@@ -144,7 +146,7 @@ const MyBooking = () => {
         </thead>
         <tbody>
           {bookings.length === 0 ? (
-            <tr><td colSpan="13" style={{ textAlign: 'center' }}>No bookings available.</td></tr>
+            <tr><td colSpan="15" style={{ textAlign: 'center' }}>No bookings available.</td></tr>
           ) : (
             bookings.map((booking) => (
               <tr key={booking._id}>
@@ -153,6 +155,8 @@ const MyBooking = () => {
                 <td>{new Date(booking.fromDateTime).toLocaleString()}</td>
                 <td>{new Date(booking.toDateTime).toLocaleString()}</td>
                 <td>{booking.totalHours} hrs</td>
+                <td>Rs {booking.subTotal}</td>
+                <td>Rs {booking.depositAmount}</td>
                 <td>Rs {booking.totalPrice}</td>
                 <td>{booking.extraTimehours ? `${booking.extraTimehours} hrs` : "--"}</td>
                 <td>{booking.extraPrice ? `Rs ${booking.extraPrice}` : "--"}</td>

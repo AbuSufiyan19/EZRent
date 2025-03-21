@@ -9,6 +9,8 @@ const bookingSchema = new mongoose.Schema({
   fromDateTime: { type: Date, required: true },
   toDateTime: { type: Date, required: true },
   totalHours: { type: Number, required: true },
+  subTotal:{ type: Number, required: true },
+  depositAmount: { type: Number, required: true },
   totalPrice: { type: Number, required: true },
   extraTimehours: { type: Number}, 
   extraPrice: { type: Number},

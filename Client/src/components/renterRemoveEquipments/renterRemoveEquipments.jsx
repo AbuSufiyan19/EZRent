@@ -62,7 +62,7 @@ const RenterRemoveEquipments = () => {
           <tr>
             <th>Equipment ID</th>
             <th>Equipment Name</th>
-            <th>Price</th>
+            <th>Rent per Hour</th>
             <th>Min Hours</th>
             <th>Location</th>
             <th>Equipment Image</th>

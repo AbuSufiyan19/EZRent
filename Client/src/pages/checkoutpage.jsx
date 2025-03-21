@@ -104,8 +104,9 @@ const handleRazorpayPayment = async () => {
     }
 
     try {
+        const totalamount = bookingData.totalprice + bookingData.depositamount;
         const { data } = await axios.post(`${config.BASE_API_URL}/payment/create-order`, { 
-            amount: bookingData.totalprice, 
+            amount: totalamount , 
             currency: "INR" 
         });
 
@@ -153,7 +154,9 @@ const handleRazorpayPayment = async () => {
                 "Rental From": formatDateTime(bookingData.fromdate),
                 "Rental To": formatDateTime(bookingData.todate),
                 "Total Hours": formatNumber(bookingData.totalhours),
-                "Total Price": `₹ ${formatNumber(bookingData.totalprice)}`,
+                "Subtotal": `₹ ${formatNumber(bookingData.totalprice)}`,
+                "Deposit Amount": `₹ ${formatNumber(bookingData.depositamount)}`,
+                "Total Amount": `₹ ${formatNumber(totalamount)}`,
                 "Renter Name": renterDetails.fullName || "N/A",
                 "Renter Contact": renterDetails.mobileNumber || "N/A",
                 "Renter Email": renterDetails.email || "N/A",
@@ -187,7 +190,9 @@ const handleConfirmPaymentRazorpay = async (transactionId, paymentStatus) => {
                 fromDateTime: bookingData.fromdate,
                 toDateTime: bookingData.todate,
                 totalHours: bookingData.totalhours,
-                totalPrice: bookingData.totalprice,
+                subTotal: bookingData.totalprice,
+                depositAmount: bookingData.depositamount,
+                totalPrice: bookingData.totalprice + bookingData.depositamount, 
                 transactionId,  // ✅ Assign Razorpay Order ID as transactionId
                 upitransactionId: "--",  // ✅ UPI Transaction ID is not applicable for Razorpay
                 paymentStatus
@@ -232,7 +237,7 @@ const handleConfirmPaymentRazorpay = async (transactionId, paymentStatus) => {
     try {
         const response = await axios.post(`${config.BASE_API_URL}/payment/generate-upi-link`, {
             renterId: bookingData.renterId,
-            amount: bookingData.totalprice,
+            amount: bookingData.totalprice + bookingData.depositamount,
             equipmentId: bookingData.equipId
         });
 
@@ -293,7 +298,9 @@ const handleConfirmPayment = async () => {
                 fromDateTime: bookingData.fromdate,
                 toDateTime: bookingData.todate,
                 totalHours: bookingData.totalhours,
-                totalPrice: bookingData.totalprice,
+                subTotal: bookingData.totalprice,
+                depositAmount: bookingData.depositamount,
+                totalPrice: bookingData.totalprice + bookingData.depositamount,
                 transactionId,
                 upitransactionId,
                 paymentStatus: "Pending"
@@ -363,10 +370,10 @@ const handleConfirmPayment = async () => {
         </div>
         <hr />
         <div className="summary">
-          {/* <p><strong>Subtotal:</strong> ₹{bookingData.totalprice}</p>
-          <p><strong>Discount:</strong> -₹0.00</p>
-          <p><strong>Shipping:</strong> Free</p> */}
-          <h3><strong>Total Amount :</strong> ₹ {formatNumber(bookingData.totalprice)}</h3>
+          <p><strong>Subtotal:</strong> ₹{bookingData.totalprice}</p>
+          <p><strong>Deposit Amount:</strong> ₹{bookingData.depositamount}</p>
+          {/* <p><strong>Shipping:</strong> Free</p> */}
+          <h3><strong>Total Amount :</strong> ₹ {formatNumber(bookingData.totalprice + bookingData.depositamount)}</h3>
           <div className="qrcontainer">
         {qrCode && (
                 <div>
@@ -414,9 +421,11 @@ const handleConfirmPayment = async () => {
 
         {/* Next Steps */}
         <div className="next-steps">
-          <h3>Steps</h3>
-          <p><strong>Payment information:</strong> Choose a payment method.</p>
-          <p><strong>Order confirmation:</strong> You'll receive an email confirmation once you confirm payment.</p>
+            <h3>Steps</h3>
+                <p><strong>Payment information:</strong> Choose a payment method.</p>
+                <p><strong>Order confirmation:</strong> You'll receive an email confirmation once you confirm payment.</p>
+                <p><strong>Deposit collection:</strong> A refundable deposit will be charged along with the rental amount.</p>
+                <p><strong>Refund process:</strong> Once the equipment is returned safely, the deposit will be refunded after verification.</p>
         </div>
       </div>
     </div>

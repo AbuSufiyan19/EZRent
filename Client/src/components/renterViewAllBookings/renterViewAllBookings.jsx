@@ -88,7 +88,8 @@ const RenterViewAllBookings = () => {
             <th>From Date</th>
             <th>To Date</th>
             <th>Total Hours</th>
-            <th>Total Amount</th>
+            <th>Caution Deposit</th>
+            <th>Total Amount (Rent + Depost)</th>
             <th>Extra Time</th>
             <th>Extra Amount</th>
             <th>Payment Status</th>
@@ -113,6 +114,7 @@ const RenterViewAllBookings = () => {
                 <td>{new Date(booking.fromDateTime).toLocaleString()}</td>
                 <td>{new Date(booking.toDateTime).toLocaleString()}</td>
                 <td>{booking.totalHours} hrs</td>
+                <td>Rs {booking.depositAmount}</td>
                 <td>Rs {booking.totalPrice}</td>
                 <td>{booking.extraTimehours ? `${booking.extraTimehours} hrs` : "--"}</td>
                 <td>{booking.extraPrice ? `Rs ${booking.extraPrice}` : "--"}</td>
@@ -136,7 +138,7 @@ const RenterViewAllBookings = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="13" style={{ textAlign: "center" }}>No bookings available.</td>
+              <td colSpan="14" style={{ textAlign: "center" }}>No bookings available.</td>
             </tr>
           )}
         </tbody>

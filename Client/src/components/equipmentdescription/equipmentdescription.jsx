@@ -171,6 +171,7 @@ const EquipmentDescriptionCard = ({setEquipmentId}) => {
         fromdate: fromDateTime,
         todate: toDateTime,
         totalhours: totalHours,
+        depositamount: equipment.deposit,
         totalprice: totalPrice,
         eqname: equipment.name,
     };
@@ -261,9 +262,15 @@ const EquipmentDescriptionCard = ({setEquipmentId}) => {
           <p className="equipmentdesc-rentername"><b>Renter Name:</b> {equipment.rentername}</p>
             <StarRating rating={equipment.averageRating || 0} />
           <div className="equipmentdesc-pricing">
-            <span className="current-price">Rs: {equipment.price}</span>
-            <span className="original-price">Per Hour (Min {equipment.minHours} hrs)</span>
-          </div>
+              <span className="current-price">₹ {equipment.price}</span>
+              <span className="original-price">
+                Per Hour (Min {equipment.minHours} hrs to be rented 
+                {equipment.minHours >= 24 ? ` (~${(equipment.minHours / 24).toFixed(1)} days)` : ""}
+                ) +
+              </span> <br />
+              <span className="original-price"><b>Refundable Deposit</b> (₹ {equipment.deposit} - exclusive from rental price)</span>
+              
+            </div>
         </div>
       </div>
 

@@ -24,10 +24,10 @@ const addEquipment = async (req, res) => {
     }
 
     const { id, username } = decoded;
-    const { category, categoryId, name, description, price, lat, lng, address, categoryName, minHours } = req.body;
+    const { category, categoryId, name, description, price, lat, lng, address, categoryName, minHours, deposit } = req.body;
     const image = req.file?.path;
 
-    if (!category || !categoryId || !name || !description || !price || !lat || !lng || !address || !image) {
+    if (!category || !categoryId || !name || !description || !price || !lat || !lng || !address || !image || !deposit) { 
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -69,6 +69,7 @@ const addEquipment = async (req, res) => {
       description,
       image,
       price,
+      deposit,
       location: { lat, lng },
       address,
       renterid: id,

@@ -30,7 +30,7 @@ router.post("/book", async (req, res) => {
     }
 
     const { id, username } = decoded;
-    const { equipmentId, fromDateTime, toDateTime, totalHours, totalPrice, equipId, equipimg, renterId, transactionId, upitransactionId,
+    const { equipmentId, fromDateTime, toDateTime, totalHours, subTotal, depositAmount, totalPrice, equipId, equipimg, renterId, transactionId, upitransactionId,
       paymentStatus,} = req.body;
 
       console.log(req.body);
@@ -71,6 +71,8 @@ router.post("/book", async (req, res) => {
       fromDateTime: fromDate,
       toDateTime: toDate,
       totalHours,
+      subTotal,
+      depositAmount,
       totalPrice,
       notifiedSMS: false,
       statusEq: false,
