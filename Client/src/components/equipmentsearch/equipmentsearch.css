@@ -120,6 +120,13 @@
   .equipment-grid-container .equipment-btn:hover {
     background-color: #ff9900;
   }
+  .no-equipments {
+    text-align: center;
+    font-size: 1.2rem;
+    color: gray;
+    margin-top: 20px;
+  }
+  
   
   /* Media queries for responsiveness */
   

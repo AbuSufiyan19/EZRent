@@ -93,4 +93,17 @@ const getrecommendDetails = async (req, res) => {
   }
 };
 
-module.exports = { fetchCategories, fetchEquipments, fetchRandomEquipments, getEquipmentsByCategory, getrecommendDetails };
+const User = require("../models/userModel");
+const getCustomerdata = async (req, res) => { 
+  try {
+    const user = await User.findById(req.params.customerId);
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching user details" });
+  }
+};
+
+module.exports = { fetchCategories, fetchEquipments, fetchRandomEquipments, getEquipmentsByCategory, getrecommendDetails, getCustomerdata};

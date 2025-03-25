@@ -21,7 +21,7 @@ const CustomerNavbar = () => {
   const [showLocation, setShowLocation] = useState(true); // Track visibility
   const [lastScrollY, setLastScrollY] = useState(0);
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
@@ -29,8 +29,27 @@ const CustomerNavbar = () => {
       fetchUserType(token);
     }
     fetchUserDistrict();
-    fetchUserLocation();
   }, []);
+
+  const fetchUserData = async (customerId) => {
+    try {
+            const response = await axios.get(`${config.BASE_API_URL}/customer/customerdata/${customerId}`);
+            const userData = response.data;
+            checkAndFetchLocation(userData);
+        } catch (error) {
+          console.error("Error fetching user data:", error.message);
+        }
+  };
+
+  const checkAndFetchLocation = (userData) => {
+    if (userData?.locationDistrict === "Click Here" && !userData?.location) {
+      console.log("Location is missing. Fetching user location...");
+      fetchUserLocation();
+    } else {
+      console.log("Location is already set.");
+    }
+  };
+  
 
   const fetchUserType = async (token) => {
     try {
@@ -41,6 +60,7 @@ const CustomerNavbar = () => {
       });
       if (response.status === 200) {
         setUserType(response.data.userType);
+        fetchUserData(response.data.userId);
       }
     } catch (error) {
       console.error("Invalid token:", error.response?.data?.message || error.message);
@@ -236,6 +256,7 @@ const CustomerNavbar = () => {
     await fetchStateName(lat, lng);
     await updateLocationInDB(lat, lng);
     setIsMapOpen(false); // Close the modal after updating
+    window.location.reload();
   };
   
   
@@ -243,10 +264,10 @@ const CustomerNavbar = () => {
     if (isMapOpen) {
       const loadGoogleMaps = async () => {
         const script = document.createElement("script");
-        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAiEvhHmhIdeKSVUF2DqUEVKdWi3LOOjIw&callback=initMap`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAiEvhHmhIdeKSVUF2DqUEVKdWi3LOOjIw&libraries=places&callback=initMap`;
         script.async = true;
         document.body.appendChild(script);
-
+  
         window.initMap = () => {
           const map = new google.maps.Map(document.getElementById("map"), {
             center: { lat: currentLocation.lat || 11.026432, lng: currentLocation.lng || 76.988416 },
@@ -258,19 +279,43 @@ const CustomerNavbar = () => {
             map: map,
             draggable: true,
           });
-          
+  
+          // Attach an event listener to move marker when dragged
           google.maps.event.addListener(marker, "dragend", function () {
             const newLat = marker.getPosition().lat();
             const newLng = marker.getPosition().lng();
             handleMapClick(newLat, newLng); // Update location details
           });
+  
+          // Add a search box for place search
+          const input = document.getElementById("map-search");
+          const searchBox = new google.maps.places.SearchBox(input);
+  
+          // Bias search results towards current map bounds
+          map.addListener("bounds_changed", () => {
+            searchBox.setBounds(map.getBounds());
+          });
+  
+          // Listen for place selection
+          searchBox.addListener("places_changed", () => {
+            const places = searchBox.getPlaces();
+            if (places.length === 0) return;
+  
+            const place = places[0];
+            if (!place.geometry || !place.geometry.location) return;
+  
+            // Move map & marker to searched location
+            map.setCenter(place.geometry.location);
+            marker.setPosition(place.geometry.location);
+            handleMapClick(place.geometry.location.lat(), place.geometry.location.lng());
+          });
         };
       };
-
+  
       loadGoogleMaps();
     }
   }, [isMapOpen]);
-
+  
   const handleScroll = () => {
     const currentScrollY = window.scrollY;
     if (currentScrollY > lastScrollY) {
@@ -382,11 +427,23 @@ const CustomerNavbar = () => {
       {isMapOpen && (
         <div className="map-modal">
           <div className="map-container">
-            <button className="close-map" onClick={() => setIsMapOpen(false)}>Close</button>
+            {/* Header section for input and close button */}
+            <div className="map-header">
+              <input
+                id="map-search"
+                type="text"
+                placeholder="Search for a location..."
+                className="map-search-input"
+              />
+              <button className="close-map" onClick={() => setIsMapOpen(false)}>Close</button>
+            </div>
+
+            {/* Map Container */}
             <div id="map" style={{ width: "100%", height: "400px" }}></div>
           </div>
         </div>
       )}
+
     </nav>
     <ToastContainer />
     </>

@@ -98,19 +98,24 @@ const EquipmentGrid = () => {
         </div>
       </div>
       <div className="grid">
-        {displayedEquipments.map((equipment) => (
-          <div key={equipment._id} className="equipment-card">
-            <img src={`${equipment.image}`} 
-                 alt={equipment.name} className="equipment-img" />
-            <div className="equipment-overlay">
-              <h3 className="equipment-title">{equipment.name}</h3>
-              <button className="equipment-btn" onClick={() => navigate("/equipdesc", { state: { equipment } })}>
-                View Details
-              </button>
+        {displayedEquipments.length > 0 ? (
+          displayedEquipments.map((equipment) => (
+            <div key={equipment._id} className="equipment-card">
+              <img src={`${equipment.image}`} 
+                  alt={equipment.name} className="equipment-img" />
+              <div className="equipment-overlay">
+                <h3 className="equipment-title">{equipment.name}</h3>
+                <button className="equipment-btn" onClick={() => navigate("/equipdesc", { state: { equipment } })}>
+                  View Details
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <div className="no-equipments">No Equipments Available</div>
+        )}
       </div>
+
       {!hasToken && (
         <div className="grid">
           {randomEquipmentsuser.map((equipment) => (
