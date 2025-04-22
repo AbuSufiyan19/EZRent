@@ -112,7 +112,9 @@ const EquipmentGrid = () => {
             </div>
           ))
         ) : (
-          <div className="no-equipments">No Equipments Available</div>
+          <div className="no-equipments">
+             {searchTerm ? "No Equipments Found" : ""}
+          </div>
         )}
       </div>
 
