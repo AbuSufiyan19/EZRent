@@ -134,7 +134,7 @@ const CustomerNavbar = () => {
       {
         params: {
           latlng: `${lat},${lng}`,
-          key: "AIzaSyAiEvhHmhIdeKSVUF2DqUEVKdWi3LOOjIw", // Replace with a secured key in production
+          key: "AIzaSyBbMkb3HU0diRAEdrzZsuAMP7nMyrI4s6c", // Replace with a secured key in production
         },
       }
     );
@@ -264,7 +264,7 @@ const CustomerNavbar = () => {
     if (isMapOpen) {
       const loadGoogleMaps = async () => {
         const script = document.createElement("script");
-        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAiEvhHmhIdeKSVUF2DqUEVKdWi3LOOjIw&libraries=places&callback=initMap`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBbMkb3HU0diRAEdrzZsuAMP7nMyrI4s6c&libraries=places&callback=initMap`;
         script.async = true;
         document.body.appendChild(script);
   

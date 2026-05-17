@@ -155,7 +155,7 @@ const RenterAddEquipments = () => {
     if (isMapOpen) {
       const loadGoogleMaps = async () => {
         const script = document.createElement("script");
-        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAiEvhHmhIdeKSVUF2DqUEVKdWi3LOOjIw&callback=initMap`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBbMkb3HU0diRAEdrzZsuAMP7nMyrI4s6c&callback=initMap`;
         script.async = true;
         document.body.appendChild(script);
 
